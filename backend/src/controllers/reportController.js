@@ -1,0 +1,79 @@
+import Student from "../models/Student.js";
+import Teacher from "../models/Teacher.js";
+import Attendance from "../models/Attendance.js";
+import Fee from "../models/Fee.js";
+import Exam from "../models/Exam.js";
+
+// Dashboard Report
+export const getDashboard =
+  async (req, res) => {
+    try {
+      const totalStudents =
+        await Student.countDocuments();
+
+      const totalTeachers =
+        await Teacher.countDocuments();
+
+      const totalAttendance =
+        await Attendance.countDocuments();
+
+      const totalFees =
+        await Fee.aggregate([
+          {
+            $group: {
+              _id: null,
+              total: {
+                $sum:
+                  "$amount"
+              }
+            }
+          }
+        ]);
+
+      const totalExams =
+        await Exam.countDocuments();
+
+      res.status(200).json({
+        success: true,
+        dashboard: {
+          totalStudents,
+          totalTeachers,
+          totalAttendance,
+          totalFees:
+            totalFees[0]
+              ?.total || 0,
+          totalExams
+        }
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };
+
+// Student Performance Report
+export const studentPerformance =
+  async (req, res) => {
+    try {
+      const report =
+        await Exam.find()
+          .populate(
+            "studentId",
+            "name"
+          );
+
+      res.status(200).json({
+        success: true,
+        report
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };
