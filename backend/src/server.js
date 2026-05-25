@@ -26,6 +26,7 @@ import leaveRoutes from "./routes/leaveRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import auditRoutes from "./routes/auditRoutes.js";
 import settingRoutes from "./routes/settingRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 import {
   protect,
@@ -57,7 +58,7 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/fees", feeRoutes);
 app.use("/api/exams", examRoutes);
 app.use("/api/timetable", timetableRoutes);
-app.use("/api/transport", transportRoutes);
+app.use("/api/transports", transportRoutes);
 app.use("/api/hostel", hostelRoutes);
 app.use("/api/notifications",notificationRoutes);
 app.use("/api/portal", portalRoutes);
@@ -69,6 +70,7 @@ app.use("/api/leaves", leaveRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/audit", auditRoutes);
 app.use("/api/settings", settingRoutes);
+app.use("/api/users", userRoutes);
 
 // Home Route
 app.get("/", (req, res) => {

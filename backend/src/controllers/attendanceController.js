@@ -28,23 +28,25 @@ export const markAttendance =
 export const getAttendance =
   async (req, res) => {
     try {
+
       const attendance =
         await Attendance.find()
-          .populate("studentId")
-          .populate("schoolId")
           .populate(
-            "markedBy",
-            "name role"
+            "studentId"
           );
 
       res.status(200).json({
         success: true,
         attendance
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
-        message: error.message
+        message:
+          error.message
       });
+
     }
   };

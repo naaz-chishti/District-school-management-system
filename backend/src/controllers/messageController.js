@@ -31,12 +31,13 @@ export const getInbox =
   async (req, res) => {
     try {
       const inbox =
-        await Message.find({
-          receiverId:
-            req.user._id
-        })
+        await Message.find()
           .populate(
             "senderId",
+            "name email role"
+          )
+          .populate(
+            "receiverId",
             "name email role"
           )
           .sort({

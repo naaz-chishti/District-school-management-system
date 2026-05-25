@@ -8,10 +8,12 @@ import Fee from "../models/Fee.js";
 export const getDashboard =
   async (req, res) => {
     try {
+
       const role =
         req.user.role;
 
-      let dashboard = {};
+      let dashboard =
+        {};
 
       // District Admin
       if (
@@ -21,8 +23,10 @@ export const getDashboard =
         dashboard = {
           totalSchools:
             await School.countDocuments(),
+
           totalTeachers:
             await Teacher.countDocuments(),
+
           totalStudents:
             await Student.countDocuments()
         };
@@ -36,8 +40,10 @@ export const getDashboard =
         dashboard = {
           totalTeachers:
             await Teacher.countDocuments(),
+
           totalStudents:
             await Student.countDocuments(),
+
           attendance:
             await Attendance.countDocuments()
         };
@@ -51,6 +57,7 @@ export const getDashboard =
         dashboard = {
           attendance:
             await Attendance.countDocuments(),
+
           exams:
             await Exam.countDocuments()
         };
@@ -64,6 +71,7 @@ export const getDashboard =
         dashboard = {
           fees:
             await Fee.countDocuments(),
+
           exams:
             await Exam.countDocuments()
         };
@@ -77,6 +85,7 @@ export const getDashboard =
         dashboard = {
           attendance:
             await Attendance.countDocuments(),
+
           exams:
             await Exam.countDocuments()
         };
@@ -87,11 +96,14 @@ export const getDashboard =
         role,
         dashboard
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
     }
   };
