@@ -3,6 +3,8 @@ import express from "express";
 import {
   applyLeave,
   getLeaves,
+  updateLeave,
+  deleteLeave,
   updateLeaveStatus
 } from "../controllers/leaveController.js";
 
@@ -11,7 +13,8 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
 // Apply Leave
 router.post(
@@ -25,6 +28,20 @@ router.get(
   "/all",
   protect,
   getLeaves
+);
+
+// Update Leave
+router.put(
+  "/update/:id",
+  protect,
+  updateLeave
+);
+
+// Delete Leave
+router.delete(
+  "/delete/:id",
+  protect,
+  deleteLeave
 );
 
 // Approve / Reject

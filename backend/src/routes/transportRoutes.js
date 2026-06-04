@@ -3,8 +3,8 @@ import express from "express";
 import {
   addTransport,
   getTransport,
-  assignStudentToBus,
-  updateBoardingStatus
+  updateTransport,
+  deleteTransport
 } from "../controllers/transportController.js";
 
 import {
@@ -12,7 +12,8 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
 // Add Transport
 router.post(
@@ -32,27 +33,26 @@ router.get(
   getTransport
 );
 
-// Assign Student To Bus
-router.post(
-  "/assign-student",
+// Update Transport
+router.put(
+  "/update/:id",
   protect,
   authorizeRoles(
     "district_admin",
     "school_admin"
   ),
-  assignStudentToBus
+  updateTransport
 );
 
-// Boarding / Drop Status
-router.put(
-  "/boarding-status",
+// Delete Transport
+router.delete(
+  "/delete/:id",
   protect,
   authorizeRoles(
     "district_admin",
-    "school_admin",
-    "teacher"
+    "school_admin"
   ),
-  updateBoardingStatus
+  deleteTransport
 );
 
 export default router;

@@ -3,146 +3,229 @@ import {
   useState
 } from "react";
 
+import {
+  useNavigate,
+  useSearchParams
+} from "react-router-dom";
+
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
-function Messages() {
-  const [messages,
-    setMessages] =
-    useState([]);
+function Message() {
+
+  const navigate =
+    useNavigate();
+
+  const [
+    searchParams
+  ] =
+    useSearchParams();
+
+  const messageId =
+    searchParams.get("id");
+
+  const [
+    formData,
+    setFormData
+  ] = useState({
+    receiverId: "",
+    title: "",
+    message: "",
+    messageType:
+      "general"
+  });
+
+  const [
+    users,
+    setUsers
+  ] = useState([]);
 
   useEffect(() => {
-    fetchInbox();
+    fetchUsers();
   }, []);
 
-  const fetchInbox =
+  const fetchUsers =
     async () => {
+
       try {
-        const response =
+
+        const res =
           await API.get(
-            "/messages/inbox"
+            "/users/all"
           );
 
-        console.log(
-          response.data
+        setUsers(
+          res.data.users || []
         );
 
-        setMessages(
-          response.data
-            .inbox || []
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        if (
+          messageId
+        ) {
+
+          await API.put(
+            `/messages/update/${messageId}`,
+            formData
+          );
+
+          alert(
+            "Message Updated"
+          );
+
+        } else {
+
+          await API.post(
+            "/messages/send",
+            formData
+          );
+
+          alert(
+            "Message Sent"
+          );
+        }
+
+        navigate(
+          "/message-list"
         );
-      } catch (
-        error
-      ) {
-        console.log(
-          error
-        );
+
+      } catch (error) {
+        console.log(error);
       }
     };
 
   return (
     <DashboardLayout>
+
       <h1>
-        Messages
+        Message
       </h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <form
+        onSubmit={
+          handleSubmit
+        }
       >
-        <thead>
-          <tr>
-            <th>
-              Sender
-            </th>
 
-            <th>
-              Title
-            </th>
+        <select
+          name="receiverId"
+          value={
+            formData.receiverId
+          }
+          onChange={
+            handleChange
+          }
+          required
+        >
+          <option value="">
+            Select Receiver
+          </option>
 
-            <th>
-              Message
-            </th>
-
-            <th>
-              Type
-            </th>
-
-            <th>
-              Read
-            </th>
-
-            <th>
-              Date
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {messages.length >
-          0 ? (
-            messages.map(
-              (
-                item
-              ) => (
-                <tr
-                  key={
-                    item._id
-                  }
-                >
-                  <td>
-                    {item
-                      .senderId
-                      ?.name ||
-                      "N/A"}
-                  </td>
-
-                  <td>
-                    {
-                      item.title
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.message
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.messageType
-                    }
-                  </td>
-
-                  <td>
-                    {item.isRead
-                      ? "Yes"
-                      : "No"}
-                  </td>
-
-                  <td>
-                    {new Date(
-                      item.createdAt
-                    ).toLocaleDateString()}
-                  </td>
-                </tr>
-              )
-            )
-          ) : (
-            <tr>
-              <td
-                colSpan="6"
+          {users.map(
+            (user) => (
+              <option
+                key={
+                  user._id
+                }
+                value={
+                  user._id
+                }
               >
-                No messages
-                found
-              </td>
-            </tr>
+                {user.name}
+              </option>
+            )
           )}
-        </tbody>
-      </table>
+        </select>
+
+        <br />
+        <br />
+
+        <input
+          type="text"
+          name="title"
+          placeholder="Title"
+          value={
+            formData.title
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br />
+        <br />
+
+        <textarea
+          name="message"
+          placeholder="Message"
+          value={
+            formData.message
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br />
+        <br />
+
+        <select
+          name="messageType"
+          value={
+            formData.messageType
+          }
+          onChange={
+            handleChange
+          }
+        >
+          <option value="general">
+            General
+          </option>
+
+          <option value="important">
+            Important
+          </option>
+
+          <option value="announcement">
+            Announcement
+          </option>
+        </select>
+
+        <br />
+        <br />
+
+        <button type="submit">
+          {messageId
+            ? "Update Message"
+            : "Send Message"}
+        </button>
+
+      </form>
+
     </DashboardLayout>
   );
 }
 
-export default Messages;
+export default Message;

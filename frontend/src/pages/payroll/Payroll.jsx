@@ -3,196 +3,449 @@ import {
   useState
 } from "react";
 
+import {
+  useSearchParams,
+  useNavigate
+} from "react-router-dom";
+
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function Payroll() {
-  const [payrolls,
-    setPayrolls] =
-    useState([]);
 
-  useEffect(() => {
-    fetchPayrolls();
-  }, []);
+  const navigate =
+    useNavigate();
 
-  const fetchPayrolls =
+  const [
+    searchParams
+  ] =
+    useSearchParams();
+
+  const payrollId =
+    searchParams.get(
+      "id"
+    );
+
+  const [
+    teachers,
+    setTeachers
+  ] = useState([]);
+
+  const [
+    schools,
+    setSchools
+  ] = useState([]);
+
+  const [
+    editId,
+    setEditId
+  ] = useState(null);
+
+  const [
+    formData,
+    setFormData
+  ] = useState({
+    teacherId: "",
+    schoolId: "",
+    basicSalary: "",
+    allowances: "",
+    deductions: "",
+    month: "",
+    year: "",
+    paymentStatus: "",
+    performanceRating: "",
+    remarks: ""
+  });
+
+  // Get Teachers
+  const getTeachers =
     async () => {
+
       try {
-        const response =
+
+        const res =
+          await API.get(
+            "/teachers/all"
+          );
+
+        setTeachers(
+          res.data.teachers
+        );
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  // Get Schools
+  const getSchools =
+    async () => {
+
+      try {
+
+        const res =
+          await API.get(
+            "/schools/all"
+          );
+
+        setSchools(
+          res.data.schools
+        );
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  // Get Single Payroll
+  const getSinglePayroll =
+    async () => {
+
+      try {
+
+        const res =
           await API.get(
             "/payroll/all"
           );
 
-        console.log(
-          response.data
+        const payroll =
+          res.data.payrolls.find(
+            (p) =>
+              p._id ===
+              payrollId
+          );
+
+        if (
+          payroll
+        ) {
+
+          setEditId(
+            payroll._id
+          );
+
+          setFormData({
+            teacherId:
+              payroll
+                .teacherId
+                ?._id || "",
+            schoolId:
+              payroll
+                .schoolId
+                ?._id || "",
+            basicSalary:
+              payroll.basicSalary,
+            allowances:
+              payroll.allowances,
+            deductions:
+              payroll.deductions,
+            month:
+              payroll.month,
+            year:
+              payroll.year,
+            paymentStatus:
+              payroll.paymentStatus,
+            performanceRating:
+              payroll.performanceRating,
+            remarks:
+              payroll.remarks
+          });
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  useEffect(() => {
+
+    getTeachers();
+    getSchools();
+
+    if (
+      payrollId
+    ) {
+      getSinglePayroll();
+    }
+
+  }, []);
+
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  // Submit
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        if (
+          editId
+        ) {
+
+          await API.put(
+            `/payroll/update/${editId}`,
+            formData
+          );
+
+          alert(
+            "Payroll Updated Successfully"
+          );
+
+        } else {
+
+          await API.post(
+            "/payroll/add",
+            formData
+          );
+
+          alert(
+            "Payroll Added Successfully"
+          );
+        }
+
+        navigate(
+          "/payroll-list"
         );
 
-        setPayrolls(
-          response.data
-            .payrolls || []
-        );
-      } catch (
-        error
-      ) {
-        console.log(
-          "Payroll Error:",
-          error
+      } catch (error) {
+
+        console.log(error);
+
+        alert(
+          error.response?.data?.message ||
+          "Something went wrong"
         );
       }
     };
 
   return (
     <DashboardLayout>
+
       <h1>
         Payroll
       </h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <form
+        onSubmit={
+          handleSubmit
+        }
       >
-        <thead>
-          <tr>
-            <th>
-              Teacher
-            </th>
 
-            <th>
-              School
-            </th>
+        <select
+          name="teacherId"
+          value={
+            formData.teacherId
+          }
+          onChange={
+            handleChange
+          }
+          required
+        >
+          <option value="">
+            Select Teacher
+          </option>
 
-            <th>
-              Basic Salary
-            </th>
-
-            <th>
-              Allowances
-            </th>
-
-            <th>
-              Deductions
-            </th>
-
-            <th>
-              Net Salary
-            </th>
-
-            <th>
-              Month
-            </th>
-
-            <th>
-              Year
-            </th>
-
-            <th>
-              Payment Status
-            </th>
-
-            <th>
-              Rating
-            </th>
-
-            <th>
-              Remarks
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {payrolls.length >
-          0 ? (
-            payrolls.map(
-              (
-                item
-              ) => (
-                <tr
-                  key={
-                    item._id
-                  }
-                >
-                  <td>
-                    {item
-                      .teacherId
-                      ?.name ||
-                      "N/A"}
-                  </td>
-
-                  <td>
-                    {item
-                      .schoolId
-                      ?.schoolName ||
-                      "N/A"}
-                  </td>
-
-                  <td>
-                    {
-                      item.basicSalary
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.allowances
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.deductions
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.netSalary
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.month
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.year
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.paymentStatus
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.performanceRating
-                    }
-                  </td>
-
-                  <td>
-                    {
-                      item.remarks
-                    }
-                  </td>
-                </tr>
-              )
-            )
-          ) : (
-            <tr>
-              <td
-                colSpan="11"
+          {teachers.map(
+            (
+              teacher
+            ) => (
+              <option
+                key={
+                  teacher._id
+                }
+                value={
+                  teacher._id
+                }
               >
-                No payroll
-                data found
-              </td>
-            </tr>
+                {
+                  teacher.name
+                }
+              </option>
+            )
           )}
-        </tbody>
-      </table>
+        </select>
+
+        <br /><br />
+
+        <select
+          name="schoolId"
+          value={
+            formData.schoolId
+          }
+          onChange={
+            handleChange
+          }
+          required
+        >
+          <option value="">
+            Select School
+          </option>
+
+          {schools.map(
+            (
+              school
+            ) => (
+              <option
+                key={
+                  school._id
+                }
+                value={
+                  school._id
+                }
+              >
+                {
+                  school.schoolName
+                }
+              </option>
+            )
+          )}
+        </select>
+
+        <br /><br />
+
+        <input
+          type="number"
+          name="basicSalary"
+          placeholder="Basic Salary"
+          value={
+            formData.basicSalary
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br /><br />
+
+        <input
+          type="number"
+          name="allowances"
+          placeholder="Allowances"
+          value={
+            formData.allowances
+          }
+          onChange={
+            handleChange
+          }
+        />
+
+        <br /><br />
+
+        <input
+          type="number"
+          name="deductions"
+          placeholder="Deductions"
+          value={
+            formData.deductions
+          }
+          onChange={
+            handleChange
+          }
+        />
+
+        <br /><br />
+
+        <input
+          type="text"
+          name="month"
+          placeholder="Month"
+          value={
+            formData.month
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br /><br />
+
+        <input
+          type="number"
+          name="year"
+          placeholder="Year"
+          value={
+            formData.year
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br /><br />
+
+        <select
+          name="paymentStatus"
+          value={
+            formData.paymentStatus
+          }
+          onChange={
+            handleChange
+          }
+        >
+          <option value="">
+            Payment Status
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="paid">
+            Paid
+          </option>
+        </select>
+
+        <br /><br />
+
+        <input
+          type="number"
+          name="performanceRating"
+          placeholder="Performance Rating (1-5)"
+          value={
+            formData.performanceRating
+          }
+          onChange={
+            handleChange
+          }
+        />
+
+        <br /><br />
+
+        <textarea
+          name="remarks"
+          placeholder="Remarks"
+          value={
+            formData.remarks
+          }
+          onChange={
+            handleChange
+          }
+        />
+
+        <br /><br />
+
+        <button
+          type="submit"
+        >
+          {editId
+            ? "Update Payroll"
+            : "Add Payroll"}
+        </button>
+
+      </form>
+
     </DashboardLayout>
   );
 }

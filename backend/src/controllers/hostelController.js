@@ -117,3 +117,89 @@ export const assignStudentToHostel =
       });
     }
   };
+
+   // Update Hostel
+export const updateHostel =
+  async (req, res) => {
+
+    try {
+
+      const hostel =
+        await Hostel.findByIdAndUpdate(
+          req.params.id,
+          req.body,
+          {
+            new: true
+          }
+        );
+
+      if (
+        !hostel
+      ) {
+        return res
+          .status(404)
+          .json({
+            success: false,
+            message:
+              "Hostel not found"
+          });
+      }
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Hostel updated successfully",
+        hostel
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+
+    }
+  };
+
+
+// Delete Hostel
+export const deleteHostel =
+  async (req, res) => {
+
+    try {
+
+      const hostel =
+        await Hostel.findByIdAndDelete(
+          req.params.id
+        );
+
+      if (
+        !hostel
+      ) {
+        return res
+          .status(404)
+          .json({
+            success: false,
+            message:
+              "Hostel not found"
+          });
+      }
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Hostel deleted successfully"
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+
+    }
+  };

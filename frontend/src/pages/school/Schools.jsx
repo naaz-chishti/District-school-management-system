@@ -3,132 +3,219 @@ import {
   useState
 } from "react";
 
+import {
+  useNavigate,
+  useSearchParams
+} from "react-router-dom";
+
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function Schools() {
-  const [schools,
-    setSchools] =
-    useState([]);
 
-  const getSchools =
+  const navigate =
+    useNavigate();
+
+  const [
+    searchParams
+  ] =
+    useSearchParams();
+
+  const id =
+    searchParams.get(
+      "id"
+    );
+
+  const [formData,
+    setFormData] =
+    useState({
+      schoolName: "",
+      schoolCode: "",
+      district: "",
+      principalName: "",
+      email: "",
+      phone: "",
+      address: "",
+      status: "active"
+    });
+
+  useEffect(() => {
+
+    if (id) {
+      fetchSchool();
+    }
+
+  }, [id]);
+
+  const fetchSchool =
     async () => {
+
       try {
+
         const res =
           await API.get(
-            "/schools/all"
+            `/schools/${id}`
           );
 
-        setSchools(
-          res.data.schools
+        setFormData(
+          res.data.school
         );
+
       } catch (error) {
         console.log(error);
       }
     };
 
-  useEffect(() => {
-    getSchools();
-  }, []);
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        if (id) {
+
+          await API.put(
+            `/schools/update/${id}`,
+            formData
+          );
+
+          alert(
+            "School Updated Successfully"
+          );
+
+        } else {
+
+          await API.post(
+            "/schools/create",
+            formData
+          );
+
+          alert(
+            "School Added Successfully"
+          );
+        }
+
+        navigate(
+          "/school-list"
+        );
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   return (
     <DashboardLayout>
-      <h1>Schools</h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <h1>
+        {id
+          ? "Edit School"
+          : "Add School"}
+      </h1>
+
+      <form
+        onSubmit={
+          handleSubmit
+        }
       >
-        <thead>
-          <tr>
-            <th>
-              School Name
-            </th>
 
-            <th>
-              School Code
-            </th>
+        <input
+          type="text"
+          name="schoolName"
+          placeholder="School Name"
+          value={formData.schoolName}
+          onChange={handleChange}
+          required
+        />
 
-            <th>
-              District
-            </th>
+        <br /><br />
 
-            <th>
-              Principal
-            </th>
+        <input
+          type="text"
+          name="schoolCode"
+          placeholder="School Code"
+          value={formData.schoolCode}
+          onChange={handleChange}
+          required
+        />
 
-            <th>Email</th>
+        <br /><br />
 
-            <th>Phone</th>
+        <input
+          type="text"
+          name="district"
+          placeholder="District"
+          value={formData.district}
+          onChange={handleChange}
+          required
+        />
 
-            <th>
-              Address
-            </th>
+        <br /><br />
 
-            <th>Status</th>
-          </tr>
-        </thead>
+        <input
+          type="text"
+          name="principalName"
+          placeholder="Principal Name"
+          value={formData.principalName}
+          onChange={handleChange}
+          required
+        />
 
-        <tbody>
-          {schools.map(
-            (school) => (
-              <tr
-                key={
-                  school._id
-                }
-              >
-                <td>
-                  {
-                    school.schoolName
-                  }
-                </td>
+        <br /><br />
 
-                <td>
-                  {
-                    school.schoolCode
-                  }
-                </td>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
 
-                <td>
-                  {
-                    school.district
-                  }
-                </td>
+        <br /><br />
 
-                <td>
-                  {
-                    school.principalName
-                  }
-                </td>
+        <input
+          type="text"
+          name="phone"
+          placeholder="Phone"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+        />
 
-                <td>
-                  {
-                    school.email
-                  }
-                </td>
+        <br /><br />
 
-                <td>
-                  {
-                    school.phone
-                  }
-                </td>
+        <textarea
+          name="address"
+          placeholder="Address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+        />
 
-                <td>
-                  {
-                    school.address
-                  }
-                </td>
+        <br /><br />
 
-                <td>
-                  {
-                    school.status
-                  }
-                </td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+        <button type="submit">
+
+          {id
+            ? "Update School"
+            : "Add School"}
+
+        </button>
+
+      </form>
+
     </DashboardLayout>
   );
 }

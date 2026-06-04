@@ -1,9 +1,11 @@
 import Notification from "../models/Notification.js";
 
-// Send Notification
+
+// Add Notification
 export const addNotification =
   async (req, res) => {
     try {
+
       const notification =
         await Notification.create({
           ...req.body,
@@ -17,18 +19,23 @@ export const addNotification =
           "Notification sent successfully",
         notification
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
-        message: error.message
+        message:
+          error.message
       });
     }
   };
 
-// Get Notifications
+
+// Get All Notifications
 export const getNotifications =
   async (req, res) => {
     try {
+
       const notifications =
         await Notification.find()
           .populate(
@@ -37,16 +44,132 @@ export const getNotifications =
           .populate(
             "createdBy",
             "name role"
-          );
+          )
+          .sort({
+            createdAt: -1
+          });
 
       res.status(200).json({
         success: true,
         notifications
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
-        message: error.message
+        message:
+          error.message
+      });
+    }
+  };
+
+
+// Get Single Notification
+export const getSingleNotification =
+  async (req, res) => {
+    try {
+
+      const notification =
+        await Notification.findById(
+          req.params.id
+        );
+
+      res.status(200).json({
+        success: true,
+        notification
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };
+
+
+// Update Notification
+export const updateNotification =
+  async (req, res) => {
+    try {
+
+      const notification =
+        await Notification.findByIdAndUpdate(
+          req.params.id,
+          req.body,
+          { new: true }
+        );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Notification Updated Successfully",
+        notification
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };
+
+
+// Delete Notification
+export const deleteNotification =
+  async (req, res) => {
+    try {
+
+      await Notification.findByIdAndDelete(
+        req.params.id
+      );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Notification Deleted Successfully"
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };
+
+ // Get Latest Notifications
+export const getLatestNotifications =
+  async (req, res) => {
+
+    try {
+
+      const notifications =
+        await Notification.find()
+          .sort({
+            createdAt: -1
+          })
+          .limit(5);
+
+      res.status(200).json({
+        success: true,
+        notifications
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
       });
     }
   };

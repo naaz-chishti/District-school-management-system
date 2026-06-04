@@ -1,4 +1,6 @@
 import Sidebar from "./Sidebar";
+import TopNavbar from "../components/TopNavbar";
+import Footer from "../components/Footer";
 
 function DashboardLayout({
   children
@@ -6,7 +8,9 @@ function DashboardLayout({
   return (
     <div
       style={{
-        display: "flex"
+        display: "flex",
+        minHeight: "100vh",
+        background: "#f4f6f9"
       }}
     >
       <Sidebar />
@@ -14,11 +18,26 @@ function DashboardLayout({
       <div
         style={{
           flex: 1,
-          padding: "20px"
+          display: "flex",
+          flexDirection: "column"
         }}
       >
-        {children}
+        <TopNavbar />
+
+        <div
+          style={{
+            flex: 1,
+            padding: "25px",
+            overflow: "auto"
+          }}
+        >
+          {children}
+        </div>
+
+        <Footer />
+
       </div>
+
     </div>
   );
 }

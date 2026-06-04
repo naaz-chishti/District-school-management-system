@@ -2,7 +2,9 @@ import express from "express";
 
 import {
   addTimetable,
-  getTimetable
+  getTimetable,
+  updateTimetable,
+  deleteTimetable
 } from "../controllers/timetableController.js";
 
 import {
@@ -10,9 +12,10 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
-// Add Timetable
+// Add
 router.post(
   "/add",
   protect,
@@ -23,11 +26,33 @@ router.post(
   addTimetable
 );
 
-// View Timetable
+// Get All
 router.get(
   "/all",
   protect,
   getTimetable
+);
+
+// Update
+router.put(
+  "/update/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  updateTimetable
+);
+
+// Delete
+router.delete(
+  "/delete/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  deleteTimetable
 );
 
 export default router;

@@ -43,3 +43,59 @@ export const getParents =
       });
     }
   };
+
+  // Update Parent
+export const updateParent =
+  async (req, res) => {
+    try {
+
+      const parent =
+        await Parent.findByIdAndUpdate(
+          req.params.id,
+          req.body,
+          {
+            new: true
+          }
+        );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Parent updated successfully",
+        parent
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };
+
+// Delete Parent
+export const deleteParent =
+  async (req, res) => {
+    try {
+
+      await Parent.findByIdAndDelete(
+        req.params.id
+      );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Parent deleted successfully"
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };

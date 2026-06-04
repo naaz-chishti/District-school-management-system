@@ -1,434 +1,308 @@
-import {
-  useNavigate
-} from "react-router-dom";
-
-import {
-  Link
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Sidebar() {
 
-  const navigate =
-    useNavigate();
+  const user = JSON.parse(
+    localStorage.getItem("user")
+  );
 
-  const user =
-    JSON.parse(
-      localStorage.getItem(
-        "user"
-      )
-    );
-
-  const role =
-    user?.role;
-
-  const handleLogout =
-    () => {
-
-      localStorage.removeItem(
-        "token"
-      );
-
-      localStorage.removeItem(
-        "user"
-      );
-
-      navigate("/");
-    };
+  const role = user?.role;
 
   return (
     <div
       style={{
-        width: "250px",
-        background:
-          "#222",
-        color:
-          "white",
-        height:
-          "100vh",
-        padding:
-          "20px"
+        width: "280px",
+        background: "#111827",
+        color: "#fff",
+        minHeight: "100vh",
+        padding: "20px",
+        overflowY: "auto"
       }}
     >
-      <h2>
-        School Admin
+      <h2
+        style={{
+          textAlign: "center",
+          marginBottom: "30px",
+          color: "#60A5FA"
+        }}
+      >
+        School ERP
       </h2>
 
-      <ul
+      <div
         style={{
-          listStyle:
-            "none",
-          padding: 0
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px"
         }}
       >
 
-        {/* Dashboard */}
-        <li>
-          <Link
-            to="/dashboard"
-            style={{
-              color:
-                "white"
-            }}
-          >
-            Dashboard
-          </Link>
-        </li>
+        {/* DISTRICT ADMIN */}
 
-        {/* Schools */}
-        {role ===
-          "district_admin" && (
-          <li>
-            <Link
-              to="/schools"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Schools
-            </Link>
-          </li>
-        )}
+        {role === "district_admin" && (
+          <>
+            <LinkStyle to="/dashboard">
+              Dashboard
+            </LinkStyle>
 
-        {/* Teachers */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin") && (
-          <li>
-            <Link
-              to="/teachers"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Teachers
-            </Link>
-          </li>
-        )}
+            <LinkStyle to="/schools">
+              Add School
+            </LinkStyle>
 
-        {/* Students */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin" ||
-          role ===
-          "teacher") && (
-          <li>
-            <Link
-              to="/students"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Students
-            </Link>
-          </li>
-        )}
+            <LinkStyle to="/school-list">
+              School List
+            </LinkStyle>
 
-        {/* Parents */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin") && (
-          <li>
-            <Link
-              to="/parents"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Parents
-            </Link>
-          </li>
-        )}
+            <LinkStyle to="/users">
+              Add User
+            </LinkStyle>
 
-        {/* Users */}
-        {role ===
-          "district_admin" && (
-          <li>
-            <Link
-              to="/users"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Users
-            </Link>
-          </li>
-        )}
+            <LinkStyle to="/user-list">
+              User List
+            </LinkStyle>
 
-        {/* Attendance */}
-        {(role ===
-          "school_admin" ||
-          role ===
-          "teacher" ||
-          role ===
-          "student") && (
-          <li>
-            <Link
-              to="/attendance"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Attendance
-            </Link>
-          </li>
-        )}
+            <LinkStyle to="/teachers">
+              Add Teacher
+            </LinkStyle>
 
-        {/* Timetable */}
-        <li>
-          <Link
-            to="/timetable"
-            style={{
-              color:
-                "white"
-            }}
-          >
-            Timetable
-          </Link>
-        </li>
+            <LinkStyle to="/teacher-list">
+              Teacher List
+            </LinkStyle>
 
-        {/* Fees */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin" ||
-          role ===
-          "parent") && (
-          <li>
-            <Link
-              to="/fees"
-              style={{
-                color:
-                  "white"
-              }}
-            >
+            <LinkStyle to="/students">
+              Add Student
+            </LinkStyle>
+
+            <LinkStyle to="/student-list">
+              Student List
+            </LinkStyle>
+
+            <LinkStyle to="/parents">
+              Add Parent
+            </LinkStyle>
+
+            <LinkStyle to="/parent-list">
+              Parent List
+            </LinkStyle>
+
+            <LinkStyle to="/fees">
               Fees
-            </Link>
-          </li>
-        )}
+            </LinkStyle>
 
-        {/* Exams */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin" ||
-          role ===
-          "teacher" ||
-          role ===
-          "student" ||
-          role ===
-          "parent") && (
-          <li>
-            <Link
-              to="/exams"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Exams
-            </Link>
-          </li>
-        )}
+            <LinkStyle to="/fee-list">
+              Fee List
+            </LinkStyle>
 
-        {/* Hostel */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin") && (
-          <li>
-            <Link
-              to="/hostel"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Hostel
-            </Link>
-          </li>
-        )}
-
-        {/* Payroll */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin") && (
-          <li>
-            <Link
-              to="/payroll"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Payroll
-            </Link>
-          </li>
-        )}
-
-        {/* Transport */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin") && (
-          <li>
-            <Link
-              to="/transport"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Transport
-            </Link>
-          </li>
-        )}
-
-        {/* Reports */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin") && (
-          <li>
-            <Link
-              to="/reports"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Reports
-            </Link>
-          </li>
-        )}
-
-        {/* Events */}
-        <li>
-          <Link
-            to="/events"
-            style={{
-              color:
-                "white"
-            }}
-          >
-            Events
-          </Link>
-        </li>
-
-        {/* Leaves */}
-        <li>
-          <Link
-            to="/leaves"
-            style={{
-              color:
-                "white"
-            }}
-          >
-            Leaves
-          </Link>
-        </li>
-
-        {/* Audit */}
-        {role ===
-          "district_admin" && (
-          <li>
-            <Link
-              to="/audit"
-              style={{
-                color:
-                  "white"
-              }}
-            >
+            <LinkStyle to="/audit-log">
               Audit Log
-            </Link>
-          </li>
-        )}
+            </LinkStyle>
 
-        {/* Messages */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin" ||
-          role ===
-          "teacher" ||
-          role ===
-          "parent") && (
-          <li>
-            <Link
-              to="/messages"
-              style={{
-                color:
-                  "white"
-              }}
-            >
-              Messages
-            </Link>
-          </li>
-        )}
+            <LinkStyle to="/audit-list">
+              Audit List
+            </LinkStyle>
 
-        {/* Notifications */}
-        <li>
-          <Link
-            to="/notifications"
-            style={{
-              color:
-                "white"
-            }}
-          >
-            Notifications
-          </Link>
-        </li>
-
-        {/* Settings */}
-        {(role ===
-          "district_admin" ||
-          role ===
-          "school_admin") && (
-          <li>
-            <Link
-              to="/settings"
-              style={{
-                color:
-                  "white"
-              }}
-            >
+            <LinkStyle to="/settings">
               Settings
-            </Link>
-          </li>
+            </LinkStyle>
+
+            <LinkStyle to="/profile">
+              My Profile
+            </LinkStyle>
+          </>
         )}
 
-      </ul>
+        <LinkStyle to="/exam-list">Exam List</LinkStyle>
+<LinkStyle to="/timetable-list">Timetable List</LinkStyle>
+<LinkStyle to="/event-list">Event List</LinkStyle>
+<LinkStyle to="/leave-list">Leave List</LinkStyle>
+<LinkStyle to="/message-list">Message List</LinkStyle>
+<LinkStyle to="/notification-list">Notification List</LinkStyle>
+<LinkStyle to="/reports">Reports</LinkStyle>
+<LinkStyle to="/transport-list">Transport List</LinkStyle>
+<LinkStyle to="/hostel-list">Hostel List</LinkStyle>
+<LinkStyle to="/payroll-list">Payroll List</LinkStyle>
 
-      <button
-        onClick={
-          handleLogout
-        }
-        style={{
-          width: "100%",
-          padding:
-            "10px",
-          background:
-            "red",
-          color:
-            "white",
-          border:
-            "none",
-          cursor:
-            "pointer"
-        }}
-      >
-        Logout
-      </button>
+        {/* TEACHER */}
+
+{role === "teacher" && (
+  <>
+    <LinkStyle to="/dashboard">
+      Dashboard
+    </LinkStyle>
+
+    <LinkStyle to="/student-list">
+      Students
+    </LinkStyle>
+
+    <LinkStyle to="/attendance">
+      Attendance
+    </LinkStyle>
+
+    <LinkStyle to="/attendance-list">
+      Attendance List
+    </LinkStyle>
+
+    <LinkStyle to="/exam-list">
+      Exams
+    </LinkStyle>
+
+    <LinkStyle to="/timetable-list">
+      Timetable
+    </LinkStyle>
+
+    <LinkStyle to="/events">
+      Events
+    </LinkStyle>
+
+    <LinkStyle to="/event-list">
+      Event List
+    </LinkStyle>
+
+    <LinkStyle to="/leaves">
+      Leaves
+    </LinkStyle>
+
+    <LinkStyle to="/leave-list">
+      Leave List
+    </LinkStyle>
+
+    <LinkStyle to="/messages">
+      Messages
+    </LinkStyle>
+
+    <LinkStyle to="/message-list">
+      Message List
+    </LinkStyle>
+
+    <LinkStyle to="/notification-list">
+      Notifications
+    </LinkStyle>
+
+    <LinkStyle to="/payroll-list">
+      Payroll
+    </LinkStyle>
+
+    <LinkStyle to="/profile">
+      My Profile
+    </LinkStyle>
+  </>
+)}
+
+        {/* PARENT */}
+
+{role === "parent" && (
+  <>
+    <LinkStyle to="/dashboard">
+      Dashboard
+    </LinkStyle>
+
+    <LinkStyle to="/fee-list">
+      Fees
+    </LinkStyle>
+
+    <LinkStyle to="/attendance-list">
+      Attendance
+    </LinkStyle>
+
+    <LinkStyle to="/exam-list">
+      Exams
+    </LinkStyle>
+
+    <LinkStyle to="/event-list">
+      Events
+    </LinkStyle>
+
+    <LinkStyle to="/message-list">
+      Messages
+    </LinkStyle>
+
+    <LinkStyle to="/notification-list">
+      Notifications
+    </LinkStyle>
+
+    <LinkStyle to="/transport-list">
+      Transport
+    </LinkStyle>
+
+    <LinkStyle to="/profile">
+      My Profile
+    </LinkStyle>
+  </>
+)}
+
+       {/* STUDENT */}
+
+{role === "student" && (
+  <>
+    <LinkStyle to="/dashboard">
+      Dashboard
+    </LinkStyle>
+
+    <LinkStyle to="/attendance-list">
+      Attendance
+    </LinkStyle>
+
+    <LinkStyle to="/exam-list">
+      Exams
+    </LinkStyle>
+
+    <LinkStyle to="/timetable-list">
+      Timetable
+    </LinkStyle>
+
+    <LinkStyle to="/event-list">
+      Events
+    </LinkStyle>
+
+    <LinkStyle to="/message-list">
+      Messages
+    </LinkStyle>
+
+    <LinkStyle to="/notification-list">
+      Notifications
+    </LinkStyle>
+
+    <LinkStyle to="/hostel-list">
+      Hostel
+    </LinkStyle>
+
+    <LinkStyle to="/transport-list">
+      Transport
+    </LinkStyle>
+
+    <LinkStyle to="/leave-list">
+      Leaves
+    </LinkStyle>
+
+    <LinkStyle to="/profile">
+      My Profile
+    </LinkStyle>
+  </>
+)}
+
+      </div>
+
     </div>
+  );
+}
+
+function LinkStyle({
+  to,
+  children
+}) {
+  return (
+    <Link
+      to={to}
+      style={{
+        textDecoration: "none",
+        color: "#E5E7EB",
+        padding: "10px 15px",
+        borderRadius: "8px",
+        background: "#1F2937"
+      }}
+    >
+      {children}
+    </Link>
   );
 }
 

@@ -1,43 +1,27 @@
-import {
-  Navigate
-} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-function ProtectedRoute({
-  children,
-  allowedRoles
-}) {
+function ProtectedRoute({ children, allowedRoles }) {
+  const token = localStorage.getItem("token");
 
-  const token =
-    localStorage.getItem(
-      "token"
-    );
+  let user = null;
 
-  const user =
-    JSON.parse(
-      localStorage.getItem(
-        "user"
-      )
-    );
-
-  if (!token) {
-    return (
-      <Navigate
-        to="/"
-      />
-    );
+  try {
+    user = JSON.parse(localStorage.getItem("user"));
+  } catch (err) {
+    user = null;
   }
 
-  if (
-    allowedRoles &&
-    !allowedRoles.includes(
-      user?.role
-    )
-  ) {
-    return (
-      <Navigate
-        to="/dashboard"
-      />
-    );
+  console.log("TOKEN:", localStorage.getItem("token"));
+console.log("USER:", localStorage.getItem("user"));
+
+  // Not logged in
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Role check (safe)
+  if (allowedRoles && (!user || !allowedRoles.includes(user.role))) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;

@@ -1,109 +1,139 @@
 import Student from "../models/Student.js";
 import Teacher from "../models/Teacher.js";
+import Parent from "../models/Parent.js";
 import School from "../models/School.js";
-import Attendance from "../models/Attendance.js";
-import Exam from "../models/Exam.js";
 import Fee from "../models/Fee.js";
+import Event from "../models/Event.js";
+import Leave from "../models/Leave.js";
+import Notification from "../models/Notification.js";
+import AuditLog from "../models/AuditLog.js";
 
 export const getDashboard =
   async (req, res) => {
+
     try {
 
-      const role =
-        req.user.role;
+      const totalStudents =
+        await Student.countDocuments();
 
-      let dashboard =
-        {};
+      const totalTeachers =
+        await Teacher.countDocuments();
 
-      // District Admin
-      if (
-        role ===
-        "district_admin"
-      ) {
-        dashboard = {
-          totalSchools:
-            await School.countDocuments(),
+      const totalParents =
+        await Parent.countDocuments();
 
-          totalTeachers:
-            await Teacher.countDocuments(),
+      const totalSchools =
+        await School.countDocuments();
 
-          totalStudents:
-            await Student.countDocuments()
-        };
-      }
+      const totalEvents =
+        await Event.countDocuments();
 
-      // School Admin
-      else if (
-        role ===
-        "school_admin"
-      ) {
-        dashboard = {
-          totalTeachers:
-            await Teacher.countDocuments(),
+      const totalLeaves =
+        await Leave.countDocuments();
 
-          totalStudents:
-            await Student.countDocuments(),
+      const totalNotifications =
+        await Notification.countDocuments();
 
-          attendance:
-            await Attendance.countDocuments()
-        };
-      }
+      const fees =
+        await Fee.find();
 
-      // Teacher
-      else if (
-        role ===
-        "teacher"
-      ) {
-        dashboard = {
-          attendance:
-            await Attendance.countDocuments(),
+      const totalFeesCollected =
+        fees
+          .filter(
+            (item) =>
+              item.status === "Paid"
+          )
+          .reduce(
+            (total, item) =>
+              total +
+              Number(item.amount || 0),
+            0
+          );
 
-          exams:
-            await Exam.countDocuments()
-        };
-      }
+      const totalPendingFees =
+        fees
+          .filter(
+            (item) =>
+              item.status === "Pending"
+          )
+          .reduce(
+            (total, item) =>
+              total +
+              Number(item.amount || 0),
+            0
+          );
 
-      // Parent
-      else if (
-        role ===
-        "parent"
-      ) {
-        dashboard = {
-          fees:
-            await Fee.countDocuments(),
+      // Recent Activities
 
-          exams:
-            await Exam.countDocuments()
-        };
-      }
+      const recentActivities =
+        await AuditLog.find()
+          .sort({
+            createdAt: -1
+          })
+          .limit(5)
+          .populate(
+            "userId",
+            "name"
+          );
 
-      // Student
-      else if (
-        role ===
-        "student"
-      ) {
-        dashboard = {
-          attendance:
-            await Attendance.countDocuments(),
+      const formattedActivities =
+        recentActivities.map(
+          (item) => {
 
-          exams:
-            await Exam.countDocuments()
-        };
-      }
+            const userName =
+              item.userId?.name ||
+              "System";
+
+            const action =
+              item.action || "";
+
+            const module =
+              item.module || "";
+
+            return `${userName} ${action} ${module}`;
+          }
+        );
+
+      // Upcoming Events
+
+     const upcomingEvents =
+  await Event.find()
+    .sort({
+      startDate: 1
+    })
+    .limit(5);
 
       res.status(200).json({
         success: true,
-        role,
-        dashboard
+
+        role:
+          req.user?.role || "",
+
+        dashboard: {
+          totalStudents,
+          totalTeachers,
+          totalParents,
+          totalSchools,
+          totalEvents,
+          totalLeaves,
+          totalNotifications,
+          totalFeesCollected,
+          totalPendingFees,
+          upcomingEvents
+        },
+
+        recentActivities:
+          formattedActivities
       });
 
     } catch (error) {
+
+      console.log(error);
 
       res.status(500).json({
         success: false,
         message:
           error.message
       });
-
     }
   };

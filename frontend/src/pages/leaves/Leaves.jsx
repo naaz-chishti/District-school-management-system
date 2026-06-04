@@ -3,116 +3,238 @@ import {
   useState
 } from "react";
 
+import {
+  useNavigate,
+  useSearchParams
+} from "react-router-dom";
+
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function Leaves() {
-  const [leaves,
-    setleaves] =
-    useState([]);
+
+  const navigate =
+    useNavigate();
+
+  const [
+    searchParams
+  ] =
+    useSearchParams();
+
+  const leaveId =
+    searchParams.get(
+      "id"
+    );
+
+  const [
+    editId,
+    setEditId
+  ] = useState(null);
+
+  const [
+    formData,
+    setFormData
+  ] = useState({
+    leaveType: "",
+    reason: "",
+    startDate: "",
+    endDate: ""
+  });
+
+  const getSingleLeave =
+    async () => {
+
+      try {
+
+        const res =
+          await API.get(
+            "/leaves/all"
+          );
+
+        const leave =
+          res.data.leaves.find(
+            (l) =>
+              l._id ===
+              leaveId
+          );
+
+        if (leave) {
+
+          setEditId(
+            leave._id
+          );
+
+          setFormData({
+            leaveType:
+              leave.leaveType,
+            reason:
+              leave.reason,
+            startDate:
+              leave.startDate
+                ?.split("T")[0],
+            endDate:
+              leave.endDate
+                ?.split("T")[0]
+          });
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   useEffect(() => {
-    const getleaves =
-      async () => {
-        try {
-          const res =
-            await API.get(
-              "/leaves/all"
-            );
 
-          setleaves(
-            res.data.leaves
+    if (leaveId) {
+      getSingleLeave();
+    }
+
+  }, [leaveId]);
+
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        if (editId) {
+
+          await API.put(
+            `/leaves/update/${editId}`,
+            formData
           );
-        } catch (
-          error
-        ) {
-          console.log(
-            error
+
+          alert(
+            "Leave Updated Successfully"
+          );
+
+        } else {
+
+          await API.post(
+            "/leaves/apply",
+            formData
+          );
+
+          alert(
+            "Leave Applied Successfully"
           );
         }
-      };
 
-    getleaves();
-  }, []);
+        navigate(
+          "/leave-list"
+        );
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   return (
     <DashboardLayout>
+
       <h1>
         Leaves
       </h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <form
+        onSubmit={
+          handleSubmit
+        }
       >
-        <thead>
-          <tr>
-            <th>
-              Leave Type
-            </th>
 
-            <th>
-              Reason
-            </th>
+        <select
+          name="leaveType"
+          value={
+            formData.leaveType
+          }
+          onChange={
+            handleChange
+          }
+          required
+        >
+          <option value="">
+            Select Leave
+          </option>
 
-            <th>
-              Start Date
-            </th>
+          <option value="sick">
+            Sick
+          </option>
 
-            <th>
-              End Date
-            </th>
+          <option value="casual">
+            Casual
+          </option>
 
-            <th>
-              Status
-            </th>
-          </tr>
-        </thead>
+          <option value="emergency">
+            Emergency
+          </option>
 
-        <tbody>
-          {leaves.map(
-            (
-              item
-            ) => (
-              <tr
-                key={
-                  item._id
-                }
-              >
-                <td>
-                  {
-                    item.leaveType
-                  }
-                </td>
+        </select>
 
-                <td>
-                  {
-                    item.reason
-                  }
-                </td>
+        <br /><br />
 
-                <td>
-                  {new Date(
-                    item.startDate
-                  ).toLocaleDateString()}
-                </td>
+        <textarea
+          name="reason"
+          placeholder="Reason"
+          value={
+            formData.reason
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-                <td>
-                  {new Date(
-                    item.endDate
-                  ).toLocaleDateString()}
-                </td>
+        <br /><br />
 
-                <td>
-                  {
-                    item.status
-                  }
-                </td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+        <input
+          type="date"
+          name="startDate"
+          value={
+            formData.startDate
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br /><br />
+
+        <input
+          type="date"
+          name="endDate"
+          value={
+            formData.endDate
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br /><br />
+
+        <button
+          type="submit"
+        >
+          {editId
+            ? "Update Leave"
+            : "Apply Leave"}
+        </button>
+
+      </form>
+
     </DashboardLayout>
   );
 }

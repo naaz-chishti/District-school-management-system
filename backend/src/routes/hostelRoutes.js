@@ -2,7 +2,9 @@ import express from "express";
 
 import {
   addHostel,
-  getHostels
+  getHostels,
+  updateHostel,
+  deleteHostel
 } from "../controllers/hostelController.js";
 
 import {
@@ -10,7 +12,8 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
 // Add Hostel
 router.post(
@@ -23,11 +26,33 @@ router.post(
   addHostel
 );
 
-// Get Hostel
+// Get Hostels
 router.get(
   "/all",
   protect,
   getHostels
+);
+
+// Update Hostel
+router.put(
+  "/update/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  updateHostel
+);
+
+// Delete Hostel
+router.delete(
+  "/delete/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  deleteHostel
 );
 
 export default router;

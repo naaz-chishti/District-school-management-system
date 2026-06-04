@@ -4,6 +4,7 @@ import Transport from "../models/Transport.js";
 export const addTransport =
   async (req, res) => {
     try {
+
       const transport =
         await Transport.create(
           req.body
@@ -15,12 +16,15 @@ export const addTransport =
           "Transport added successfully",
         transport
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
     }
   };
 
@@ -28,6 +32,7 @@ export const addTransport =
 export const getTransport =
   async (req, res) => {
     try {
+
       const transport =
         await Transport.find()
           .populate(
@@ -41,94 +46,72 @@ export const getTransport =
         success: true,
         transport
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
     }
   };
 
-// Assign Student To Bus
-export const assignStudentToBus =
+// Update Transport
+export const updateTransport =
   async (req, res) => {
     try {
-      const {
-        transportId,
-        studentId
-      } = req.body;
-
-      const transport =
-        await Transport.findById(
-          transportId
-        );
-
-      if (!transport) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message:
-              "Transport not found"
-          });
-      }
-
-      transport.assignedStudents.push(
-        studentId
-      );
-
-      await transport.save();
-
-      res.status(200).json({
-        success: true,
-        message:
-          "Student assigned successfully",
-        transport
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message:
-          error.message
-      });
-    }
-  };
-
-// Update Boarding Status
-export const updateBoardingStatus =
-  async (req, res) => {
-    try {
-      const {
-        transportId,
-        status
-      } = req.body;
 
       const transport =
         await Transport.findByIdAndUpdate(
-          transportId,
+          req.params.id,
+          req.body,
           {
-            boardingStatus:
-              status,
-            parentAlertSent:
-              true
-          },
-          { new: true }
+            new: true
+          }
         );
 
       res.status(200).json({
         success: true,
         message:
-          `Student ${status}`,
-        parentAlert:
-          "Parent notified",
+          "Transport Updated Successfully",
         transport
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
+    }
+  };
+
+// Delete Transport
+export const deleteTransport =
+  async (req, res) => {
+    try {
+
+      await Transport.findByIdAndDelete(
+        req.params.id
+      );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Transport Deleted Successfully"
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+
     }
   };

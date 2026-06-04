@@ -2,7 +2,9 @@ import express from "express";
 
 import {
   addParent,
-  getParents
+  getParents,
+  updateParent,
+  deleteParent
 } from "../controllers/parentController.js";
 
 import {
@@ -10,7 +12,8 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
 // Add Parent
 router.post(
@@ -28,6 +31,28 @@ router.get(
   "/all",
   protect,
   getParents
+);
+
+// Update Parent
+router.put(
+  "/update/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  updateParent
+);
+
+// Delete Parent
+router.delete(
+  "/delete/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  deleteParent
 );
 
 export default router;

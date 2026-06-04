@@ -4,6 +4,7 @@ import Leave from "../models/Leave.js";
 export const applyLeave =
   async (req, res) => {
     try {
+
       const leave =
         await Leave.create({
           ...req.body,
@@ -17,12 +18,15 @@ export const applyLeave =
           "Leave applied successfully",
         leave
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
     }
   };
 
@@ -30,6 +34,7 @@ export const applyLeave =
 export const getLeaves =
   async (req, res) => {
     try {
+
       const leaves =
         await Leave.find()
           .populate(
@@ -41,19 +46,79 @@ export const getLeaves =
         success: true,
         leaves
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
     }
   };
 
-// Approve Leave
+// Update Leave
+export const updateLeave =
+  async (req, res) => {
+    try {
+
+      const leave =
+        await Leave.findByIdAndUpdate(
+          req.params.id,
+          req.body,
+          { new: true }
+        );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Leave updated successfully",
+        leave
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+
+    }
+  };
+
+// Delete Leave
+export const deleteLeave =
+  async (req, res) => {
+    try {
+
+      await Leave.findByIdAndDelete(
+        req.params.id
+      );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Leave deleted successfully"
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+
+    }
+  };
+
+// Approve / Reject Leave
 export const updateLeaveStatus =
   async (req, res) => {
     try {
+
       const {
         leaveId,
         status
@@ -72,11 +137,14 @@ export const updateLeaveStatus =
           `Leave ${status}`,
         leave
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
     }
   };

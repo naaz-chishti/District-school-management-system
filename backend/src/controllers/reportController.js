@@ -24,7 +24,7 @@ export const getDashboard =
               _id: null,
               total: {
                 $sum:
-                  "$amount"
+                  "$paidamount"
               }
             }
           }

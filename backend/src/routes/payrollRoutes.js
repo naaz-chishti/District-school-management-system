@@ -2,7 +2,9 @@ import express from "express";
 
 import {
   addPayroll,
-  getPayrolls
+  getPayrolls,
+  updatePayroll,
+  deletePayroll
 } from "../controllers/payrollController.js";
 
 import {
@@ -10,7 +12,8 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
 // Add Payroll
 router.post(
@@ -28,6 +31,28 @@ router.get(
   "/all",
   protect,
   getPayrolls
+);
+
+// Update Payroll
+router.put(
+  "/update/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  updatePayroll
+);
+
+// Delete Payroll
+router.delete(
+  "/delete/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  deletePayroll
 );
 
 export default router;

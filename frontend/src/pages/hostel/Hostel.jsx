@@ -3,174 +3,361 @@ import {
   useState
 } from "react";
 
+import {
+  useSearchParams,
+  useNavigate
+} from "react-router-dom";
+
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function Hostel() {
-  const [hostels,
-    setHostels] =
-    useState([]);
 
-  useEffect(() => {
-    fetchHostels();
-  }, []);
+  const navigate =
+    useNavigate();
 
-  const fetchHostels =
+  const [
+    searchParams
+  ] =
+    useSearchParams();
+
+  const hostelId =
+    searchParams.get(
+      "id"
+    );
+
+  const [
+    schools,
+    setSchools
+  ] = useState([]);
+
+  const [
+    formData,
+    setFormData
+  ] = useState({
+    hostelName: "",
+    roomNumber: "",
+    roomType: "",
+    capacity: "",
+    wardenName: "",
+    wardenPhone: "",
+    hostelFee: "",
+    schoolId: ""
+  });
+
+  // Get Schools
+  const getSchools =
     async () => {
+
       try {
-        const response =
+
+        const res =
+          await API.get(
+            "/schools/all"
+          );
+
+        setSchools(
+          res.data.schools
+        );
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  // Get Single Hostel
+  const getSingleHostel =
+    async () => {
+
+      try {
+
+        const res =
           await API.get(
             "/hostel/all"
           );
 
-        console.log(
-          response.data
+        const hostel =
+          res.data.hostels.find(
+            (h) =>
+              h._id ===
+              hostelId
+          );
+
+        if (
+          hostel
+        ) {
+
+          setFormData({
+            hostelName:
+              hostel.hostelName || "",
+            roomNumber:
+              hostel.roomNumber || "",
+            roomType:
+              hostel.roomType || "",
+            capacity:
+              hostel.capacity || "",
+            wardenName:
+              hostel.wardenName || "",
+            wardenPhone:
+              hostel.wardenPhone || "",
+            hostelFee:
+              hostel.hostelFee || "",
+            schoolId:
+              hostel.schoolId?._id || ""
+          });
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  useEffect(() => {
+
+    getSchools();
+
+    if (
+      hostelId
+    ) {
+      getSingleHostel();
+    }
+
+  }, []);
+
+  // Handle Change
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  // Submit
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        // Add Hostel
+        await API.post(
+          "/hostel/add",
+          formData
         );
 
-        setHostels(
-          response.data
-            .hostels || []
+        alert(
+          "Hostel Added Successfully"
         );
-      } catch (
-        error
-      ) {
-        console.log(
-          "Hostel Error:",
-          error
+
+        navigate(
+          "/hostel-list"
         );
+
+      } catch (error) {
+        console.log(error);
       }
     };
 
   return (
     <DashboardLayout>
+
       <h1>
         Hostel
       </h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <form
+        onSubmit={
+          handleSubmit
+        }
+        style={{
+          background:
+            "white",
+          padding:
+            "30px",
+          borderRadius:
+            "15px"
+        }}
       >
-        <thead>
-          <tr>
-            <th>
-              Hostel Name
-            </th>
 
-            <th>
-              Room Number
-            </th>
+        <h2>
+          Add Hostel
+        </h2>
 
-            <th>
-              Room Type
-            </th>
+        <input
+          type="text"
+          name="hostelName"
+          placeholder="Hostel Name"
+          value={
+            formData.hostelName
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Capacity
-            </th>
+        <br />
+        <br />
 
-            <th>
-              Occupied Beds
-            </th>
+        <input
+          type="text"
+          name="roomNumber"
+          placeholder="Room Number"
+          value={
+            formData.roomNumber
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Warden Name
-            </th>
+        <br />
+        <br />
 
-            <th>
-              Warden Phone
-            </th>
+        <select
+          name="roomType"
+          value={
+            formData.roomType
+          }
+          onChange={
+            handleChange
+          }
+          required
+        >
+          <option value="">
+            Select Room Type
+          </option>
 
-            <th>
-              Hostel Fee
-            </th>
+          <option value="single">
+            Single
+          </option>
 
-            <th>
-              Status
-            </th>
-          </tr>
-        </thead>
+          <option value="double">
+            Double
+          </option>
 
-        <tbody>
-          {hostels.length >
-          0 ? (
-            hostels.map(
-              (
-                item
-              ) => (
-                <tr
-                  key={
-                    item._id
-                  }
-                >
-                  <td>
-                    {
-                      item.hostelName
-                    }
-                  </td>
+          <option value="shared">
+            Shared
+          </option>
+        </select>
 
-                  <td>
-                    {
-                      item.roomNumber
-                    }
-                  </td>
+        <br />
+        <br />
 
-                  <td>
-                    {
-                      item.roomType
-                    }
-                  </td>
+        <input
+          type="number"
+          name="capacity"
+          placeholder="Capacity"
+          value={
+            formData.capacity
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-                  <td>
-                    {
-                      item.capacity
-                    }
-                  </td>
+        <br />
+        <br />
 
-                  <td>
-                    {
-                      item.occupiedBeds
-                    }
-                  </td>
+        <input
+          type="text"
+          name="wardenName"
+          placeholder="Warden Name"
+          value={
+            formData.wardenName
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-                  <td>
-                    {
-                      item.wardenName
-                    }
-                  </td>
+        <br />
+        <br />
 
-                  <td>
-                    {
-                      item.wardenPhone
-                    }
-                  </td>
+        <input
+          type="text"
+          name="wardenPhone"
+          placeholder="Warden Phone"
+          value={
+            formData.wardenPhone
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-                  <td>
-                    {
-                      item.hostelFee
-                    }
-                  </td>
+        <br />
+        <br />
 
-                  <td>
-                    {
-                      item.status
-                    }
-                  </td>
-                </tr>
-              )
-            )
-          ) : (
-            <tr>
-              <td
-                colSpan="9"
+        <input
+          type="number"
+          name="hostelFee"
+          placeholder="Hostel Fee"
+          value={
+            formData.hostelFee
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br />
+        <br />
+
+        <select
+          name="schoolId"
+          value={
+            formData.schoolId
+          }
+          onChange={
+            handleChange
+          }
+          required
+        >
+          <option value="">
+            Select School
+          </option>
+
+          {schools.map(
+            (
+              school
+            ) => (
+              <option
+                key={
+                  school._id
+                }
+                value={
+                  school._id
+                }
               >
-                No hostel
-                data found
-              </td>
-            </tr>
+                {
+                  school.schoolName
+                }
+              </option>
+            )
           )}
-        </tbody>
-      </table>
+        </select>
+
+        <br />
+        <br />
+
+        <button
+          type="submit"
+        >
+          Add Hostel
+        </button>
+
+      </form>
+
     </DashboardLayout>
   );
 }

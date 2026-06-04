@@ -2,7 +2,9 @@ import express from "express";
 
 import {
   saveSettings,
-  getSettings
+  getSettings,
+  getSingleSetting,
+  deleteSetting
 } from "../controllers/settingController.js";
 
 import {
@@ -13,6 +15,8 @@ import {
 const router =
   express.Router();
 
+
+// Save Settings
 router.post(
   "/save",
   protect,
@@ -23,10 +27,28 @@ router.post(
   saveSettings
 );
 
+
+// Get All Settings
 router.get(
   "/all",
   protect,
   getSettings
+);
+
+
+// Get Single Setting
+router.get(
+  "/:id",
+  protect,
+  getSingleSetting
+);
+
+
+// Delete Setting
+router.delete(
+  "/delete/:id",
+  protect,
+  deleteSetting
 );
 
 export default router;

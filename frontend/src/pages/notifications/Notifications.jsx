@@ -3,40 +3,139 @@ import {
   useState
 } from "react";
 
+import {
+  useNavigate,
+  useSearchParams
+} from "react-router-dom";
+
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function Notifications() {
+
+  const navigate =
+    useNavigate();
+
   const [
-    notifications,
-    setNotifications
-  ] = useState([]);
+    searchParams
+  ] =
+    useSearchParams();
+
+  const id =
+    searchParams.get(
+      "id"
+    );
+
+  const [
+    formData,
+    setFormData
+  ] =
+    useState({
+      title: "",
+      message: "",
+      sentTo: "all",
+      schoolId: ""
+    });
 
   useEffect(() => {
-    fetchNotifications();
-  }, []);
 
-  const fetchNotifications =
+    if (id) {
+      fetchNotification();
+    }
+
+  }, [id]);
+
+  const fetchNotification =
     async () => {
+
       try {
-        const response =
+
+        const res =
           await API.get(
-            "/notifications/all"
+            `/notifications/${id}`
           );
 
+        setFormData({
+          title:
+            res.data
+              .notification
+              .title || "",
+
+          message:
+            res.data
+              .notification
+              .message || "",
+
+          sentTo:
+            res.data
+              .notification
+              .sentTo || "all",
+
+          schoolId:
+            res.data
+              .notification
+              .schoolId?._id ||
+            res.data
+              .notification
+              .schoolId ||
+            ""
+        });
+
+      } catch (error) {
+
         console.log(
-          response.data
+          error
+        );
+      }
+    };
+
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        if (id) {
+
+          await API.put(
+            `/notifications/update/${id}`,
+            formData
+          );
+
+          alert(
+            "Notification Updated Successfully"
+          );
+
+        } else {
+
+          await API.post(
+            "/notifications/send",
+            formData
+          );
+
+          alert(
+            "Notification Added Successfully"
+          );
+        }
+
+        navigate(
+          "/notification-list"
         );
 
-        setNotifications(
-          response.data
-            .notifications || []
-        );
-      } catch (
-        error
-      ) {
+      } catch (error) {
+
         console.log(
-          "Notification Error:",
           error
         );
       }
@@ -44,96 +143,105 @@ function Notifications() {
 
   return (
     <DashboardLayout>
+
       <h1>
-        Notifications
+        {id
+          ? "Edit Notification"
+          : "Add Notification"}
       </h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <form
+        onSubmit={
+          handleSubmit
+        }
       >
-        <thead>
-          <tr>
-            <th>
-              Title
-            </th>
 
-            <th>
-              Message
-            </th>
+        <input
+          type="text"
+          name="title"
+          placeholder="Title"
+          value={
+            formData.title
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Sent To
-            </th>
+        <br />
+        <br />
 
-            <th>
-              School
-            </th>
+        <textarea
+          name="message"
+          placeholder="Message"
+          value={
+            formData.message
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Date
-            </th>
-          </tr>
-        </thead>
+        <br />
+        <br />
 
-        <tbody>
-          {notifications.length >
-          0 ? (
-            notifications.map(
-              (
-                item
-              ) => (
-                <tr
-                  key={
-                    item._id
-                  }
-                >
-                  <td>
-                    {
-                      item.title
-                    }
-                  </td>
+        <select
+          name="sentTo"
+          value={
+            formData.sentTo
+          }
+          onChange={
+            handleChange
+          }
+        >
+          <option value="all">
+            All
+          </option>
 
-                  <td>
-                    {
-                      item.message
-                    }
-                  </td>
+          <option value="students">
+            Students
+          </option>
 
-                  <td>
-                    {
-                      item.sentTo
-                    }
-                  </td>
+          <option value="teachers">
+            Teachers
+          </option>
 
-                  <td>
-                    {item
-                      .schoolId
-                      ?.schoolName ||
-                      "N/A"}
-                  </td>
+          <option value="parents">
+            Parents
+          </option>
+        </select>
 
-                  <td>
-                    {new Date(
-                      item.createdAt
-                    ).toLocaleDateString()}
-                  </td>
-                </tr>
-              )
-            )
-          ) : (
-            <tr>
-              <td
-                colSpan="5"
-              >
-                No
-                notifications
-                found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+        <br />
+        <br />
+
+        <input
+          type="text"
+          name="schoolId"
+          placeholder="School ID"
+          value={
+            formData.schoolId
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
+
+        <br />
+        <br />
+
+        <button
+          type="submit"
+        >
+          {id
+            ? "Update Notification"
+            : "Add Notification"}
+        </button>
+
+      </form>
+
     </DashboardLayout>
   );
 }

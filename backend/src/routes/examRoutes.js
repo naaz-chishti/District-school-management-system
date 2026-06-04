@@ -3,7 +3,8 @@ import express from "express";
 import {
   addExamResult,
   getExamResults,
-  getStudentReportCard
+  updateExam,
+  deleteExam
 } from "../controllers/examController.js";
 
 import {
@@ -11,9 +12,10 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
-// Add Exam Result
+// Add Exam
 router.post(
   "/add",
   protect,
@@ -25,18 +27,34 @@ router.post(
   addExamResult
 );
 
-// Get All Results
+// Get Exams
 router.get(
   "/all",
   protect,
   getExamResults
 );
 
-// Student Report Card
-router.get(
-  "/report-card/:studentId",
+// Update Exam
+router.put(
+  "/update/:id",
   protect,
-  getStudentReportCard
+  authorizeRoles(
+    "district_admin",
+    "school_admin",
+    "teacher"
+  ),
+  updateExam
+);
+
+// Delete Exam
+router.delete(
+  "/delete/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  deleteExam
 );
 
 export default router;

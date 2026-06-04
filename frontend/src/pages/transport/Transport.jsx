@@ -3,18 +3,77 @@ import {
   useState
 } from "react";
 
+import {
+  useNavigate,
+  useSearchParams
+} from "react-router-dom";
+
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function Transport() {
 
+  const navigate =
+    useNavigate();
+
   const [
-    transport,
-    setTransport
+    searchParams
+  ] =
+    useSearchParams();
+
+  const transportId =
+    searchParams.get(
+      "id"
+    );
+
+  const [
+    schools,
+    setSchools
   ] = useState([]);
 
-  const getTransport =
+  const [
+    editId,
+    setEditId
+  ] = useState(null);
+
+  const [
+    formData,
+    setFormData
+  ] = useState({
+    busNumber: "",
+    vehicleNumber: "",
+    driverName: "",
+    driverPhone: "",
+    routeName: "",
+    capacity: "",
+    schoolId: "",
+    status: "active"
+  });
+
+  // Get Schools
+  const getSchools =
     async () => {
+
+      try {
+
+        const res =
+          await API.get(
+            "/schools/all"
+          );
+
+        setSchools(
+          res.data.schools
+        );
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  // Get Single Transport
+  const getSingleTransport =
+    async () => {
+
       try {
 
         const res =
@@ -22,130 +81,323 @@ function Transport() {
             "/transports/all"
           );
 
-        setTransport(
-          res.data
-            .transport || []
-        );
+        const transport =
+          res.data.transport.find(
+            (item) =>
+              item._id ===
+              transportId
+          );
+
+        if (
+          transport
+        ) {
+
+          setEditId(
+            transport._id
+          );
+
+          setFormData({
+            busNumber:
+              transport.busNumber ||
+              "",
+
+            vehicleNumber:
+              transport.vehicleNumber ||
+              "",
+
+            driverName:
+              transport.driverName ||
+              "",
+
+            driverPhone:
+              transport.driverPhone ||
+              "",
+
+            routeName:
+              transport.routeName ||
+              "",
+
+            capacity:
+              transport.capacity ||
+              "",
+
+            schoolId:
+              transport.schoolId
+                ?._id || "",
+
+            status:
+              transport.status ||
+              "active"
+          });
+        }
 
       } catch (error) {
-        console.log(
-          error
-        );
+        console.log(error);
       }
     };
 
   useEffect(() => {
-    getTransport();
-  }, []);
+
+    getSchools();
+
+    if (
+      transportId
+    ) {
+      getSingleTransport();
+    }
+
+  }, [transportId]);
+
+  // Input Change
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  // Submit Form
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        if (
+          editId
+        ) {
+
+          // Update
+          await API.put(
+            `/transports/update/${editId}`,
+            formData
+          );
+
+          alert(
+            "Transport Updated Successfully"
+          );
+
+        } else {
+
+          // Add
+          await API.post(
+            "/transports/add",
+            formData
+          );
+
+          alert(
+            "Transport Added Successfully"
+          );
+        }
+
+        navigate(
+          "/transport-list"
+        );
+
+      } catch (error) {
+
+        console.log(error);
+
+        alert(
+          error.response?.data
+            ?.message ||
+          "Something went wrong"
+        );
+      }
+    };
 
   return (
     <DashboardLayout>
+
       <h1>
-        Transport
+        {editId
+          ? "Edit Transport"
+          : "Add Transport"}
       </h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <form
+        onSubmit={
+          handleSubmit
+        }
+        style={{
+          background:
+            "white",
+          padding:
+            "30px",
+          borderRadius:
+            "15px"
+        }}
       >
-        <thead>
-          <tr>
-            <th>
-              Bus Number
-            </th>
 
-            <th>
-              Vehicle Number
-            </th>
+        <input
+          type="text"
+          name="busNumber"
+          placeholder="Bus Number"
+          value={
+            formData.busNumber
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Driver Name
-            </th>
+        <br />
+        <br />
 
-            <th>
-              Driver Phone
-            </th>
+        <input
+          type="text"
+          name="vehicleNumber"
+          placeholder="Vehicle Number"
+          value={
+            formData.vehicleNumber
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Route
-            </th>
+        <br />
+        <br />
 
-            <th>
-              Capacity
-            </th>
+        <input
+          type="text"
+          name="driverName"
+          placeholder="Driver Name"
+          value={
+            formData.driverName
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Status
-            </th>
-          </tr>
-        </thead>
+        <br />
+        <br />
 
-        <tbody>
-          {transport &&
-          transport.length >
-            0 ? (
-            transport.map(
-              (item) => (
-                <tr
-                  key={
-                    item._id
-                  }
-                >
-                  <td>
-                    {
-                      item.busNumber
-                    }
-                  </td>
+        <input
+          type="text"
+          name="driverPhone"
+          placeholder="Driver Phone"
+          value={
+            formData.driverPhone
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-                  <td>
-                    {
-                      item.vehicleNumber
-                    }
-                  </td>
+        <br />
+        <br />
 
-                  <td>
-                    {
-                      item.driverName
-                    }
-                  </td>
+        <input
+          type="text"
+          name="routeName"
+          placeholder="Route Name"
+          value={
+            formData.routeName
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-                  <td>
-                    {
-                      item.driverPhone
-                    }
-                  </td>
+        <br />
+        <br />
 
-                  <td>
-                    {
-                      item.routeName
-                    }
-                  </td>
+        <input
+          type="number"
+          name="capacity"
+          placeholder="Capacity"
+          value={
+            formData.capacity
+          }
+          onChange={
+            handleChange
+          }
+        />
 
-                  <td>
-                    {
-                      item.capacity
-                    }
-                  </td>
+        <br />
+        <br />
 
-                  <td>
-                    {
-                      item.status
-                    }
-                  </td>
-                </tr>
-              )
-            )
-          ) : (
-            <tr>
-              <td
-                colSpan="7"
+        {/* School Dropdown */}
+        <select
+          name="schoolId"
+          value={
+            formData.schoolId
+          }
+          onChange={
+            handleChange
+          }
+          required
+        >
+          <option value="">
+            Select School
+          </option>
+
+          {schools.map(
+            (
+              school
+            ) => (
+              <option
+                key={
+                  school._id
+                }
+                value={
+                  school._id
+                }
               >
-                No Transport Found
-              </td>
-            </tr>
+                {
+                  school.schoolName
+                }
+              </option>
+            )
           )}
-        </tbody>
-      </table>
+        </select>
+
+        <br />
+        <br />
+
+        {/* Status */}
+        <select
+          name="status"
+          value={
+            formData.status
+          }
+          onChange={
+            handleChange
+          }
+        >
+          <option value="active">
+            Active
+          </option>
+
+          <option value="inactive">
+            Inactive
+          </option>
+        </select>
+
+        <br />
+        <br />
+
+        <button
+          type="submit"
+        >
+          {editId
+            ? "Update Transport"
+            : "Add Transport"}
+        </button>
+
+      </form>
+
     </DashboardLayout>
   );
 }

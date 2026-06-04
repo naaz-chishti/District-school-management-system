@@ -45,3 +45,61 @@ export const getFees = async (
     });
   }
 };
+
+// Update Fee
+export const updateFee =
+  async (req, res) => {
+
+    try {
+
+      const fee =
+        await Fee.findByIdAndUpdate(
+          req.params.id,
+          req.body,
+          { new: true }
+        );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Fee Updated Successfully",
+        fee
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+
+    }
+  };
+
+  // Delete Fee
+export const deleteFee =
+  async (req, res) => {
+
+    try {
+
+      await Fee.findByIdAndDelete(
+        req.params.id
+      );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Fee Deleted Successfully"
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+
+    }
+  };

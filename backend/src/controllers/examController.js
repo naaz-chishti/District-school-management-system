@@ -1,27 +1,28 @@
 import Exam from "../models/Exam.js";
 
-// Add Exam Result
+// Add Exam
 export const addExamResult =
   async (req, res) => {
     try {
+
       const {
         obtainedMarks,
         totalMarks
       } = req.body;
 
-      // Calculate Percentage
       const percentage =
         (
           obtainedMarks /
           totalMarks
         ) * 100;
 
-      // Grade Logic
       let grade = "";
       let resultStatus =
         "pass";
 
-      if (percentage >= 90) {
+      if (
+        percentage >= 90
+      ) {
         grade = "A+";
       } else if (
         percentage >= 80
@@ -59,22 +60,26 @@ export const addExamResult =
       res.status(201).json({
         success: true,
         message:
-          "Exam result added successfully",
+          "Exam added successfully",
         exam
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
     }
   };
 
-// Get All Results
+// Get Exams
 export const getExamResults =
   async (req, res) => {
     try {
+
       const exams =
         await Exam.find()
           .populate(
@@ -88,42 +93,121 @@ export const getExamResults =
         success: true,
         exams
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
     }
   };
 
-// Student Report Card
-export const getStudentReportCard =
+// Update Exam
+export const updateExam =
   async (req, res) => {
     try {
-      const { studentId } =
-        req.params;
 
-      const reportCard =
-        await Exam.find({
-          studentId
-        })
-          .populate(
-            "studentId"
-          )
-          .populate(
-            "schoolId"
-          );
+      const {
+        obtainedMarks,
+        totalMarks
+      } = req.body;
+
+      const percentage =
+        (
+          obtainedMarks /
+          totalMarks
+        ) * 100;
+
+      let grade = "";
+      let resultStatus =
+        "pass";
+
+      if (
+        percentage >= 90
+      ) {
+        grade = "A+";
+      } else if (
+        percentage >= 80
+      ) {
+        grade = "A";
+      } else if (
+        percentage >= 70
+      ) {
+        grade = "B";
+      } else if (
+        percentage >= 60
+      ) {
+        grade = "C";
+      } else if (
+        percentage >= 35
+      ) {
+        grade = "D";
+      } else {
+        grade = "F";
+        resultStatus =
+          "fail";
+      }
+
+      const exam =
+        await Exam.findByIdAndUpdate(
+          req.params.id,
+          {
+            ...req.body,
+            percentage:
+              percentage.toFixed(
+                2
+              ),
+            grade,
+            resultStatus
+          },
+          {
+            new: true
+          }
+        );
 
       res.status(200).json({
         success: true,
-        reportCard
+        message:
+          "Exam updated successfully",
+        exam
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
           error.message
       });
+
+    }
+  };
+
+// Delete Exam
+export const deleteExam =
+  async (req, res) => {
+    try {
+
+      await Exam.findByIdAndDelete(
+        req.params.id
+      );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Exam deleted successfully"
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+
     }
   };

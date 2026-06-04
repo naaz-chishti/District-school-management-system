@@ -2,146 +2,376 @@ import {
   useEffect,
   useState
 } from "react";
+import {
+  useNavigate
+} from "react-router-dom";
+
+import {
+  useSearchParams
+} from "react-router-dom";
 
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function Teachers() {
-  const [teachers,
-    setTeachers] =
-    useState([]);
 
-  const getTeachers =
+  const [
+    searchParams
+  ] =
+    useSearchParams();
+
+    const navigate =
+  useNavigate();
+
+  const teacherId =
+    searchParams.get(
+      "id"
+    );
+
+  const [
+    schools,
+    setSchools
+  ] = useState([]);
+
+  const [
+    editId,
+    setEditId
+  ] = useState(null);
+
+  const [
+    formData,
+    setFormData
+  ] = useState({
+    teacherId: "",
+    name: "",
+    email: "",
+    subject: "",
+    qualification: "",
+    salary: "",
+    schoolId: ""
+  });
+
+  // Get Schools
+  const getSchools =
     async () => {
+
       try {
+
+        const res =
+          await API.get(
+            "/schools/all"
+          );
+
+        setSchools(
+          res.data.schools
+        );
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  // Get Single Teacher
+  const getSingleTeacher =
+    async () => {
+
+      try {
+
         const res =
           await API.get(
             "/teachers/all"
           );
 
-        setTeachers(
-          res.data.teachers
-        );
+        const teacher =
+          res.data.teachers.find(
+            (t) =>
+              t._id ===
+              teacherId
+          );
+
+        if (
+          teacher
+        ) {
+
+          setEditId(
+            teacher._id
+          );
+
+          setFormData({
+            teacherId:
+              teacher.teacherId,
+            name:
+              teacher.name,
+            email:
+              teacher.email,
+            subject:
+              teacher.subject,
+            qualification:
+              teacher.qualification,
+            salary:
+              teacher.salary,
+            schoolId:
+              teacher
+                .schoolId
+                ?._id || ""
+          });
+        }
+
       } catch (error) {
         console.log(error);
       }
     };
 
   useEffect(() => {
-    getTeachers();
+
+    getSchools();
+
+    if (
+      teacherId
+    ) {
+      getSingleTeacher();
+    }
+
   }, []);
+
+  // Handle Input
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  // Submit Form
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        if (
+          editId
+        ) {
+
+          await API.put(
+            `/teachers/update/${editId}`,
+            formData
+          );
+
+          alert(
+            "Teacher Updated Successfully"
+          );
+
+          navigate(
+            "/teacher-list"
+          );
+          
+        } else {
+
+          await API.post(
+            "/teachers/add",
+            formData
+          );
+
+          alert(
+            "Teacher Added Successfully"
+          );
+        }
+
+        setFormData({
+          teacherId: "",
+          name: "",
+          email: "",
+          subject: "",
+          qualification: "",
+          salary: "",
+          schoolId: ""
+        });
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   return (
     <DashboardLayout>
-      <h1>Teachers</h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <h1>
+        Teachers
+      </h1>
+
+      <form
+        onSubmit={
+          handleSubmit
+        }
+        style={{
+          background:
+            "white",
+          padding:
+            "30px",
+          borderRadius:
+            "15px",
+          boxShadow:
+            "0 2px 10px rgba(0,0,0,0.1)"
+        }}
       >
-        <thead>
-          <tr>
-            <th>
-              Teacher ID
-            </th>
 
-            <th>Name</th>
+        <div
+          style={{
+            display:
+              "grid",
+            gridTemplateColumns:
+              "1fr 1fr",
+            gap:
+              "15px"
+          }}
+        >
 
-            <th>Email</th>
+          <input
+            type="text"
+            name="teacherId"
+            placeholder="Teacher ID"
+            value={
+              formData.teacherId
+            }
+            onChange={
+              handleChange
+            }
+            required
+          />
 
-            <th>
-              Subject
-            </th>
+          <input
+            type="text"
+            name="name"
+            placeholder="Teacher Name"
+            value={
+              formData.name
+            }
+            onChange={
+              handleChange
+            }
+            required
+          />
 
-            <th>
-              Qualification
-            </th>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={
+              formData.email
+            }
+            onChange={
+              handleChange
+            }
+            required
+          />
 
-            <th>
-              Salary
-            </th>
+          <input
+            type="text"
+            name="subject"
+            placeholder="Subject"
+            value={
+              formData.subject
+            }
+            onChange={
+              handleChange
+            }
+            required
+          />
 
-            <th>
-              Attendance
-            </th>
+          <input
+            type="text"
+            name="qualification"
+            placeholder="Qualification"
+            value={
+              formData.qualification
+            }
+            onChange={
+              handleChange
+            }
+            required
+          />
 
-            <th>
-              Leave Balance
-            </th>
+          <input
+            type="number"
+            name="salary"
+            placeholder="Salary"
+            value={
+              formData.salary
+            }
+            onChange={
+              handleChange
+            }
+          />
 
-            <th>
-              Performance
-            </th>
-          </tr>
-        </thead>
+          <select
+            name="schoolId"
+            value={
+              formData.schoolId
+            }
+            onChange={
+              handleChange
+            }
+            required
+          >
+            <option value="">
+              Select School
+            </option>
 
-        <tbody>
-          {teachers.map(
-            (teacher) => (
-              <tr
-                key={
-                  teacher._id
-                }
-              >
-                <td>
-                  {
-                    teacher.teacherId
+            {schools.map(
+              (
+                school
+              ) => (
+                <option
+                  key={
+                    school._id
                   }
-                </td>
-
-                <td>
-                  {
-                    teacher.name
+                  value={
+                    school._id
                   }
-                </td>
-
-                <td>
+                >
                   {
-                    teacher.email
+                    school.schoolName
                   }
-                </td>
+                </option>
+              )
+            )}
+          </select>
 
-                <td>
-                  {
-                    teacher.subject
-                  }
-                </td>
+        </div>
 
-                <td>
-                  {
-                    teacher.qualification
-                  }
-                </td>
+        <button
+          type="submit"
+          style={{
+            width:
+              "100%",
+            background:
+              "#2563eb",
+            color:
+              "white",
+            padding:
+              "14px",
+            border:
+              "none",
+            borderRadius:
+              "10px",
+            marginTop:
+              "20px"
+          }}
+        >
+          {
+            editId
+              ? "Update Teacher"
+              : "Add Teacher"
+          }
+        </button>
 
-                <td>
-                  ₹
-                  {
-                    teacher.salary
-                  }
-                </td>
+      </form>
 
-                <td>
-                  {
-                    teacher.attendance
-                  }
-                </td>
-
-                <td>
-                  {
-                    teacher.leaveBalance
-                  }
-                </td>
-
-                <td>
-                  {
-                    teacher.performanceScore
-                  }
-                </td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
     </DashboardLayout>
   );
 }

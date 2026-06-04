@@ -1,148 +1,146 @@
+import { useState } from "react";
+
 import {
-  useEffect,
-  useState
-} from "react";
+  useNavigate
+} from "react-router-dom";
 
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function AuditLog() {
-  const [logs,
-    setLogs] =
-    useState([]);
 
-  useEffect(() => {
-    fetchLogs();
-  }, []);
+  const navigate =
+    useNavigate();
 
-  const fetchLogs =
-    async () => {
+  const [
+    formData,
+    setFormData
+  ] = useState({
+    action: "",
+    module: "",
+    details: ""
+  });
+
+  const handleChange =
+    (e) => {
+
+      setFormData({
+        ...formData,
+        [e.target.name]:
+          e.target.value
+      });
+    };
+
+  const handleSubmit =
+    async (e) => {
+
+      e.preventDefault();
+
       try {
-        const response =
-          await API.get(
-            "/audit/all"
-          );
 
-        console.log(
-          response.data
+        await API.post(
+          "/audit/add",
+          formData
         );
 
-        setLogs(
-          response.data
-            .logs || []
+        alert(
+          "Audit Log Added Successfully"
         );
-      } catch (
-        error
-      ) {
-        console.log(
-          "Audit Error:",
-          error
+
+        setFormData({
+          action: "",
+          module: "",
+          details: ""
+        });
+
+        navigate(
+          "/audit-list"
         );
+
+      } catch (error) {
+        console.log(error);
       }
     };
 
   return (
     <DashboardLayout>
+
       <h1>
-        Audit Logs
+        Audit Log
       </h1>
 
-      <table
-        border="1"
-        cellPadding="10"
+      <form
+        onSubmit={
+          handleSubmit
+        }
+        style={{
+          background:
+            "white",
+          padding:
+            "30px",
+          borderRadius:
+            "15px"
+        }}
       >
-        <thead>
-          <tr>
-            <th>
-              User Name
-            </th>
 
-            <th>
-              Role
-            </th>
+        <h2>
+          Add Audit Log
+        </h2>
 
-            <th>
-              Action
-            </th>
+        <input
+          type="text"
+          name="action"
+          placeholder="Enter Action"
+          value={
+            formData.action
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Module
-            </th>
+        <br />
+        <br />
 
-            <th>
-              Details
-            </th>
+        <input
+          type="text"
+          name="module"
+          placeholder="Enter Module"
+          value={
+            formData.module
+          }
+          onChange={
+            handleChange
+          }
+          required
+        />
 
-            <th>
-              Date
-            </th>
-          </tr>
-        </thead>
+        <br />
+        <br />
 
-        <tbody>
-          {logs.length >
-          0 ? (
-            logs.map(
-              (
-                item
-              ) => (
-                <tr
-                  key={
-                    item._id
-                  }
-                >
-                  <td>
-                    {item
-                      .userId
-                      ?.name ||
-                      "N/A"}
-                  </td>
+        <textarea
+          name="details"
+          placeholder="Enter Details"
+          value={
+            formData.details
+          }
+          onChange={
+            handleChange
+          }
+        />
 
-                  <td>
-                    {item
-                      .userId
-                      ?.role ||
-                      "N/A"}
-                  </td>
+        <br />
+        <br />
 
-                  <td>
-                    {
-                      item.action
-                    }
-                  </td>
+        <button
+          type="submit"
+        >
+          Add Audit Log
+        </button>
 
-                  <td>
-                    {
-                      item.module
-                    }
-                  </td>
+      </form>
 
-                  <td>
-                    {
-                      item.details
-                    }
-                  </td>
-
-                  <td>
-                    {new Date(
-                      item.createdAt
-                    ).toLocaleDateString()}
-                  </td>
-                </tr>
-              )
-            )
-          ) : (
-            <tr>
-              <td
-                colSpan="6"
-              >
-                No audit
-                logs found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
     </DashboardLayout>
   );
 }

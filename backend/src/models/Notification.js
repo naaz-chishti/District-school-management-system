@@ -44,7 +44,7 @@ const notificationSchema =
 
 const Notification =
   mongoose.model(
-    "Notification",
+    "Notifications",
     notificationSchema
   );
 

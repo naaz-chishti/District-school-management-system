@@ -7,7 +7,7 @@ const parentSchema =
         type:
           mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        required: false 
       },
 
       children: [
@@ -25,7 +25,7 @@ const parentSchema =
 
       phone: {
         type: String,
-        required: true
+        required: false
       },
 
       address: {

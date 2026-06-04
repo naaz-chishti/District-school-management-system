@@ -1,7 +1,11 @@
 import express from "express";
 
 import {
-  getUsers
+  createUser,
+  getUsers,
+  getSingleUser,
+  updateUser,
+  deleteUser
 } from "../controllers/userController.js";
 
 import {
@@ -11,11 +15,41 @@ import {
 const router =
   express.Router();
 
-// Get Users
+router.post(
+  "/create",
+  protect,
+  createUser
+);
+
 router.get(
   "/all",
   protect,
   getUsers
+);
+
+router.get(
+  "/:id",
+  protect,
+  getSingleUser
+);
+
+router.put(
+  "/update/:id",
+  protect,
+  updateUser
+);
+
+router.put(
+  "/profile/:id",
+  protect,
+  updateUser
+);
+
+
+router.delete(
+  "/delete/:id",
+  protect,
+  deleteUser
 );
 
 export default router;

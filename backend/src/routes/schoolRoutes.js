@@ -2,7 +2,10 @@ import express from "express";
 
 import {
   createSchool,
-  getSchools
+  getSchools,
+  getSingleSchool,
+  updateSchool,
+  deleteSchool
 } from "../controllers/schoolController.js";
 
 import {
@@ -10,21 +13,56 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
-// Only District Admin Can Create
+
+// Create School
 router.post(
   "/create",
   protect,
-  authorizeRoles("district_admin"),
+  authorizeRoles(
+    "district_admin"
+  ),
   createSchool
 );
 
-// View Schools
+
+// Get All Schools
 router.get(
   "/all",
   protect,
   getSchools
+);
+
+
+// Get Single School
+router.get(
+  "/:id",
+  protect,
+  getSingleSchool
+);
+
+
+// Update School
+router.put(
+  "/update/:id",
+  protect,
+  authorizeRoles(
+    "district_admin"
+  ),
+  updateSchool
+);
+
+
+// Delete School
+router.delete(
+  "/delete/:id",
+  protect,
+  authorizeRoles(
+    "district_admin"
+  ),
+  deleteSchool
 );
 
 export default router;

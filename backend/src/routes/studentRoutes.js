@@ -2,7 +2,10 @@ import express from "express";
 
 import {
   addStudent,
-  getStudents
+  getStudents,
+  getSingleStudent,
+  updateStudent,
+  deleteStudent
 } from "../controllers/studentController.js";
 
 import {
@@ -18,7 +21,8 @@ router.post(
   protect,
   authorizeRoles(
     "district_admin",
-    "school_admin"
+    "school_admin",
+    "teacher"
   ),
   addStudent
 );
@@ -29,5 +33,36 @@ router.get(
   protect,
   getStudents
 );
+
+router.get(
+  "/:id",
+  protect,
+  getSingleStudent
+);
+
+// Update Student
+router.put(
+  "/update/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin",
+    "teacher"
+  ),
+  updateStudent
+);
+
+// Delete Student
+router.delete(
+  "/delete/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  deleteStudent
+);
+
+
 
 export default router;

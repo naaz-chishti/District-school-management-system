@@ -2,7 +2,9 @@ import express from "express";
 
 import {
   markAttendance,
-  getAttendance
+  getAttendance,
+  updateAttendance,
+  deleteAttendance
 } from "../controllers/attendanceController.js";
 
 import {
@@ -10,9 +12,10 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
-// Teacher/Admin Mark Attendance
+// Mark Attendance
 router.post(
   "/mark",
   protect,
@@ -24,11 +27,34 @@ router.post(
   markAttendance
 );
 
-// View Attendance
+// Get Attendance
 router.get(
   "/all",
   protect,
   getAttendance
+);
+
+// Update Attendance
+router.put(
+  "/update/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin",
+    "teacher"
+  ),
+  updateAttendance
+);
+
+// Delete Attendance
+router.delete(
+  "/delete/:id",
+  protect,
+  authorizeRoles(
+    "district_admin",
+    "school_admin"
+  ),
+  deleteAttendance
 );
 
 export default router;
