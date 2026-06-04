@@ -67,7 +67,7 @@ function TopNavbar() {
         </h2>
 
         <small>
-          Empowering Education Through Technology 🎓 
+          Empowering Education Through Technology 🎓 📚
         </small>
 
       </div>

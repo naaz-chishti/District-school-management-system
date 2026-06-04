@@ -12,7 +12,7 @@ function Sidebar() {
     <div
       style={{
         width: "280px",
-        background: "#111827",
+      background: "#111827",
         color: "#fff",
         minHeight: "100vh",
         padding: "20px",
@@ -110,17 +110,8 @@ function Sidebar() {
             </LinkStyle>
           </>
         )}
+        
 
-        <LinkStyle to="/exam-list">Exam List</LinkStyle>
-<LinkStyle to="/timetable-list">Timetable List</LinkStyle>
-<LinkStyle to="/event-list">Event List</LinkStyle>
-<LinkStyle to="/leave-list">Leave List</LinkStyle>
-<LinkStyle to="/message-list">Message List</LinkStyle>
-<LinkStyle to="/notification-list">Notification List</LinkStyle>
-<LinkStyle to="/reports">Reports</LinkStyle>
-<LinkStyle to="/transport-list">Transport List</LinkStyle>
-<LinkStyle to="/hostel-list">Hostel List</LinkStyle>
-<LinkStyle to="/payroll-list">Payroll List</LinkStyle>
 
         {/* TEACHER */}
 
