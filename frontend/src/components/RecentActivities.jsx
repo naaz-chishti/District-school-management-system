@@ -40,9 +40,22 @@ function RecentActivities({
 
                   <ListItem>
 
-                    <ListItemText
-                      primary={activity}
-                    />
+                   <ListItem
+  sx={{
+    transition: "all 0.3s ease",
+    cursor: "pointer",
+    borderRadius: "10px",
+
+    "&:hover": {
+      backgroundColor: "#EFF6FF",
+      transform: "translateX(8px)"
+    }
+  }}
+>
+  <ListItemText
+    primary={activity}
+  />
+</ListItem>
 
                   </ListItem>
 

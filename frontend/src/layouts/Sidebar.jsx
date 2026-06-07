@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
-function Sidebar() {
+function Sidebar({
+  isMobile,
+  sidebarOpen
+}) {
 
   const user = JSON.parse(
     localStorage.getItem("user")
@@ -10,14 +14,31 @@ function Sidebar() {
 
   return (
     <div
-      style={{
-        width: "280px",
-      background: "#111827",
-        color: "#fff",
-        minHeight: "100vh",
-        padding: "20px",
-        overflowY: "auto"
-      }}
+     style={{
+  width: "280px",
+  background: "#111827",
+  color: "#fff",
+  minHeight: "100vh",
+  padding: "20px",
+  overflowY: "auto",
+
+  position: isMobile
+    ? "fixed"
+    : "relative",
+
+  left:
+    isMobile &&
+    !sidebarOpen
+      ? "-300px"
+      : "0",
+
+  top: 0,
+
+  zIndex: 1000,
+
+  transition:
+    "all 0.3s ease"
+}}
     >
       <h2
         style={{
@@ -99,6 +120,14 @@ function Sidebar() {
 
             <LinkStyle to="/audit-list">
               Audit List
+            </LinkStyle>
+
+            <LinkStyle to="/payroll">
+              Payroll
+            </LinkStyle>
+
+            <LinkStyle to="/payroll-list">
+              Payroll List
             </LinkStyle>
 
             <LinkStyle to="/settings">
@@ -281,15 +310,40 @@ function LinkStyle({
   to,
   children
 }) {
+
+  const [hover, setHover] =
+    useState(false);
+
   return (
     <Link
       to={to}
+      onMouseEnter={() =>
+        setHover(true)
+      }
+      onMouseLeave={() =>
+        setHover(false)
+      }
       style={{
         textDecoration: "none",
-        color: "#E5E7EB",
-        padding: "10px 15px",
-        borderRadius: "8px",
-        background: "#1F2937"
+        color: hover
+          ? "#fff"
+          : "#E5E7EB",
+        padding: "12px 15px",
+        borderRadius: "10px",
+        background: hover
+          ? "linear-gradient(90deg,#2563EB,#3B82F6)"
+          : "#1F2937",
+        transform: hover
+          ? "translateX(8px)"
+          : "translateX(0px)",
+        boxShadow: hover
+          ? "0 4px 15px rgba(37,99,235,0.4)"
+          : "none",
+        transition:
+          "all 0.3s ease",
+        fontWeight: hover
+          ? "600"
+          : "500"
       }}
     >
       {children}

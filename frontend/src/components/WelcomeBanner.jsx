@@ -1,7 +1,21 @@
 function WelcomeBanner({ data }) {
   return (
-    <div
-      style={{
+   <div
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform =
+      "scale(1.01)";
+    e.currentTarget.style.boxShadow =
+      "0px 10px 25px rgba(0,0,0,0.2)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform =
+      "scale(1)";
+    e.currentTarget.style.boxShadow =
+      "none";
+  }}
+  style={{
+        transition: "all 0.3s ease",
+        cursor: "pointer",
         background:
           "linear-gradient(135deg,#2563eb,#1d4ed8)",
         color: "#fff",

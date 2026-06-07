@@ -1,8 +1,37 @@
+import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import TopNavbar from "../components/TopNavbar";
-import Footer from "../components/Footer";
 
 function DashboardLayout({ children }) {
+
+ const [mobile, setMobile] =
+  useState(window.innerWidth < 768);
+
+const [sidebarOpen,
+  setSidebarOpen] =
+  useState(false);
+
+  useEffect(() => {
+
+    const handleResize = () => {
+      setMobile(
+        window.innerWidth < 768
+      );
+    };
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () =>
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+
+  }, []);
+
   return (
     <div
       style={{
@@ -11,7 +40,11 @@ function DashboardLayout({ children }) {
         background: "#f4f6f9"
       }}
     >
-      <Sidebar />
+      <Sidebar
+  isMobile={mobile}
+  sidebarOpen={sidebarOpen}
+  setSidebarOpen={setSidebarOpen}
+/>
 
       <div
         style={{
@@ -19,11 +52,17 @@ function DashboardLayout({ children }) {
           overflow: "auto"
         }}
       >
-        <TopNavbar />
+        <TopNavbar
+  isMobile={mobile}
+  setSidebarOpen={setSidebarOpen}
+/>
 
         <div
           style={{
-            padding: "25px"
+            padding:
+              mobile
+                ? "15px"
+                : "25px"
           }}
         >
           {children}

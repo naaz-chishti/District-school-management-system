@@ -198,28 +198,28 @@ function Dashboard() {
       {/* Activities + Events */}
 
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "2fr 1fr",
-          gap: "20px",
-          marginTop: "30px"
-        }}
-      >
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      window.innerWidth < 768
+        ? "1fr"
+        : "2fr 1fr",
+    gap: "20px",
+    marginTop: "30px"
+  }}
+>
+  <RecentActivities
+    activities={
+      data.recentActivities || []
+    }
+  />
 
-        <RecentActivities
-          activities={
-            data.recentActivities || []
-          }
-        />
-
-        <UpcomingEvents
-          events={
-            data.upcomingEvents || []
-          }
-        />
-
-      </div>
+  <UpcomingEvents
+    events={
+      data.upcomingEvents || []
+    }
+  />
+</div>
 
       
 

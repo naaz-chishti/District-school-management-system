@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 
 function UserMenu() {
-
   const navigate = useNavigate();
 
   const [open, setOpen] =
@@ -15,7 +14,6 @@ function UserMenu() {
     );
 
   const handleLogout = () => {
-
     localStorage.removeItem(
       "token"
     );
@@ -32,28 +30,43 @@ function UserMenu() {
       style={{
         position: "relative"
       }}
+      onMouseEnter={() =>
+        setOpen(true)
+      }
+      onMouseLeave={() =>
+        setOpen(false)
+      }
     >
-     <FaUserCircle
-  size={40}
-  color="#38bdf8"
-  style={{
-    cursor: "pointer"
-  }}
-  onClick={() =>
-    setOpen(!open)
-  }
-/>
+      <FaUserCircle
+        size={40}
+        color="#38bdf8"
+        style={{
+          cursor: "pointer",
+          transition:
+            "all 0.3s ease"
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform =
+            "scale(1.15)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform =
+            "scale(1)";
+        }}
+      />
+
       {open && (
         <div
           style={{
             position: "absolute",
             right: 0,
-            top: "45px",
+            top: "50px",
             width: "220px",
             background: "#fff",
-            borderRadius: "10px",
+            borderRadius: "12px",
             boxShadow:
-              "0 4px 12px rgba(0,0,0,0.15)",
+              "0 8px 25px rgba(0,0,0,0.15)",
+            overflow: "hidden",
             zIndex: 999
           }}
         >
@@ -61,7 +74,9 @@ function UserMenu() {
             style={{
               padding: "15px",
               borderBottom:
-                "1px solid #eee"
+                "1px solid #eee",
+              background:
+                "#f8fafc"
             }}
           >
             <strong>
@@ -71,7 +86,9 @@ function UserMenu() {
             <p
               style={{
                 margin: 0,
-                fontSize: "12px"
+                fontSize: "12px",
+                color:
+                  "#6b7280"
               }}
             >
               {user?.role}
@@ -80,8 +97,22 @@ function UserMenu() {
 
           <div
             style={{
-              padding: "12px",
-              cursor: "pointer"
+              padding: "12px 15px",
+              cursor: "pointer",
+              transition:
+                "all 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background =
+                "#EFF6FF";
+              e.currentTarget.style.paddingLeft =
+                "20px";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background =
+                "#fff";
+              e.currentTarget.style.paddingLeft =
+                "15px";
             }}
             onClick={() =>
               navigate("/profile")
@@ -92,8 +123,22 @@ function UserMenu() {
 
           <div
             style={{
-              padding: "12px",
-              cursor: "pointer"
+              padding: "12px 15px",
+              cursor: "pointer",
+              transition:
+                "all 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background =
+                "#EFF6FF";
+              e.currentTarget.style.paddingLeft =
+                "20px";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background =
+                "#fff";
+              e.currentTarget.style.paddingLeft =
+                "15px";
             }}
             onClick={() =>
               navigate("/settings")
@@ -104,9 +149,23 @@ function UserMenu() {
 
           <div
             style={{
-              padding: "12px",
+              padding: "12px 15px",
               color: "red",
-              cursor: "pointer"
+              cursor: "pointer",
+              transition:
+                "all 0.3s ease"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background =
+                "#FEF2F2";
+              e.currentTarget.style.paddingLeft =
+                "20px";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background =
+                "#fff";
+              e.currentTarget.style.paddingLeft =
+                "15px";
             }}
             onClick={handleLogout}
           >

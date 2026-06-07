@@ -46,9 +46,10 @@ function DataTable({
         overflowX: "auto"
       }}
     >
-      <table
-        style={{
-          width: "100%",
+     <table
+  style={{
+    width: "100%",
+    minWidth: "900px",
           borderCollapse:
             "collapse"
         }}

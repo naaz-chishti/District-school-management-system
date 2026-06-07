@@ -5,12 +5,29 @@ function UpcomingEvents({
   return (
     <div
       style={{
-        background: "#fff",
-        padding: "20px",
-        borderRadius: "15px",
-        boxShadow:
-          "0 2px 10px rgba(0,0,0,0.1)"
-      }}
+  padding: "12px",
+  marginBottom: "10px",
+  background: "#f8fafc",
+  borderRadius: "10px",
+  borderLeft:
+    "4px solid #2563eb",
+
+  transition:
+    "all 0.3s ease",
+  cursor: "pointer"
+}}
+onMouseEnter={(e) => {
+  e.currentTarget.style.transform =
+    "translateY(-5px)";
+  e.currentTarget.style.boxShadow =
+    "0 10px 20px rgba(0,0,0,0.15)";
+}}
+onMouseLeave={(e) => {
+  e.currentTarget.style.transform =
+    "translateY(0)";
+  e.currentTarget.style.boxShadow =
+    "none";
+}}
     >
       <h3
         style={{

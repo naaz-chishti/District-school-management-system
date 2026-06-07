@@ -11,6 +11,7 @@ import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import DataTable from "../../components/DataTable";
 import TableHeader from "../../components/TableHeader";
+import { toast } from "react-toastify";
 
 function StudentList() {
 
@@ -99,9 +100,9 @@ function StudentList() {
           `/students/delete/${id}`
         );
 
-        alert(
-          "Student Deleted Successfully"
-        );
+toast.success(
+  "Student Deleted Successfully"
+);
 
         getStudents();
 
@@ -151,28 +152,34 @@ function StudentList() {
       />
 
       <button
-        onClick={() =>
-          navigate("/students")
-        }
-        style={{
-          background:
-            "#2563eb",
-          color:
-            "#fff",
-          border:
-            "none",
-          padding:
-            "10px 15px",
-          borderRadius:
-            "8px",
-          cursor:
-            "pointer",
-          marginBottom:
-            "20px"
-        }}
-      >
-        + Add Student
-      </button>
+  onClick={() =>
+    navigate("/students")
+  }
+  style={{
+    background: "#22c55e",
+    color: "#fff",
+    border: "none",
+    padding: "10px 20px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    marginBottom: "15px",
+    transition: "all 0.3s ease"
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform =
+      "translateY(-3px)";
+    e.currentTarget.style.boxShadow =
+      "0 8px 20px rgba(34,197,94,0.4)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform =
+      "translateY(0)";
+    e.currentTarget.style.boxShadow =
+      "none";
+  }}
+>
+  + Add Student
+</button>
 
       <DataTable
         columns={columns}
@@ -184,7 +191,7 @@ function StudentList() {
         navigate(`/student-view/${student._id}`)
       }
       style={{
-        background: "#16a34a",
+        background: "#2563eb",
         color: "#fff",
         border: "none",
         padding: "6px 12px",

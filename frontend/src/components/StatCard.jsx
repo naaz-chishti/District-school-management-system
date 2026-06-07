@@ -1,35 +1,34 @@
+import "./StatCard.css";
+
 function StatCard({
   title,
   value,
-  icon
+  icon,
+  color
 }) {
   return (
     <div
-      style={{
-        background: "#fff",
-        padding: "25px",
-        borderRadius: "15px",
-        boxShadow:
-          "0 4px 12px rgba(0,0,0,0.08)",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        transition: "0.3s"
-      }}
+      className="stat-card"
     >
-      <div>
-        <h3>{title}</h3>
-
-        <h1>{value}</h1>
-      </div>
-
       <div
+        className="stat-icon"
         style={{
-          fontSize: "35px",
-          color: "#2563eb"
+          color: color
         }}
       >
         {icon}
+      </div>
+
+      <div>
+        <h4>{title}</h4>
+
+        <h2
+          style={{
+            color: color
+          }}
+        >
+          {value}
+        </h2>
       </div>
     </div>
   );

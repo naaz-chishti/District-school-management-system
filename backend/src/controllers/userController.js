@@ -157,9 +157,16 @@ export const updateUser =
 
     try {
 
-      const updateData = {
-        ...req.body
-      };
+     const updateData = {
+  ...req.body
+};
+
+if (
+  !updateData.password ||
+  updateData.password.trim() === ""
+) {
+  delete updateData.password;
+}
 
       // Fix schoolId validation
       if (
