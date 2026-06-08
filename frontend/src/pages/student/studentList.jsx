@@ -156,7 +156,7 @@ toast.success(
     navigate("/students")
   }
   style={{
-    background: "#22c55e",
+    background: "#2563eb",
     color: "#fff",
     border: "none",
     padding: "10px 20px",

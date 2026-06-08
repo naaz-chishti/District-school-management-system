@@ -7,12 +7,11 @@ import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 function Reports() {
-  const [dashboard,
-    setDashboard] =
+
+  const [dashboard, setDashboard] =
     useState({});
 
-  const [report,
-    setReport] =
+  const [report, setReport] =
     useState([]);
 
   useEffect(() => {
@@ -23,245 +22,315 @@ function Reports() {
   const fetchDashboard =
     async () => {
       try {
+
         const response =
           await API.get(
             "/reports/dashboard"
           );
 
-        console.log(
-          "Dashboard:",
-          response.data
+        setDashboard(
+          response.data.dashboard || {}
         );
 
-        setDashboard(
-          response.data
-            .dashboard || {}
-        );
-      } catch (
-        error
-      ) {
-        console.log(
-          "Dashboard Error:",
-          error
-        );
+      } catch (error) {
+
+        console.log(error);
       }
     };
 
   const fetchStudentReport =
     async () => {
       try {
+
         const response =
           await API.get(
             "/reports/student-performance"
           );
 
-        console.log(
-          "Student Report:",
-          response.data
+        setReport(
+          response.data.report || []
         );
 
-        setReport(
-          response.data
-            .report || []
-        );
-      } catch (
-        error
-      ) {
-        console.log(
-          "Student Report Error:",
-          error
-        );
+      } catch (error) {
+
+        console.log(error);
       }
     };
 
   return (
     <DashboardLayout>
-      <h1>
-        Reports
-      </h1>
 
-      <h2>
-        Dashboard Report
-      </h2>
-
-      <table
-        border="1"
-        cellPadding="10"
+      <div
+        style={{
+          padding: "20px"
+        }}
       >
-        <tbody>
-          <tr>
-            <td>
-              Total Students
-            </td>
-            <td>
-              {dashboard
-                .totalStudents ||
-                0}
-            </td>
-          </tr>
 
-          <tr>
-            <td>
-              Total Teachers
-            </td>
-            <td>
-              {dashboard
-                .totalTeachers ||
-                0}
-            </td>
-          </tr>
+        <h1
+          style={{
+            marginBottom: "25px",
+            color: "#1e293b"
+          }}
+        >
+          Reports Dashboard
+        </h1>
 
-          <tr>
-            <td>
-              Total Attendance
-            </td>
-            <td>
-              {dashboard
-                .totalAttendance ||
-                0}
-            </td>
-          </tr>
+        {/* SUMMARY CARDS */}
 
-          <tr>
-            <td>
-              Total Fees
-            </td>
-            <td>
-              {dashboard
-                .totalFees ||
-                0}
-            </td>
-          </tr>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit,minmax(220px,1fr))",
+            gap: "20px",
+            marginBottom: "35px"
+          }}
+        >
 
-          <tr>
-            <td>
-              Total Exams
-            </td>
-            <td>
-              {dashboard
-                .totalExams ||
-                0}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          <ReportCard
+            title="Students"
+            value={
+              dashboard.totalStudents || 0
+            }
+          />
 
-      <br />
+          <ReportCard
+            title="Teachers"
+            value={
+              dashboard.totalTeachers || 0
+            }
+          />
 
-      <h2>
-        Student
-        Performance
-      </h2>
+          <ReportCard
+            title="Attendance"
+            value={
+              dashboard.totalAttendance || 0
+            }
+          />
 
-      <table
-        border="1"
-        cellPadding="10"
-      >
-        <thead>
-          <tr>
-            <th>
-              Student
-              Name
-            </th>
+          <ReportCard
+            title="Fees Collected"
+            value={`₹${
+              dashboard.totalFees || 0
+            }`}
+          />
 
-            <th>
-              Subject
-            </th>
+          <ReportCard
+            title="Exams"
+            value={
+              dashboard.totalExams || 0
+            }
+          />
 
-            <th>
-              Exam Type
-            </th>
+        </div>
 
-            <th>
-              Total Marks
-            </th>
+        {/* STUDENT PERFORMANCE */}
 
-            <th>
-              Obtained
-              Marks
-            </th>
+        <div
+          style={{
+            background: "#fff",
+            padding: "25px",
+            borderRadius: "15px",
+            boxShadow:
+              "0 4px 15px rgba(0,0,0,0.08)"
+          }}
+        >
 
-            <th>
-              Grade
-            </th>
+          <h2
+            style={{
+              marginBottom: "20px",
+              color: "#1e293b"
+            }}
+          >
+            Student Performance Report
+          </h2>
 
-            <th>
-              Remarks
-            </th>
-          </tr>
-        </thead>
+          <div
+            style={{
+              overflowX: "auto"
+            }}
+          >
 
-        <tbody>
-          {report.length >
-          0 ? (
-            report.map(
-              (
-                item
-              ) => (
+            <table
+              style={{
+                width: "100%",
+                borderCollapse:
+                  "collapse"
+              }}
+            >
+
+              <thead>
+
                 <tr
-                  key={
-                    item._id
-                  }
+                  style={{
+                    background:
+                      "#2563eb",
+                    color: "#fff"
+                  }}
                 >
-                  <td>
-                    {item
-                      .studentId
-                      ?.name ||
-                      "N/A"}
-                  </td>
+                  <th style={thStyle}>
+                    Student
+                  </th>
 
-                  <td>
-                    {
-                      item.subject
-                    }
-                  </td>
+                  <th style={thStyle}>
+                    Subject
+                  </th>
 
-                  <td>
-                    {
-                      item.examType
-                    }
-                  </td>
+                  <th style={thStyle}>
+                    Exam Type
+                  </th>
 
-                  <td>
-                    {
-                      item.totalMarks
-                    }
-                  </td>
+                  <th style={thStyle}>
+                    Total Marks
+                  </th>
 
-                  <td>
-                    {
-                      item.obtainedMarks
-                    }
-                  </td>
+                  <th style={thStyle}>
+                    Obtained
+                  </th>
 
-                  <td>
-                    {
-                      item.grade
-                    }
-                  </td>
+                  <th style={thStyle}>
+                    Grade
+                  </th>
 
-                  <td>
-                    {
-                      item.remarks
-                    }
-                  </td>
+                  <th style={thStyle}>
+                    Remarks
+                  </th>
                 </tr>
-              )
-            )
-          ) : (
-            <tr>
-              <td
-                colSpan="7"
-              >
-                No report
-                data found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+
+              </thead>
+
+              <tbody>
+
+                {report.length > 0 ? (
+
+                  report.map(
+                    (item) => (
+
+                      <tr
+                        key={item._id}
+                        style={{
+                          borderBottom:
+                            "1px solid #e5e7eb"
+                        }}
+                      >
+                        <td style={tdStyle}>
+                          {item.studentId
+                            ?.name || "N/A"}
+                        </td>
+
+                        <td style={tdStyle}>
+                          {item.subject}
+                        </td>
+
+                        <td style={tdStyle}>
+                          {item.examType}
+                        </td>
+
+                        <td style={tdStyle}>
+                          {item.totalMarks}
+                        </td>
+
+                        <td style={tdStyle}>
+                          {item.obtainedMarks}
+                        </td>
+
+                        <td style={tdStyle}>
+                          <span
+                            style={{
+                              background:
+                                "#dcfce7",
+                              color:
+                                "#166534",
+                              padding:
+                                "4px 10px",
+                              borderRadius:
+                                "20px",
+                              fontWeight:
+                                "600"
+                            }}
+                          >
+                            {item.grade}
+                          </span>
+                        </td>
+
+                        <td style={tdStyle}>
+                          {item.remarks ||
+                            "-"}
+                        </td>
+                      </tr>
+                    )
+                  )
+
+                ) : (
+
+                  <tr>
+                    <td
+                      colSpan="7"
+                      style={{
+                        textAlign:
+                          "center",
+                        padding:
+                          "20px"
+                      }}
+                    >
+                      No Student Report Found
+                    </td>
+                  </tr>
+
+                )}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </DashboardLayout>
   );
 }
+
+/* CARD */
+
+function ReportCard({
+  title,
+  value
+}) {
+  return (
+    <div
+      style={{
+        background:
+          "linear-gradient(135deg,#2563eb,#3b82f6)",
+        color: "#fff",
+        padding: "25px",
+        borderRadius: "15px",
+        boxShadow:
+          "0 5px 15px rgba(37,99,235,0.3)"
+      }}
+    >
+      <h3
+        style={{
+          marginBottom: "10px"
+        }}
+      >
+        {title}
+      </h3>
+
+      <h1>{value}</h1>
+    </div>
+  );
+}
+
+const thStyle = {
+  padding: "12px",
+  textAlign: "left"
+};
+
+const tdStyle = {
+  padding: "12px"
+};
 
 export default Reports;

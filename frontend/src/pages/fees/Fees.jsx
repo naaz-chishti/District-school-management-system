@@ -10,6 +10,7 @@ import {
 
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import { toast } from "react-toastify";
 
 function Fees() {
 
@@ -220,8 +221,14 @@ function Fees() {
         });
 
       } catch (error) {
-        console.log(error);
-      }
+
+  toast.error(
+    error.response?.data?.message ||
+    "Something went wrong"
+  );
+
+  console.log(error);
+}
     };
 
   return (

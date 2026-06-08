@@ -1,9 +1,25 @@
 import Transport from "../models/Transport.js";
 
+
 // Add Transport
 export const addTransport =
   async (req, res) => {
+
     try {
+
+      const existingTransport =
+        await Transport.findOne({
+          busNumber:
+            req.body.busNumber
+        });
+
+      if (existingTransport) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Bus Number already exists"
+        });
+      }
 
       const transport =
         await Transport.create(
@@ -13,7 +29,7 @@ export const addTransport =
       res.status(201).json({
         success: true,
         message:
-          "Transport added successfully",
+          "Transport Added Successfully",
         transport
       });
 
@@ -28,9 +44,11 @@ export const addTransport =
     }
   };
 
+
 // Get All Transport
 export const getTransport =
   async (req, res) => {
+
     try {
 
       const transport =
@@ -58,19 +76,47 @@ export const getTransport =
     }
   };
 
+
 // Update Transport
 export const updateTransport =
   async (req, res) => {
+
     try {
+
+      const existingTransport =
+        await Transport.findOne({
+          busNumber:
+            req.body.busNumber,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingTransport) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Bus Number already exists"
+        });
+      }
 
       const transport =
         await Transport.findByIdAndUpdate(
           req.params.id,
           req.body,
           {
-            new: true
+            new: true,
+            runValidators: true
           }
         );
+
+      if (!transport) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Transport not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
@@ -90,14 +136,25 @@ export const updateTransport =
     }
   };
 
+
 // Delete Transport
 export const deleteTransport =
   async (req, res) => {
+
     try {
 
-      await Transport.findByIdAndDelete(
-        req.params.id
-      );
+      const transport =
+        await Transport.findByIdAndDelete(
+          req.params.id
+        );
+
+      if (!transport) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Transport not found"
+        });
+      }
 
       res.status(200).json({
         success: true,

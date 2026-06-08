@@ -1,21 +1,32 @@
 import Student from "../models/Student.js";
 
 // Add Student
-export const addStudent = async (
-  req,
-  res
-) => {
+export const addStudent = async (req, res) => {
   try {
+
+    const existingStudent =
+      await Student.findOne({
+        studentId: req.body.studentId
+      });
+
+    if (existingStudent) {
+      return res.status(400).json({
+        success: false,
+        message: "Student ID already exists"
+      });
+    }
+
     const student =
       await Student.create(req.body);
 
     res.status(201).json({
       success: true,
-      message:
-        "Student added successfully",
+      message: "Student Added Successfully",
       student
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message
@@ -82,32 +93,58 @@ export const getSingleStudent =
   };
 
 // Update Student
-export const updateStudent =
-  async (req, res) => {
-    try {
+// Update Student
+export const updateStudent = async (
+  req,
+  res
+) => {
+  try {
 
-      const student =
-        await Student.findByIdAndUpdate(
-          req.params.id,
-          req.body,
-          { new: true }
-        );
-
-      res.status(200).json({
-        success: true,
-        message:
-          "Student updated successfully",
-        student
+    const existingStudent =
+      await Student.findOne({
+        studentId: req.body.studentId,
+        _id: { $ne: req.params.id }
       });
 
-    } catch (error) {
-      res.status(500).json({
+    if (existingStudent) {
+      return res.status(400).json({
         success: false,
-        message:
-          error.message
+        message: "Student ID already exists"
       });
     }
-  };
+
+    const student =
+      await Student.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Student Updated Successfully",
+      student
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
 
 // Delete Student

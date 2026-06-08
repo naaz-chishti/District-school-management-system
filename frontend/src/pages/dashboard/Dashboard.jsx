@@ -8,6 +8,7 @@ import RecentActivities from "../../components/RecentActivities";
 import QuickActions from "../../components/QuickActions";
 import UpcomingEvents from "../../components/UpcomingEvents";
 import WelcomeBanner from "../../components/WelcomeBanner";
+import { toast } from "react-toastify";
 
 
 import {
@@ -47,6 +48,11 @@ function Dashboard() {
 
       } catch (error) {
 
+        toast.error(
+          error.response?.data
+            ?.message ||
+          "Something went wrong"
+        );
         console.log(error);
       }
     };

@@ -10,6 +10,7 @@ import {
 
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import { toast } from "react-toastify";
 
 function Transport() {
 
@@ -202,7 +203,7 @@ function Transport() {
 
         console.log(error);
 
-        alert(
+        toast.error(
           error.response?.data
             ?.message ||
           "Something went wrong"

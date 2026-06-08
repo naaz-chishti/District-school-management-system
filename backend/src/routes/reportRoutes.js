@@ -2,7 +2,8 @@ import express from "express";
 
 import {
   getDashboard,
-  studentPerformance
+  studentPerformance,
+  feeReport
 } from "../controllers/reportController.js";
 
 import {
@@ -10,9 +11,11 @@ import {
   authorizeRoles
 } from "../middleware/authMiddleware.js";
 
-const router = express.Router();
+const router =
+  express.Router();
 
-// Dashboard
+
+// Dashboard Report
 router.get(
   "/dashboard",
   protect,
@@ -23,11 +26,21 @@ router.get(
   getDashboard
 );
 
-// Student Report
+
+// Student Performance Report
 router.get(
   "/student-performance",
   protect,
   studentPerformance
 );
+
+
+// Fee Report
+router.get(
+  "/fees",
+  protect,
+  feeReport
+);
+
 
 export default router;

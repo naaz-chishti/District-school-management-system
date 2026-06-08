@@ -10,6 +10,7 @@ import {
 
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import { toast } from "react-toastify";
 
 function Users() {
 
@@ -100,7 +101,7 @@ function Users() {
             formData
           );
 
-          alert(
+          toast.success(
             "User Updated Successfully"
           );
 

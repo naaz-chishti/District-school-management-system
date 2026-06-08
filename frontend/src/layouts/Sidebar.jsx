@@ -60,100 +60,58 @@ function Sidebar({
 
         {/* DISTRICT ADMIN */}
 
-        {role === "district_admin" && (
-          <>
-            <LinkStyle to="/dashboard">
-              Dashboard
-            </LinkStyle>
-
-            <LinkStyle to="/schools">
-              Add School
-            </LinkStyle>
-
-            <LinkStyle to="/school-list">
-              School List
-            </LinkStyle>
-
-            <LinkStyle to="/users">
-              Add User
-            </LinkStyle>
-
-            <LinkStyle to="/user-list">
-              User List
-            </LinkStyle>
-
-            <LinkStyle to="/teachers">
-              Add Teacher
-            </LinkStyle>
-
-            <LinkStyle to="/teacher-list">
-              Teacher List
-            </LinkStyle>
-
-            <LinkStyle to="/students">
-              Add Student
-            </LinkStyle>
-
-            <LinkStyle to="/student-list">
-              Student List
-            </LinkStyle>
-
-            <LinkStyle to="/parents">
-              Add Parent
-            </LinkStyle>
-
-            <LinkStyle to="/parent-list">
-              Parent List
-            </LinkStyle>
-
-            <LinkStyle to="/fees">
-              Fees
-            </LinkStyle>
-
-            <LinkStyle to="/fee-list">
-              Fee List
-            </LinkStyle>
-
-            <LinkStyle to="/audit-log">
-              Audit Log
-            </LinkStyle>
-
-            <LinkStyle to="/audit-list">
-              Audit List
-            </LinkStyle>
-
-            <LinkStyle to="/payroll">
-              Payroll
-            </LinkStyle>
-
-            <LinkStyle to="/payroll-list">
-              Payroll List
-            </LinkStyle>
-
-            <LinkStyle to="/settings">
-              Settings
-            </LinkStyle>
-
-            <LinkStyle to="/profile">
-              My Profile
-            </LinkStyle>
-          </>
-        )}
-        
-
-
-        {/* TEACHER */}
-
-{role === "teacher" && (
+       {role === "district_admin" && (
   <>
     <LinkStyle to="/dashboard">
       Dashboard
     </LinkStyle>
 
-    <LinkStyle to="/student-list">
-      Students
+    {/* School Management */}
+    <LinkStyle to="/schools">
+      Add School
     </LinkStyle>
 
+    <LinkStyle to="/school-list">
+      School List
+    </LinkStyle>
+
+    {/* User Management */}
+    <LinkStyle to="/users">
+      Add User
+    </LinkStyle>
+
+    <LinkStyle to="/user-list">
+      User List
+    </LinkStyle>
+
+    {/* Teacher Management */}
+    <LinkStyle to="/teachers">
+      Add Teacher
+    </LinkStyle>
+
+    <LinkStyle to="/teacher-list">
+      Teacher List
+    </LinkStyle>
+
+    {/* Student Management */}
+    <LinkStyle to="/students">
+      Add Student
+    </LinkStyle>
+
+    <LinkStyle to="/student-list">
+      Student List
+    </LinkStyle>
+
+    {/* Parent Management */}
+    <LinkStyle to="/parents">
+      Add Parent
+    </LinkStyle>
+
+    <LinkStyle to="/parent-list">
+      Parent List
+    </LinkStyle>
+
+    {/* Attendance */}
     <LinkStyle to="/attendance">
       Attendance
     </LinkStyle>
@@ -162,49 +120,152 @@ function Sidebar({
       Attendance List
     </LinkStyle>
 
+    {/* Fees */}
+    <LinkStyle to="/fees">
+      Add Fee
+    </LinkStyle>
+
+    <LinkStyle to="/fee-list">
+      Fee List
+    </LinkStyle>
+
+    {/* Exams */}
+    <LinkStyle to="/exams">
+      Create Exam
+    </LinkStyle>
+
     <LinkStyle to="/exam-list">
-      Exams
+      Exam List
+    </LinkStyle>
+
+    {/* Timetable */}
+    <LinkStyle to="/timetable">
+      Create Timetable
     </LinkStyle>
 
     <LinkStyle to="/timetable-list">
-      Timetable
+      Timetable List
     </LinkStyle>
 
+    {/* Events */}
     <LinkStyle to="/events">
-      Events
+      Add Event
     </LinkStyle>
 
     <LinkStyle to="/event-list">
       Event List
     </LinkStyle>
 
-    <LinkStyle to="/leaves">
-      Leaves
+    {/* Notifications */}
+    <LinkStyle to="/notifications">
+      Send Notification
     </LinkStyle>
 
-    <LinkStyle to="/leave-list">
-      Leave List
+    <LinkStyle to="/notification-list">
+      Notification List
     </LinkStyle>
 
+    {/* Messages */}
     <LinkStyle to="/messages">
-      Messages
+      Send Message
     </LinkStyle>
 
     <LinkStyle to="/message-list">
       Message List
     </LinkStyle>
 
-    <LinkStyle to="/notification-list">
-      Notifications
+    {/* Leaves */}
+    <LinkStyle to="/leaves">
+      Leave Requests
+    </LinkStyle>
+
+    <LinkStyle to="/leave-list">
+      Leave List
+    </LinkStyle>
+
+    {/* Payroll */}
+    <LinkStyle to="/payroll">
+      Generate Payroll
     </LinkStyle>
 
     <LinkStyle to="/payroll-list">
-      Payroll
+      Payroll List
     </LinkStyle>
 
+    {/* Transport */}
+    <LinkStyle to="/transports">
+      Add Transport
+    </LinkStyle>
+
+    <LinkStyle to="/transport-list">
+      Transport List
+    </LinkStyle>
+
+    {/* Hostel */}
+    <LinkStyle to="/hostel">
+      Add Hostel
+    </LinkStyle>
+
+    <LinkStyle to="/hostel-list">
+      Hostel List
+    </LinkStyle>
+
+    {/* Reports */}
+    <LinkStyle to="/reports">
+      Reports
+    </LinkStyle>
+
+    {/* Audit */}
+    <LinkStyle to="/audit-log">
+      Audit Log
+    </LinkStyle>
+
+    <LinkStyle to="/audit-list">
+      Audit List
+    </LinkStyle>
+
+    {/* Settings */}
+    <LinkStyle to="/settings">
+      Settings
+    </LinkStyle>
+
+    {/* Profile */}
     <LinkStyle to="/profile">
       My Profile
     </LinkStyle>
+  </>
+)}
+        
+
+
+        {/* TEACHER */}
+
+{role === "teacher" && (
+  <>
+    <LinkStyle to="/dashboard">Dashboard</LinkStyle>
+
+    <LinkStyle to="/student-list">Students</LinkStyle>
+
+    <LinkStyle to="/attendance">Mark Attendance</LinkStyle>
+    <LinkStyle to="/attendance-list">Attendance List</LinkStyle>
+
+    <LinkStyle to="/exam-list">Exams</LinkStyle>
+
+    <LinkStyle to="/timetable-list">Timetable</LinkStyle>
+
+    <LinkStyle to="/event-list">Events</LinkStyle>
+
+    <LinkStyle to="/messages">Send Message</LinkStyle>
+    <LinkStyle to="/message-list">Message List</LinkStyle>
+
+    <LinkStyle to="/notification-list">Notifications</LinkStyle>
+
+    <LinkStyle to="/leaves">Apply Leave</LinkStyle>
+    <LinkStyle to="/leave-list">Leave List</LinkStyle>
+
+    <LinkStyle to="/payroll-list">Payroll</LinkStyle>
+
+    <LinkStyle to="/profile">My Profile</LinkStyle>
   </>
 )}
 
@@ -212,41 +273,23 @@ function Sidebar({
 
 {role === "parent" && (
   <>
-    <LinkStyle to="/dashboard">
-      Dashboard
-    </LinkStyle>
+    <LinkStyle to="/dashboard">Dashboard</LinkStyle>
 
-    <LinkStyle to="/fee-list">
-      Fees
-    </LinkStyle>
+    <LinkStyle to="/attendance-list">Attendance</LinkStyle>
 
-    <LinkStyle to="/attendance-list">
-      Attendance
-    </LinkStyle>
+    <LinkStyle to="/exam-list">Exam Results</LinkStyle>
 
-    <LinkStyle to="/exam-list">
-      Exams
-    </LinkStyle>
+    <LinkStyle to="/fee-list">Fees</LinkStyle>
 
-    <LinkStyle to="/event-list">
-      Events
-    </LinkStyle>
+    <LinkStyle to="/event-list">Events</LinkStyle>
 
-    <LinkStyle to="/message-list">
-      Messages
-    </LinkStyle>
+    <LinkStyle to="/message-list">Messages</LinkStyle>
 
-    <LinkStyle to="/notification-list">
-      Notifications
-    </LinkStyle>
+    <LinkStyle to="/notification-list">Notifications</LinkStyle>
 
-    <LinkStyle to="/transport-list">
-      Transport
-    </LinkStyle>
+    <LinkStyle to="/transport-list">Transport</LinkStyle>
 
-    <LinkStyle to="/profile">
-      My Profile
-    </LinkStyle>
+    <LinkStyle to="/profile">My Profile</LinkStyle>
   </>
 )}
 
@@ -254,49 +297,28 @@ function Sidebar({
 
 {role === "student" && (
   <>
-    <LinkStyle to="/dashboard">
-      Dashboard
-    </LinkStyle>
+    <LinkStyle to="/dashboard">Dashboard</LinkStyle>
 
-    <LinkStyle to="/attendance-list">
-      Attendance
-    </LinkStyle>
+    <LinkStyle to="/attendance-list">Attendance</LinkStyle>
 
-    <LinkStyle to="/exam-list">
-      Exams
-    </LinkStyle>
+    <LinkStyle to="/exam-list">Exam Results</LinkStyle>
 
-    <LinkStyle to="/timetable-list">
-      Timetable
-    </LinkStyle>
+    <LinkStyle to="/timetable-list">Timetable</LinkStyle>
 
-    <LinkStyle to="/event-list">
-      Events
-    </LinkStyle>
+    <LinkStyle to="/event-list">Events</LinkStyle>
 
-    <LinkStyle to="/message-list">
-      Messages
-    </LinkStyle>
+    <LinkStyle to="/message-list">Messages</LinkStyle>
 
-    <LinkStyle to="/notification-list">
-      Notifications
-    </LinkStyle>
+    <LinkStyle to="/notification-list">Notifications</LinkStyle>
 
-    <LinkStyle to="/hostel-list">
-      Hostel
-    </LinkStyle>
+    <LinkStyle to="/hostel-list">Hostel</LinkStyle>
 
-    <LinkStyle to="/transport-list">
-      Transport
-    </LinkStyle>
+    <LinkStyle to="/transport-list">Transport</LinkStyle>
 
-    <LinkStyle to="/leave-list">
-      Leaves
-    </LinkStyle>
+    <LinkStyle to="/leaves">Apply Leave</LinkStyle>
+    <LinkStyle to="/leave-list">Leave List</LinkStyle>
 
-    <LinkStyle to="/profile">
-      My Profile
-    </LinkStyle>
+    <LinkStyle to="/profile">My Profile</LinkStyle>
   </>
 )}
 

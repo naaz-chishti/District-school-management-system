@@ -3,7 +3,26 @@ import Exam from "../models/Exam.js";
 // Add Exam
 export const addExamResult =
   async (req, res) => {
+
     try {
+
+      const existingExam =
+        await Exam.findOne({
+          studentId:
+            req.body.studentId,
+          subject:
+            req.body.subject,
+          examType:
+            req.body.examType
+        });
+
+      if (existingExam) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Exam result already exists for this subject"
+        });
+      }
 
       const {
         obtainedMarks,
@@ -20,9 +39,7 @@ export const addExamResult =
       let resultStatus =
         "pass";
 
-      if (
-        percentage >= 90
-      ) {
+      if (percentage >= 90) {
         grade = "A+";
       } else if (
         percentage >= 80
@@ -60,7 +77,7 @@ export const addExamResult =
       res.status(201).json({
         success: true,
         message:
-          "Exam added successfully",
+          "Exam Added Successfully",
         exam
       });
 
@@ -71,13 +88,14 @@ export const addExamResult =
         message:
           error.message
       });
-
     }
   };
+
 
 // Get Exams
 export const getExamResults =
   async (req, res) => {
+
     try {
 
       const exams =
@@ -101,14 +119,37 @@ export const getExamResults =
         message:
           error.message
       });
-
     }
   };
+
 
 // Update Exam
 export const updateExam =
   async (req, res) => {
+
     try {
+
+      const existingExam =
+        await Exam.findOne({
+          studentId:
+            req.body.studentId,
+          subject:
+            req.body.subject,
+          examType:
+            req.body.examType,
+          _id: {
+            $ne:
+              req.params.id
+          }
+        });
+
+      if (existingExam) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Exam result already exists for this subject"
+        });
+      }
 
       const {
         obtainedMarks,
@@ -125,9 +166,7 @@ export const updateExam =
       let resultStatus =
         "pass";
 
-      if (
-        percentage >= 90
-      ) {
+      if (percentage >= 90) {
         grade = "A+";
       } else if (
         percentage >= 80
@@ -164,14 +203,24 @@ export const updateExam =
             resultStatus
           },
           {
-            new: true
+            new: true,
+            runValidators:
+              true
           }
         );
+
+      if (!exam) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Exam not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
         message:
-          "Exam updated successfully",
+          "Exam Updated Successfully",
         exam
       });
 
@@ -182,13 +231,14 @@ export const updateExam =
         message:
           error.message
       });
-
     }
   };
+
 
 // Delete Exam
 export const deleteExam =
   async (req, res) => {
+
     try {
 
       await Exam.findByIdAndDelete(
@@ -198,7 +248,7 @@ export const deleteExam =
       res.status(200).json({
         success: true,
         message:
-          "Exam deleted successfully"
+          "Exam Deleted Successfully"
       });
 
     } catch (error) {
@@ -208,6 +258,5 @@ export const deleteExam =
         message:
           error.message
       });
-
     }
   };

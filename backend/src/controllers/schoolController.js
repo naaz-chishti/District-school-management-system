@@ -4,7 +4,22 @@ import School from "../models/School.js";
 // Create School
 export const createSchool =
   async (req, res) => {
+
     try {
+
+      const existingSchool =
+        await School.findOne({
+          schoolCode:
+            req.body.schoolCode
+        });
+
+      if (existingSchool) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "School Code already exists"
+        });
+      }
 
       const school =
         await School.create(
@@ -27,7 +42,6 @@ export const createSchool =
       });
     }
   };
-
 
 // Get All Schools
 export const getSchools =
@@ -92,13 +106,34 @@ export const getSingleSchool =
 // Update School
 export const updateSchool =
   async (req, res) => {
+
     try {
+
+      const existingSchool =
+        await School.findOne({
+          schoolCode:
+            req.body.schoolCode,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingSchool) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "School Code already exists"
+        });
+      }
 
       const school =
         await School.findByIdAndUpdate(
           req.params.id,
           req.body,
-          { new: true }
+          {
+            new: true,
+            runValidators: true
+          }
         );
 
       res.status(200).json({
@@ -117,7 +152,6 @@ export const updateSchool =
       });
     }
   };
-
 
 // Delete School
 export const deleteSchool =

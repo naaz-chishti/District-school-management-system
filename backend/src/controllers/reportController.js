@@ -4,10 +4,13 @@ import Attendance from "../models/Attendance.js";
 import Fee from "../models/Fee.js";
 import Exam from "../models/Exam.js";
 
-// Dashboard Report
+
+// DASHBOARD REPORT
 export const getDashboard =
   async (req, res) => {
+
     try {
+
       const totalStudents =
         await Student.countDocuments();
 
@@ -17,6 +20,9 @@ export const getDashboard =
       const totalAttendance =
         await Attendance.countDocuments();
 
+      const totalExams =
+        await Exam.countDocuments();
+
       const totalFees =
         await Fee.aggregate([
           {
@@ -24,14 +30,11 @@ export const getDashboard =
               _id: null,
               total: {
                 $sum:
-                  "$paidamount"
+                  "$paidAmount"
               }
             }
           }
         ]);
-
-      const totalExams =
-        await Exam.countDocuments();
 
       res.status(200).json({
         success: true,
@@ -39,13 +42,15 @@ export const getDashboard =
           totalStudents,
           totalTeachers,
           totalAttendance,
+          totalExams,
           totalFees:
             totalFees[0]
-              ?.total || 0,
-          totalExams
+              ?.total || 0
         }
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
@@ -54,22 +59,62 @@ export const getDashboard =
     }
   };
 
-// Student Performance Report
+
+// STUDENT PERFORMANCE REPORT
 export const studentPerformance =
   async (req, res) => {
+
     try {
+
       const report =
         await Exam.find()
           .populate(
             "studentId",
-            "name"
+            "name studentId"
+          )
+          .populate(
+            "schoolId",
+            "schoolName"
           );
 
       res.status(200).json({
         success: true,
         report
       });
+
     } catch (error) {
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };
+
+  export const feeReport =
+  async (req, res) => {
+
+    try {
+
+      const fees =
+        await Fee.find()
+          .populate(
+            "studentId",
+            "name"
+          )
+          .populate(
+            "schoolId",
+            "schoolName"
+          );
+
+      res.status(200).json({
+        success: true,
+        fees
+      });
+
+    } catch (error) {
+
       res.status(500).json({
         success: false,
         message:

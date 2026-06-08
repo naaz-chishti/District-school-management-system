@@ -1,9 +1,28 @@
 import Hostel from "../models/Hostel.js";
 
 // Add Hostel
+// Add Hostel
 export const addHostel =
   async (req, res) => {
+
     try {
+
+      const existingHostel =
+        await Hostel.findOne({
+          hostelName:
+            req.body.hostelName,
+          roomNumber:
+            req.body.roomNumber
+        });
+
+      if (existingHostel) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Hostel Room already exists"
+        });
+      }
+
       const hostel =
         await Hostel.create(
           req.body
@@ -12,10 +31,12 @@ export const addHostel =
       res.status(201).json({
         success: true,
         message:
-          "Hostel added successfully",
+          "Hostel Added Successfully",
         hostel
       });
+
     } catch (error) {
+
       res.status(500).json({
         success: false,
         message:
@@ -87,6 +108,18 @@ export const assignStudentToHostel =
           });
       }
 
+      if (
+  hostel.assignedStudents.includes(
+    studentId
+  )
+) {
+  return res.status(400).json({
+    success: false,
+    message:
+      "Student already assigned to this hostel"
+  });
+}
+
       hostel.assignedStudents.push(
         studentId
       );
@@ -119,36 +152,53 @@ export const assignStudentToHostel =
   };
 
    // Update Hostel
+// Update Hostel
 export const updateHostel =
   async (req, res) => {
 
     try {
+
+      const existingHostel =
+        await Hostel.findOne({
+          hostelName:
+            req.body.hostelName,
+          roomNumber:
+            req.body.roomNumber,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingHostel) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Hostel Room already exists"
+        });
+      }
 
       const hostel =
         await Hostel.findByIdAndUpdate(
           req.params.id,
           req.body,
           {
-            new: true
+            new: true,
+            runValidators: true
           }
         );
 
-      if (
-        !hostel
-      ) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message:
-              "Hostel not found"
-          });
+      if (!hostel) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Hostel not found"
+        });
       }
 
       res.status(200).json({
         success: true,
         message:
-          "Hostel updated successfully",
+          "Hostel Updated Successfully",
         hostel
       });
 
@@ -159,7 +209,6 @@ export const updateHostel =
         message:
           error.message
       });
-
     }
   };
 

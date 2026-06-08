@@ -10,6 +10,7 @@ import {
 
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import { toast } from "react-toastify";
 
 function Schools() {
 
@@ -111,6 +112,10 @@ function Schools() {
         );
 
       } catch (error) {
+        toast.error(
+          error.response?.data?.message ||
+          "Something went wrong"
+        );
         console.log(error);
       }
     };

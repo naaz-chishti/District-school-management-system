@@ -1,9 +1,33 @@
 import Timetable from "../models/Timetable.js";
 
+
 // Add Timetable
 export const addTimetable =
   async (req, res) => {
+
     try {
+
+      const existingTimetable =
+        await Timetable.findOne({
+          schoolId:
+            req.body.schoolId,
+          className:
+            req.body.className,
+          section:
+            req.body.section,
+          day:
+            req.body.day,
+          startTime:
+            req.body.startTime
+        });
+
+      if (existingTimetable) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Timetable already exists for this class and time"
+        });
+      }
 
       const timetable =
         await Timetable.create(
@@ -13,7 +37,7 @@ export const addTimetable =
       res.status(201).json({
         success: true,
         message:
-          "Timetable added successfully",
+          "Timetable Added Successfully",
         timetable
       });
 
@@ -27,6 +51,7 @@ export const addTimetable =
 
     }
   };
+
 
 // Get Timetable
 export const getTimetable =
@@ -59,25 +84,60 @@ export const getTimetable =
     }
   };
 
+
 // Update Timetable
 export const updateTimetable =
   async (req, res) => {
 
     try {
 
+      const existingTimetable =
+        await Timetable.findOne({
+          schoolId:
+            req.body.schoolId,
+          className:
+            req.body.className,
+          section:
+            req.body.section,
+          day:
+            req.body.day,
+          startTime:
+            req.body.startTime,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingTimetable) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Timetable already exists for this class and time"
+        });
+      }
+
       const timetable =
         await Timetable.findByIdAndUpdate(
           req.params.id,
           req.body,
           {
-            new: true
+            new: true,
+            runValidators: true
           }
         );
+
+      if (!timetable) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Timetable not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
         message:
-          "Timetable updated successfully",
+          "Timetable Updated Successfully",
         timetable
       });
 
@@ -92,20 +152,30 @@ export const updateTimetable =
     }
   };
 
+
 // Delete Timetable
 export const deleteTimetable =
   async (req, res) => {
 
     try {
 
-      await Timetable.findByIdAndDelete(
-        req.params.id
-      );
+      const timetable =
+        await Timetable.findByIdAndDelete(
+          req.params.id
+        );
+
+      if (!timetable) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Timetable not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
         message:
-          "Timetable deleted successfully"
+          "Timetable Deleted Successfully"
       });
 
     } catch (error) {

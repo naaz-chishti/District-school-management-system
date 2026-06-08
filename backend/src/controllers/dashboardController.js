@@ -34,34 +34,30 @@ export const getDashboard =
       const totalNotifications =
         await Notification.countDocuments();
 
+      // Fee Statistics
+
       const fees =
         await Fee.find();
 
       const totalFeesCollected =
-        fees
-          .filter(
-            (item) =>
-              item.status === "Paid"
-          )
-          .reduce(
-            (total, item) =>
-              total +
-              Number(item.amount || 0),
-            0
-          );
+        fees.reduce(
+          (total, fee) =>
+            total +
+            Number(
+              fee.paidAmount || 0
+            ),
+          0
+        );
 
       const totalPendingFees =
-        fees
-          .filter(
-            (item) =>
-              item.status === "Pending"
-          )
-          .reduce(
-            (total, item) =>
-              total +
-              Number(item.amount || 0),
-            0
-          );
+        fees.reduce(
+          (total, fee) =>
+            total +
+            Number(
+              fee.remainingAmount || 0
+            ),
+          0
+        );
 
       // Recent Activities
 
@@ -84,24 +80,22 @@ export const getDashboard =
               item.userId?.name ||
               "System";
 
-            const action =
-              item.action || "";
-
-            const module =
-              item.module || "";
-
-            return `${userName} ${action} ${module}`;
+            return `${userName} ${item.action} ${item.module}`;
           }
         );
 
       // Upcoming Events
 
-     const upcomingEvents =
-  await Event.find()
-    .sort({
-      startDate: 1
-    })
-    .limit(5);
+      const upcomingEvents =
+        await Event.find({
+          startDate: {
+            $gte: new Date()
+          }
+        })
+          .sort({
+            startDate: 1
+          })
+          .limit(5);
 
       res.status(200).json({
         success: true,
@@ -110,15 +104,19 @@ export const getDashboard =
           req.user?.role || "",
 
         dashboard: {
+
           totalStudents,
           totalTeachers,
           totalParents,
           totalSchools,
+
           totalEvents,
           totalLeaves,
           totalNotifications,
+
           totalFeesCollected,
           totalPendingFees,
+
           upcomingEvents
         },
 

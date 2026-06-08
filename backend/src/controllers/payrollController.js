@@ -1,10 +1,29 @@
 import Payroll from "../models/Payroll.js";
 
+
 // Add Payroll
 export const addPayroll =
   async (req, res) => {
 
     try {
+
+      const existingPayroll =
+        await Payroll.findOne({
+          teacherId:
+            req.body.teacherId,
+          month:
+            req.body.month,
+          year:
+            req.body.year
+        });
+
+      if (existingPayroll) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Payroll already exists for this teacher and month"
+        });
+      }
 
       const {
         basicSalary,
@@ -13,15 +32,9 @@ export const addPayroll =
       } = req.body;
 
       const netSalary =
-        Number(
-          basicSalary
-        ) +
-        Number(
-          allowances
-        ) -
-        Number(
-          deductions
-        );
+        Number(basicSalary) +
+        Number(allowances || 0) -
+        Number(deductions || 0);
 
       const payroll =
         await Payroll.create({
@@ -32,7 +45,7 @@ export const addPayroll =
       res.status(201).json({
         success: true,
         message:
-          "Payroll added successfully",
+          "Payroll Added Successfully",
         payroll
       });
 
@@ -46,6 +59,7 @@ export const addPayroll =
 
     }
   };
+
 
 // Get Payrolls
 export const getPayrolls =
@@ -78,11 +92,33 @@ export const getPayrolls =
     }
   };
 
+
 // Update Payroll
 export const updatePayroll =
   async (req, res) => {
 
     try {
+
+      const existingPayroll =
+        await Payroll.findOne({
+          teacherId:
+            req.body.teacherId,
+          month:
+            req.body.month,
+          year:
+            req.body.year,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingPayroll) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Payroll already exists for this teacher and month"
+        });
+      }
 
       const {
         basicSalary,
@@ -91,15 +127,9 @@ export const updatePayroll =
       } = req.body;
 
       const netSalary =
-        Number(
-          basicSalary
-        ) +
-        Number(
-          allowances
-        ) -
-        Number(
-          deductions
-        );
+        Number(basicSalary) +
+        Number(allowances || 0) -
+        Number(deductions || 0);
 
       const payroll =
         await Payroll.findByIdAndUpdate(
@@ -109,14 +139,23 @@ export const updatePayroll =
             netSalary
           },
           {
-            new: true
+            new: true,
+            runValidators: true
           }
         );
+
+      if (!payroll) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Payroll not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
         message:
-          "Payroll updated successfully",
+          "Payroll Updated Successfully",
         payroll
       });
 
@@ -131,20 +170,30 @@ export const updatePayroll =
     }
   };
 
+
 // Delete Payroll
 export const deletePayroll =
   async (req, res) => {
 
     try {
 
-      await Payroll.findByIdAndDelete(
-        req.params.id
-      );
+      const payroll =
+        await Payroll.findByIdAndDelete(
+          req.params.id
+        );
+
+      if (!payroll) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Payroll not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
         message:
-          "Payroll deleted successfully"
+          "Payroll Deleted Successfully"
       });
 
     } catch (error) {

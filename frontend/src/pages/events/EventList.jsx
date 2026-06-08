@@ -5,6 +5,7 @@ import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import TableHeader from "../../components/TableHeader";
 import DataTable from "../../components/DataTable";
+import { toast } from "react-toastify";
 
 function EventList() {
 
@@ -36,6 +37,11 @@ function EventList() {
 
       } catch (error) {
 
+        toast.error(
+          error.response?.data?.message ||
+          "Failed to load events"
+        );
+
         console.log(error);
       }
     };
@@ -56,13 +62,13 @@ function EventList() {
                 value.toLowerCase()
               ) ||
 
-            event.location
+            event.eventType
               ?.toLowerCase()
               .includes(
                 value.toLowerCase()
               ) ||
 
-            event.organizer
+            event.description
               ?.toLowerCase()
               .includes(
                 value.toLowerCase()
@@ -91,13 +97,18 @@ function EventList() {
           `/events/delete/${id}`
         );
 
-        alert(
+        toast.success(
           "Event Deleted Successfully"
         );
 
         getEvents();
 
       } catch (error) {
+
+        toast.error(
+          error.response?.data?.message ||
+          "Delete Failed"
+        );
 
         console.log(error);
       }
@@ -106,24 +117,40 @@ function EventList() {
   const columns = [
     {
       key: "title",
-      label: "Event"
+      label: "Event Title"
     },
+
     {
-      key: "location",
-      label: "Location"
+      key: "eventType",
+      label: "Event Type"
     },
+
     {
-      key: "organizer",
-      label: "Organizer"
-    },
-    {
-      key: "date",
-      label: "Date",
+      key: "startDate",
+      label: "Start Date",
       render: (event) =>
-        new Date(
-          event.date
-        ).toLocaleDateString()
+        event.startDate
+          ? new Date(
+              event.startDate
+            ).toLocaleDateString(
+              "en-IN"
+            )
+          : "-"
     },
+
+    {
+      key: "endDate",
+      label: "End Date",
+      render: (event) =>
+        event.endDate
+          ? new Date(
+              event.endDate
+            ).toLocaleDateString(
+              "en-IN"
+            )
+          : "-"
+    },
+
     {
       key: "status",
       label: "Status",
@@ -131,19 +158,34 @@ function EventList() {
         <span
           style={{
             background:
-              event.status === "Upcoming"
+              event.status ===
+              "upcoming"
                 ? "#dbeafe"
-                : "#dcfce7",
+                : event.status ===
+                  "completed"
+                ? "#dcfce7"
+                : "#fee2e2",
+
             color:
-              event.status === "Upcoming"
+              event.status ===
+              "upcoming"
                 ? "#1d4ed8"
-                : "#166534",
+                : event.status ===
+                  "completed"
+                ? "#166534"
+                : "#dc2626",
+
             padding:
               "5px 10px",
+
             borderRadius:
               "20px",
+
             fontWeight:
-              "bold"
+              "bold",
+
+            textTransform:
+              "capitalize"
           }}
         >
           {event.status}
@@ -252,4 +294,3 @@ function EventList() {
 }
 
 export default EventList;
-

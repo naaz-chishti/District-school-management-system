@@ -3,7 +3,23 @@ import Event from "../models/Event.js";
 // Add Event
 export const addEvent =
   async (req, res) => {
+
     try {
+
+      const existingEvent =
+        await Event.findOne({
+          title: req.body.title,
+          startDate: req.body.startDate,
+          schoolId: req.body.schoolId
+        });
+
+      if (existingEvent) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Event already exists"
+        });
+      }
 
       const event =
         await Event.create({
@@ -15,7 +31,7 @@ export const addEvent =
       res.status(201).json({
         success: true,
         message:
-          "Event added successfully",
+          "Event Added Successfully",
         event
       });
 
@@ -26,7 +42,6 @@ export const addEvent =
         message:
           error.message
       });
-
     }
   };
 
@@ -64,19 +79,49 @@ export const getEvents =
 // Update Event
 export const updateEvent =
   async (req, res) => {
+
     try {
+
+      const existingEvent =
+        await Event.findOne({
+          title: req.body.title,
+          startDate: req.body.startDate,
+          schoolId: req.body.schoolId,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingEvent) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Event already exists"
+        });
+      }
 
       const event =
         await Event.findByIdAndUpdate(
           req.params.id,
           req.body,
-          { new: true }
+          {
+            new: true,
+            runValidators: true
+          }
         );
+
+      if (!event) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Event not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
         message:
-          "Event updated successfully",
+          "Event Updated Successfully",
         event
       });
 
@@ -87,7 +132,6 @@ export const updateEvent =
         message:
           error.message
       });
-
     }
   };
 

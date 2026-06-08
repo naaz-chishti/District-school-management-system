@@ -1,21 +1,39 @@
 import Fee from "../models/Fee.js";
 
 // Add Fee
+// Add Fee
 export const addFee = async (
   req,
   res
 ) => {
   try {
+
+    const existingFee =
+      await Fee.findOne({
+        studentId: req.body.studentId,
+        paymentDate: req.body.paymentDate
+      });
+
+    if (existingFee) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Fee record already exists for this student"
+      });
+    }
+
     const fee =
       await Fee.create(req.body);
 
     res.status(201).json({
       success: true,
       message:
-        "Fee added successfully",
+        "Fee Added Successfully",
       fee
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message
@@ -52,12 +70,40 @@ export const updateFee =
 
     try {
 
+      const existingFee =
+        await Fee.findOne({
+          studentId: req.body.studentId,
+          paymentDate: req.body.paymentDate,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingFee) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Fee record already exists for this student"
+        });
+      }
+
       const fee =
         await Fee.findByIdAndUpdate(
           req.params.id,
           req.body,
-          { new: true }
+          {
+            new: true,
+            runValidators: true
+          }
         );
+
+      if (!fee) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Fee record not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
@@ -73,7 +119,6 @@ export const updateFee =
         message:
           error.message
       });
-
     }
   };
 

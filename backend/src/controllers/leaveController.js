@@ -3,7 +3,25 @@ import Leave from "../models/Leave.js";
 // Apply Leave
 export const applyLeave =
   async (req, res) => {
+
     try {
+
+      const existingLeave =
+        await Leave.findOne({
+          userId: req.user._id,
+          startDate:
+            req.body.startDate,
+          endDate:
+            req.body.endDate
+        });
+
+      if (existingLeave) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Leave already applied for these dates"
+        });
+      }
 
       const leave =
         await Leave.create({
@@ -15,7 +33,7 @@ export const applyLeave =
       res.status(201).json({
         success: true,
         message:
-          "Leave applied successfully",
+          "Leave Applied Successfully",
         leave
       });
 
@@ -59,21 +77,55 @@ export const getLeaves =
   };
 
 // Update Leave
+// Update Leave
 export const updateLeave =
   async (req, res) => {
+
     try {
+
+      const existingLeave =
+        await Leave.findOne({
+          userId:
+            req.body.userId,
+          startDate:
+            req.body.startDate,
+          endDate:
+            req.body.endDate,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingLeave) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Leave already applied for these dates"
+        });
+      }
 
       const leave =
         await Leave.findByIdAndUpdate(
           req.params.id,
           req.body,
-          { new: true }
+          {
+            new: true,
+            runValidators: true
+          }
         );
+
+      if (!leave) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Leave not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
         message:
-          "Leave updated successfully",
+          "Leave Updated Successfully",
         leave
       });
 
@@ -115,8 +167,10 @@ export const deleteLeave =
   };
 
 // Approve / Reject Leave
+// Approve / Reject Leave
 export const updateLeaveStatus =
   async (req, res) => {
+
     try {
 
       const {
@@ -125,16 +179,27 @@ export const updateLeaveStatus =
       } = req.body;
 
       const leave =
-        await Leave.findByIdAndUpdate(
-          leaveId,
-          { status },
-          { new: true }
+        await Leave.findById(
+          leaveId
         );
+
+      if (!leave) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Leave not found"
+        });
+      }
+
+      leave.status =
+        status;
+
+      await leave.save();
 
       res.status(200).json({
         success: true,
         message:
-          `Leave ${status}`,
+          `Leave ${status} Successfully`,
         leave
       });
 

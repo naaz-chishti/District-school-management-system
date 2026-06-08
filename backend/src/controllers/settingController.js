@@ -7,6 +7,27 @@ export const saveSettings =
 
     try {
 
+      const {
+        schoolName,
+        schoolEmail,
+        schoolPhone,
+        academicYear,
+        timezone
+      } = req.body;
+
+      if (
+        !schoolName ||
+        !schoolEmail ||
+        !schoolPhone ||
+        !academicYear
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Please fill all required fields"
+        });
+      }
+
       let settings =
         await Setting.findOne();
 
@@ -15,18 +36,29 @@ export const saveSettings =
         settings =
           await Setting.findByIdAndUpdate(
             settings._id,
-            req.body,
             {
-              new: true
+              schoolName,
+              schoolEmail,
+              schoolPhone,
+              academicYear,
+              timezone
+            },
+            {
+              new: true,
+              runValidators: true
             }
           );
 
       } else {
 
         settings =
-          await Setting.create(
-            req.body
-          );
+          await Setting.create({
+            schoolName,
+            schoolEmail,
+            schoolPhone,
+            academicYear,
+            timezone
+          });
       }
 
       res.status(200).json({
@@ -83,6 +115,14 @@ export const getSingleSetting =
           req.params.id
         );
 
+      if (!setting) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Setting not found"
+        });
+      }
+
       res.status(200).json({
         success: true,
         setting
@@ -105,9 +145,18 @@ export const deleteSetting =
 
     try {
 
-      await Setting.findByIdAndDelete(
-        req.params.id
-      );
+      const setting =
+        await Setting.findByIdAndDelete(
+          req.params.id
+        );
+
+      if (!setting) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Setting not found"
+        });
+      }
 
       res.status(200).json({
         success: true,

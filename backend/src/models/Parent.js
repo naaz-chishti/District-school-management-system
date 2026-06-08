@@ -24,9 +24,10 @@ const parentSchema =
       },
 
       phone: {
-        type: String,
-        required: false
-      },
+  type: String,
+  unique: true,
+  required: false
+},
 
       address: {
         type: String,

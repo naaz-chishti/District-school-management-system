@@ -6,16 +6,35 @@ export const addParent = async (
   res
 ) => {
   try {
+
+    const existingParent =
+      await Parent.findOne({
+        phone: req.body.phone
+      });
+
+    if (
+      req.body.phone &&
+      existingParent
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Phone Number already exists"
+      });
+    }
+
     const parent =
       await Parent.create(req.body);
 
     res.status(201).json({
       success: true,
       message:
-        "Parent added successfully",
+        "Parent Added Successfully",
       parent
     });
+
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message
@@ -44,24 +63,53 @@ export const getParents =
     }
   };
 
-  // Update Parent
+// Update Parent
 export const updateParent =
   async (req, res) => {
+
     try {
+
+      const existingParent =
+        await Parent.findOne({
+          phone: req.body.phone,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (
+        req.body.phone &&
+        existingParent
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Phone Number already exists"
+        });
+      }
 
       const parent =
         await Parent.findByIdAndUpdate(
           req.params.id,
           req.body,
           {
-            new: true
+            new: true,
+            runValidators: true
           }
         );
+
+      if (!parent) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Parent not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
         message:
-          "Parent updated successfully",
+          "Parent Updated Successfully",
         parent
       });
 

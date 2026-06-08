@@ -10,6 +10,7 @@ import {
 
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import { toast } from "react-toastify";
 
 function Students() {
 
@@ -66,13 +67,14 @@ function Students() {
           res.data.schools
         );
 
-      } catch (error) {
-  console.log(error);
+      }catch (error) {
 
-  alert(
+  toast.error(
     error.response?.data?.message ||
-    error.message
+    "Something went wrong"
   );
+
+  console.log(error);
 }
     };
 
@@ -151,56 +153,49 @@ const getSingleStudent =
     };
 
   // Submit Form
-  const handleSubmit =
-    async (e) => {
+  const handleSubmit = async (e) => {
 
-      e.preventDefault();
+  e.preventDefault();
 
-      try {
+  try {
 
-        // Update
-        if (
-          editId
-        ) {
+    if (editId) {
 
-          await API.put(
-            `/students/update/${editId}`,
-            formData
-          );
+      await API.put(
+        `/students/update/${editId}`,
+        formData
+      );
 
-          alert(
-            "Student Updated Successfully"
-          );
+      toast.success(
+        "Student Updated Successfully"
+      );
 
-          navigate(
-  "/student-list"
-);
+    } else {
 
-        }
+      await API.post(
+        "/students/add",
+        formData
+      );
 
-        // Add
-        else {
+      toast.success(
+        "Student Added Successfully"
+      );
+    }
 
-          await API.post(
-            "/students/add",
-            formData
-          );
+    setTimeout(() => {
+      navigate("/student-list");
+    }, 1000);
 
-          alert(
-            "Student Added Successfully"
-          );
-        }
+  } catch (error) {
 
-        navigate(
-          "/student-list"
-        );
+    toast.error(
+      error.response?.data?.message ||
+      "Something went wrong"
+    );
 
-      } catch (error) {
-        console.log(
-          error
-        );
-      }
-    };
+    console.log(error);
+  }
+};
 
   return (
     <DashboardLayout>

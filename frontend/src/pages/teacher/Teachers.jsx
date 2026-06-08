@@ -12,6 +12,7 @@ import {
 
 import API from "../../api/axios";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import { toast } from "react-toastify";
 
 function Teachers() {
 
@@ -194,6 +195,7 @@ function Teachers() {
 
       } catch (error) {
         console.log(error);
+        toast.error("data already exists");
       }
     };
 

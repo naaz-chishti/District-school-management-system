@@ -4,7 +4,26 @@ import Message from "../models/Message.js";
 // Send Message
 export const sendMessage =
   async (req, res) => {
+
     try {
+
+      const existingMessage =
+        await Message.findOne({
+          senderId:
+            req.user._id,
+          receiverId:
+            req.body.receiverId,
+          title:
+            req.body.title
+        });
+
+      if (existingMessage) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Message already sent"
+        });
+      }
 
       const message =
         await Message.create({
@@ -16,7 +35,7 @@ export const sendMessage =
       res.status(201).json({
         success: true,
         message:
-          "Message sent successfully",
+          "Message Sent Successfully",
         data: message
       });
 
@@ -34,6 +53,7 @@ export const sendMessage =
 // Inbox / Message List
 export const getInbox =
   async (req, res) => {
+
     try {
 
       const inbox =
@@ -69,6 +89,7 @@ export const getInbox =
 // Get Single Message
 export const getSingleMessage =
   async (req, res) => {
+
     try {
 
       const message =
@@ -111,14 +132,45 @@ export const getSingleMessage =
 // Update Message
 export const updateMessage =
   async (req, res) => {
+
     try {
+
+      const existingMessage =
+        await Message.findOne({
+          receiverId:
+            req.body.receiverId,
+          title:
+            req.body.title,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingMessage) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Message already exists"
+        });
+      }
 
       const updatedMessage =
         await Message.findByIdAndUpdate(
           req.params.id,
           req.body,
-          { new: true }
+          {
+            new: true,
+            runValidators: true
+          }
         );
+
+      if (!updatedMessage) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Message not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
@@ -142,11 +194,21 @@ export const updateMessage =
 // Delete Message
 export const deleteMessage =
   async (req, res) => {
+
     try {
 
-      await Message.findByIdAndDelete(
-        req.params.id
-      );
+      const message =
+        await Message.findByIdAndDelete(
+          req.params.id
+        );
+
+      if (!message) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Message not found"
+        });
+      }
 
       res.status(200).json({
         success: true,

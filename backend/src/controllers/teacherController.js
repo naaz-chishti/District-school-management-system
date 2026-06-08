@@ -6,6 +6,34 @@ export const addTeacher =
 
     try {
 
+      const existingTeacherId =
+        await Teacher.findOne({
+          teacherId:
+            req.body.teacherId
+        });
+
+      if (existingTeacherId) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Teacher ID already exists"
+        });
+      }
+
+      const existingEmail =
+        await Teacher.findOne({
+          email:
+            req.body.email
+        });
+
+      if (existingEmail) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Teacher Email already exists"
+        });
+      }
+
       const teacher =
         await Teacher.create(
           req.body
@@ -14,7 +42,7 @@ export const addTeacher =
       res.status(201).json({
         success: true,
         message:
-          "Teacher added successfully",
+          "Teacher Added Successfully",
         teacher
       });
 
@@ -27,7 +55,6 @@ export const addTeacher =
       });
     }
   };
-
 
 // Get All Teachers
 export const getTeachers =
@@ -63,14 +90,59 @@ export const updateTeacher =
 
     try {
 
+      const existingTeacherId =
+        await Teacher.findOne({
+          teacherId:
+            req.body.teacherId,
+          _id: {
+            $ne:
+              req.params.id
+          }
+        });
+
+      if (existingTeacherId) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Teacher ID already exists"
+        });
+      }
+
+      const existingEmail =
+        await Teacher.findOne({
+          email:
+            req.body.email,
+          _id: {
+            $ne:
+              req.params.id
+          }
+        });
+
+      if (existingEmail) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Teacher Email already exists"
+        });
+      }
+
       const teacher =
         await Teacher.findByIdAndUpdate(
           req.params.id,
           req.body,
           {
-            new: true
+            new: true,
+            runValidators: true
           }
         );
+
+      if (!teacher) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Teacher not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
@@ -88,8 +160,7 @@ export const updateTeacher =
       });
     }
   };
-
-
+  
 // Delete Teacher
 export const deleteTeacher =
   async (req, res) => {

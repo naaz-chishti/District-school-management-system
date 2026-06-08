@@ -4,7 +4,26 @@ import Notification from "../models/Notification.js";
 // Add Notification
 export const addNotification =
   async (req, res) => {
+
     try {
+
+      const existingNotification =
+        await Notification.findOne({
+          title:
+            req.body.title,
+          schoolId:
+            req.body.schoolId,
+          sentTo:
+            req.body.sentTo
+        });
+
+      if (existingNotification) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Notification already exists"
+        });
+      }
 
       const notification =
         await Notification.create({
@@ -16,7 +35,7 @@ export const addNotification =
       res.status(201).json({
         success: true,
         message:
-          "Notification sent successfully",
+          "Notification Sent Successfully",
         notification
       });
 
@@ -34,6 +53,7 @@ export const addNotification =
 // Get All Notifications
 export const getNotifications =
   async (req, res) => {
+
     try {
 
       const notifications =
@@ -68,12 +88,21 @@ export const getNotifications =
 // Get Single Notification
 export const getSingleNotification =
   async (req, res) => {
+
     try {
 
       const notification =
         await Notification.findById(
           req.params.id
         );
+
+      if (!notification) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Notification not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
@@ -94,14 +123,47 @@ export const getSingleNotification =
 // Update Notification
 export const updateNotification =
   async (req, res) => {
+
     try {
+
+      const existingNotification =
+        await Notification.findOne({
+          title:
+            req.body.title,
+          schoolId:
+            req.body.schoolId,
+          sentTo:
+            req.body.sentTo,
+          _id: {
+            $ne: req.params.id
+          }
+        });
+
+      if (existingNotification) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Notification already exists"
+        });
+      }
 
       const notification =
         await Notification.findByIdAndUpdate(
           req.params.id,
           req.body,
-          { new: true }
+          {
+            new: true,
+            runValidators: true
+          }
         );
+
+      if (!notification) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Notification not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
@@ -124,11 +186,21 @@ export const updateNotification =
 // Delete Notification
 export const deleteNotification =
   async (req, res) => {
+
     try {
 
-      await Notification.findByIdAndDelete(
-        req.params.id
-      );
+      const notification =
+        await Notification.findByIdAndDelete(
+          req.params.id
+        );
+
+      if (!notification) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Notification not found"
+        });
+      }
 
       res.status(200).json({
         success: true,
@@ -146,7 +218,8 @@ export const deleteNotification =
     }
   };
 
- // Get Latest Notifications
+
+// Get Latest Notifications
 export const getLatestNotifications =
   async (req, res) => {
 
