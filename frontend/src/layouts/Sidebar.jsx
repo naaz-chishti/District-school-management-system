@@ -102,11 +102,7 @@ function Sidebar({
       Student List
     </LinkStyle>
 
-    {/* Parent Management */}
-    <LinkStyle to="/parents">
-      Add Parent
-    </LinkStyle>
-
+    {/* Parent Management */}  
     <LinkStyle to="/parent-list">
       Parent List
     </LinkStyle>
@@ -193,7 +189,7 @@ function Sidebar({
     </LinkStyle>
 
     {/* Transport */}
-    <LinkStyle to="/transports">
+    <LinkStyle to="/transport">
       Add Transport
     </LinkStyle>
 

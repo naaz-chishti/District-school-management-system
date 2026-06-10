@@ -1,11 +1,11 @@
 import {
-  useEffect,
-  useState
+useEffect,
+useState
 } from "react";
 
 import {
-  useNavigate,
-  useSearchParams
+useNavigate,
+useSearchParams
 } from "react-router-dom";
 
 import API from "../../api/axios";
@@ -14,202 +14,263 @@ import { toast } from "react-toastify";
 
 function Users() {
 
-  const navigate =
-    useNavigate();
+const navigate =
+useNavigate();
 
-  const [
-    searchParams
-  ] =
-    useSearchParams();
+const [
+searchParams
+] =
+useSearchParams();
 
-  const id =
-    searchParams.get(
-      "id"
+const id =
+searchParams.get("id");
+
+const [schools,
+setSchools] =
+useState([]);
+
+const [formData,
+setFormData] =
+useState({
+name: "",
+email: "",
+password: "",
+role: "",
+schoolId: "",
+phone: ""
+});
+
+useEffect(() => {
+
+fetchSchools();
+
+if (id) {
+  fetchUser();
+}
+
+}, [id]);
+
+const fetchSchools =
+async () => {
+
+  try {
+
+    const res =
+      await API.get(
+        "/schools/all"
+      );
+
+    setSchools(
+      res.data.schools || []
     );
 
-  const [formData,
-    setFormData] =
-    useState({
-      name: "",
-      email: "",
+  } catch (error) {
+
+    console.log(error);
+  }
+};
+
+const fetchUser =
+async () => {
+
+  try {
+
+    const res =
+      await API.get(
+        `/users/${id}`
+      );
+
+    const user =
+      res.data.user;
+
+    setFormData({
+      name:
+        user.name || "",
+      email:
+        user.email || "",
       password: "",
-      role: "",
-      schoolId: "",
-      phone: ""
+      role:
+        user.role || "",
+      schoolId:
+        user.schoolId?._id || "",
+      phone:
+        user.phone || ""
     });
 
-  useEffect(() => {
+  } catch (error) {
+
+    console.log(error);
+  }
+};
+
+const handleChange =
+(e) => {
+
+  setFormData({
+    ...formData,
+    [e.target.name]:
+      e.target.value
+  });
+};
+
+const handleSubmit =
+async (e) => {
+
+  e.preventDefault();
+
+  try {
+
     if (id) {
-      fetchUser();
+
+      await API.put(
+        `/users/update/${id}`,
+        formData
+      );
+
+      toast.success(
+        "User Updated Successfully"
+      );
+
+    } else {
+
+      await API.post(
+        "/users/create",
+        formData
+      );
+
+      toast.success(
+        "User Created Successfully"
+      );
     }
-  }, [id]);
 
-  const fetchUser =
-    async () => {
+    setTimeout(() => {
 
-      try {
+      navigate(
+        "/user-list"
+      );
 
-        const res =
-          await API.get(
-            `/users/${id}`
-          );
+    }, 1000);
 
-        const user =
-          res.data.user;
+  } catch (error) {
 
-        setFormData({
-          name:
-            user.name || "",
-          email:
-            user.email || "",
-          password: "",
-          role:
-            user.role || "",
-          schoolId:
-            user.schoolId?._id ||
-            "",
-          phone:
-            user.phone || ""
-        });
+    toast.error(
+      error.response?.data?.message ||
+      "Something went wrong"
+    );
 
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    console.log(error);
+  }
+};
 
-  const handleChange =
-    (e) => {
+const inputStyle = {
+width: "100%",
+padding: "12px 15px",
+border: "1px solid #D1D5DB",
+borderRadius: "10px",
+fontSize: "14px",
+outline: "none",
+background: "#fff",
+boxSizing: "border-box"
+};
 
-      setFormData({
-        ...formData,
-        [e.target.name]:
-          e.target.value
-      });
-    };
+return (
 
-  const handleSubmit =
-    async (e) => {
+<DashboardLayout>
 
-      e.preventDefault();
+  <div
+    style={{
+      background: "#fff",
+      padding: "35px",
+      borderRadius: "20px",
+      boxShadow:
+        "0 10px 30px rgba(0,0,0,0.08)",
+      maxWidth: "1100px",
+      margin: "0 auto"
+    }}
+  >
 
-      try {
+    <div
+      style={{
+        marginBottom: "30px"
+      }}
+    >
 
-        if (id) {
-
-          await API.put(
-            `/users/update/${id}`,
-            formData
-          );
-
-          toast.success(
-            "User Updated Successfully"
-          );
-
-        } else {
-
-          await API.post(
-            "/users/create",
-            formData
-          );
-
-          alert(
-            "User Created Successfully"
-          );
-        }
-
-        navigate(
-          "/user-list"
-        );
-
-      } catch (error) {
-
-        console.log(
-          error.response
-            ?.data
-        );
-
-        alert(
-          error.response
-            ?.data
-            ?.message ||
-          "Something went wrong"
-        );
-      }
-    };
-
-  return (
-    <DashboardLayout>
-
-      <h1>
-        {id
+      <h1
+        style={{
+          margin: 0,
+          fontSize: "32px",
+          color: "#111827"
+        }}
+      >
+        👤 {id
           ? "Edit User"
           : "Add User"}
       </h1>
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
+      <p
+        style={{
+          color: "#6B7280",
+          marginTop: "8px"
+        }}
+      >
+        Create and manage system users
+      </p>
+
+    </div>
+
+    <form
+      onSubmit={
+        handleSubmit
+      }
+    >
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "1fr 1fr",
+          gap: "20px"
+        }}
       >
 
         <input
           type="text"
           name="name"
-          placeholder="Name"
-          value={
-            formData.name
-          }
-          onChange={
-            handleChange
-          }
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br /><br />
 
         <input
           type="email"
           name="email"
-          placeholder="Email"
-          value={
-            formData.email
-          }
-          onChange={
-            handleChange
-          }
+          placeholder="Email Address"
+          value={formData.email}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
 
-        <br /><br />
-
         {!id && (
-          <>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={
-                formData.password
-              }
-              onChange={
-                handleChange
-              }
-              required
-            />
-
-            <br /><br />
-          </>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
         )}
 
         <select
           name="role"
-          value={
-            formData.role
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.role}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select Role
@@ -234,51 +295,69 @@ function Users() {
           <option value="parent">
             Parent
           </option>
-
         </select>
 
-        <br /><br />
-
-        <input
-          type="text"
+        <select
           name="schoolId"
-          placeholder="School ID"
-          value={
-            formData.schoolId
-          }
-          onChange={
-            handleChange
-          }
-        />
+          value={formData.schoolId}
+          onChange={handleChange}
+          style={inputStyle}
+        >
+          <option value="">
+            Select School
+          </option>
 
-        <br /><br />
+          {schools.map(
+            (school) => (
+              <option
+                key={school._id}
+                value={school._id}
+              >
+                {school.schoolName}
+              </option>
+            )
+          )}
+        </select>
 
         <input
           type="text"
           name="phone"
-          placeholder="Phone"
-          value={
-            formData.phone
-          }
-          onChange={
-            handleChange
-          }
+          placeholder="Phone Number"
+          value={formData.phone}
+          onChange={handleChange}
+          style={inputStyle}
         />
 
-        <br /><br />
+      </div>
 
-        <button
-          type="submit"
-        >
-          {id
-            ? "Update User"
-            : "Create User"}
-        </button>
+      <button
+        type="submit"
+        style={{
+          marginTop: "25px",
+          width: "100%",
+          background:
+            "linear-gradient(135deg,#2563EB,#3B82F6)",
+          color: "#fff",
+          border: "none",
+          padding: "14px",
+          borderRadius: "12px",
+          fontSize: "16px",
+          fontWeight: "600",
+          cursor: "pointer"
+        }}
+      >
+        {id
+          ? "Update User"
+          : "Create User"}
+      </button>
 
-      </form>
+    </form>
 
-    </DashboardLayout>
-  );
+  </div>
+
+</DashboardLayout>
+
+);
 }
 
 export default Users;

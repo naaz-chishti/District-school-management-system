@@ -23,14 +23,17 @@ function Hostel() {
     useSearchParams();
 
   const hostelId =
-    searchParams.get(
-      "id"
-    );
+    searchParams.get("id");
 
   const [
     schools,
     setSchools
   ] = useState([]);
+
+  const [
+    editId,
+    setEditId
+  ] = useState(null);
 
   const [
     formData,
@@ -84,9 +87,11 @@ function Hostel() {
               hostelId
           );
 
-        if (
-          hostel
-        ) {
+        if (hostel) {
+
+          setEditId(
+            hostel._id
+          );
 
           setFormData({
             hostelName:
@@ -117,15 +122,12 @@ function Hostel() {
 
     getSchools();
 
-    if (
-      hostelId
-    ) {
+    if (hostelId) {
       getSingleHostel();
     }
 
-  }, []);
+  }, [hostelId]);
 
-  // Handle Change
   const handleChange =
     (e) => {
 
@@ -136,7 +138,6 @@ function Hostel() {
       });
     };
 
-  // Submit
   const handleSubmit =
     async (e) => {
 
@@ -144,15 +145,28 @@ function Hostel() {
 
       try {
 
-        // Add Hostel
-        await API.post(
-          "/hostel/add",
-          formData
-        );
+        if (editId) {
 
-        alert(
-          "Hostel Added Successfully"
-        );
+          await API.put(
+            `/hostel/update/${editId}`,
+            formData
+          );
+
+          toast.success(
+            "Hostel Updated Successfully"
+          );
+
+        } else {
+
+          await API.post(
+            "/hostel/add",
+            formData
+          );
+
+          toast.success(
+            "Hostel Added Successfully"
+          );
+        }
 
         navigate(
           "/hostel-list"
@@ -160,210 +174,218 @@ function Hostel() {
 
       } catch (error) {
 
-  toast.error(
-    error.response?.data?.message ||
-    "Something went wrong"
-  );
+        toast.error(
+          error.response?.data?.message ||
+          "Something went wrong"
+        );
 
-  console.log(error);
-}
+        console.log(error);
+      }
     };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "12px 15px",
+    border: "1px solid #D1D5DB",
+    borderRadius: "10px",
+    fontSize: "14px",
+    outline: "none",
+    background: "#fff",
+    boxSizing: "border-box"
+  };
 
   return (
     <DashboardLayout>
 
-      <h1>
-        Hostel
-      </h1>
-
-      <form
-        onSubmit={
-          handleSubmit
-        }
+      <div
         style={{
-          background:
-            "white",
-          padding:
-            "30px",
-          borderRadius:
-            "15px"
+          background: "#fff",
+          padding: "35px",
+          borderRadius: "20px",
+          boxShadow:
+            "0 10px 30px rgba(0,0,0,0.08)",
+          maxWidth: "1100px",
+          margin: "0 auto"
         }}
       >
 
-        <h2>
-          Add Hostel
-        </h2>
-
-        <input
-          type="text"
-          name="hostelName"
-          placeholder="Hostel Name"
-          value={
-            formData.hostelName
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="text"
-          name="roomNumber"
-          placeholder="Room Number"
-          value={
-            formData.roomNumber
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <select
-          name="roomType"
-          value={
-            formData.roomType
-          }
-          onChange={
-            handleChange
-          }
-          required
+        <div
+          style={{
+            marginBottom: "30px"
+          }}
         >
-          <option value="">
-            Select Room Type
-          </option>
+          <h1
+            style={{
+              margin: 0,
+              color: "#111827",
+              fontSize: "32px"
+            }}
+          >
+            🏠 {editId
+              ? "Edit Hostel"
+              : "Add Hostel"}
+          </h1>
 
-          <option value="single">
-            Single
-          </option>
+          <p
+            style={{
+              color: "#6B7280",
+              marginTop: "8px"
+            }}
+          >
+            Manage hostel rooms, wardens and accommodation details
+          </p>
+        </div>
 
-          <option value="double">
-            Double
-          </option>
-
-          <option value="shared">
-            Shared
-          </option>
-        </select>
-
-        <br />
-        <br />
-
-        <input
-          type="number"
-          name="capacity"
-          placeholder="Capacity"
-          value={
-            formData.capacity
+        <form
+          onSubmit={
+            handleSubmit
           }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="text"
-          name="wardenName"
-          placeholder="Warden Name"
-          value={
-            formData.wardenName
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="text"
-          name="wardenPhone"
-          placeholder="Warden Phone"
-          value={
-            formData.wardenPhone
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="number"
-          name="hostelFee"
-          placeholder="Hostel Fee"
-          value={
-            formData.hostelFee
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <select
-          name="schoolId"
-          value={
-            formData.schoolId
-          }
-          onChange={
-            handleChange
-          }
-          required
         >
-          <option value="">
-            Select School
-          </option>
 
-          {schools.map(
-            (
-              school
-            ) => (
-              <option
-                key={
-                  school._id
-                }
-                value={
-                  school._id
-                }
-              >
-                {
-                  school.schoolName
-                }
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "1fr 1fr",
+              gap: "20px"
+            }}
+          >
+
+            <input
+              type="text"
+              name="hostelName"
+              placeholder="Hostel Name"
+              value={formData.hostelName}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+
+            <input
+              type="text"
+              name="roomNumber"
+              placeholder="Room Number"
+              value={formData.roomNumber}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+
+            <select
+              name="roomType"
+              value={formData.roomType}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            >
+              <option value="">
+                Select Room Type
               </option>
-            )
-          )}
-        </select>
 
-        <br />
-        <br />
+              <option value="single">
+                Single
+              </option>
 
-        <button
-          type="submit"
-        >
-          Add Hostel
-        </button>
+              <option value="double">
+                Double
+              </option>
 
-      </form>
+              <option value="shared">
+                Shared
+              </option>
+            </select>
+
+            <input
+              type="number"
+              name="capacity"
+              placeholder="Capacity"
+              value={formData.capacity}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+
+            <input
+              type="text"
+              name="wardenName"
+              placeholder="Warden Name"
+              value={formData.wardenName}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+
+            <input
+              type="text"
+              name="wardenPhone"
+              placeholder="Warden Phone"
+              value={formData.wardenPhone}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+
+            <input
+              type="number"
+              name="hostelFee"
+              placeholder="Hostel Fee"
+              value={formData.hostelFee}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+
+            <select
+              name="schoolId"
+              value={formData.schoolId}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            >
+              <option value="">
+                Select School
+              </option>
+
+              {schools.map(
+                (school) => (
+                  <option
+                    key={school._id}
+                    value={school._id}
+                  >
+                    {school.schoolName}
+                  </option>
+                )
+              )}
+            </select>
+
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              marginTop: "25px",
+              background:
+                "linear-gradient(135deg,#2563EB,#3B82F6)",
+              color: "#fff",
+              border: "none",
+              padding: "14px",
+              borderRadius: "12px",
+              fontSize: "16px",
+              fontWeight: "600",
+              cursor: "pointer",
+              boxShadow:
+                "0 6px 15px rgba(37,99,235,0.3)"
+            }}
+          >
+            {editId
+              ? "Update Hostel"
+              : "Add Hostel"}
+          </button>
+
+        </form>
+
+      </div>
 
     </DashboardLayout>
   );

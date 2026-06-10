@@ -35,12 +35,13 @@ function Parents() {
   ] =
     useState(null);
 
-  const [
-    formData,
-    setFormData
-  ] = useState({
-    phone: "",
-    occupation: "",
+ const [formData, setFormData] =
+  useState({
+    fatherName: "",
+    fatherPhone: "",
+    fatherOccupation: "",
+    motherName: "",
+    motherOccupation: "",
     address: ""
   });
 
@@ -69,17 +70,25 @@ function Parents() {
             parent._id
           );
 
-          setFormData({
-            phone:
-              parent.phone ||
-              "",
-            occupation:
-              parent.occupation ||
-              "",
-            address:
-              parent.address ||
-              ""
-          });
+         setFormData({
+  fatherName:
+    parent.fatherName || "",
+
+  fatherPhone:
+    parent.fatherPhone || "",
+
+  fatherOccupation:
+    parent.fatherOccupation || "",
+
+  motherName:
+    parent.motherName || "",
+
+  motherOccupation:
+    parent.motherOccupation || "",
+
+  address:
+    parent.address || ""
+});
         }
 
       } catch (error) {
@@ -161,131 +170,145 @@ function Parents() {
 }
     };
 
+    const inputStyle = {
+  width: "100%",
+  padding: "12px 15px",
+  border: "1px solid #D1D5DB",
+  borderRadius: "10px",
+  fontSize: "14px",
+  outline: "none",
+  boxSizing: "border-box"
+};
+
   return (
-    <DashboardLayout>
+  <DashboardLayout>
 
-      <h1>
-        Parents
-      </h1>
+    <div
+      style={{
+        background: "#fff",
+        padding: "35px",
+        borderRadius: "20px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+        maxWidth: "1100px",
+        margin: "0 auto"
+      }}
+    >
+      <div style={{ marginBottom: "30px" }}>
+        <h1
+          style={{
+            margin: 0,
+            fontSize: "32px",
+            color: "#111827"
+          }}
+        >
+          👨‍👩‍👧 Parent Management
+        </h1>
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
-        style={{
-          background:
-            "white",
-          padding:
-            "30px",
-          borderRadius:
-            "15px",
-          boxShadow:
-            "0 2px 10px rgba(0,0,0,0.1)"
-        }}
-      >
+        <p
+          style={{
+            color: "#6B7280",
+            marginTop: "8px"
+          }}
+        >
+          Add and manage parent information
+        </p>
+      </div>
 
-        <h2>
-          {
-            editId
-              ? "Edit Parent"
-              : "Add Parent"
-          }
-        </h2>
+      <form onSubmit={handleSubmit}>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "20px"
+          }}
+        >
 
         <input
-          type="text"
-          name="phone"
-          placeholder="Phone"
-          value={
-            formData.phone
-          }
-          onChange={
-            handleChange
-          }
-          required
-          style={{
-            width:
-              "100%",
-            padding:
-              "12px",
-            marginTop:
-              "15px"
-          }}
-        />
+  type="text"
+  name="fatherName"
+  placeholder="Father Name"
+  value={formData.fatherName}
+  onChange={handleChange}
+/>
 
-        <input
-          type="text"
-          name="occupation"
-          placeholder="Occupation"
-          value={
-            formData.occupation
-          }
-          onChange={
-            handleChange
-          }
-          style={{
-            width:
-              "100%",
-            padding:
-              "12px",
-            marginTop:
-              "15px"
-          }}
-        />
+<input
+  type="text"
+  name="fatherPhone"
+  placeholder="Father Mobile"
+  value={formData.fatherPhone}
+  onChange={handleChange}
+/>
+
+<input
+  type="text"
+  name="fatherOccupation"
+  placeholder="Father Occupation"
+  value={formData.fatherOccupation}
+  onChange={handleChange}
+/>
+
+<input
+  type="text"
+  name="motherName"
+  placeholder="Mother Name"
+  value={formData.motherName}
+  onChange={handleChange}
+/>
+
+<input
+  type="text"
+  name="motherOccupation"
+  placeholder="Mother Occupation"
+  value={formData.motherOccupation}
+  onChange={handleChange}
+/>
+
+        </div>
 
         <textarea
           name="address"
           placeholder="Address"
-          value={
-            formData.address
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.address}
+          onChange={handleChange}
           style={{
-            width:
-              "100%",
-            padding:
-              "12px",
-            marginTop:
-              "15px",
-            minHeight:
-              "100px"
+            width: "100%",
+            padding: "12px 15px",
+            border: "1px solid #D1D5DB",
+            borderRadius: "10px",
+            marginTop: "20px",
+            minHeight: "120px",
+            resize: "none",
+            boxSizing: "border-box"
           }}
         />
 
         <button
           type="submit"
           style={{
-            width:
-              "100%",
+            width: "100%",
+            marginTop: "25px",
             background:
-              "#2563eb",
-            color:
-              "white",
-            padding:
-              "14px",
-            border:
-              "none",
-            borderRadius:
-              "10px",
-            marginTop:
-              "20px",
-            cursor:
-              "pointer"
+              "linear-gradient(135deg,#2563EB,#3B82F6)",
+            color: "#fff",
+            border: "none",
+            padding: "14px",
+            borderRadius: "12px",
+            fontSize: "16px",
+            fontWeight: "600",
+            cursor: "pointer"
           }}
         >
-          {
-            editId
-              ? "Update Parent"
-              : "Add Parent"
-          }
+          {editId
+            ? "Update Parent"
+            : "Add Parent"}
         </button>
 
       </form>
+    </div>
 
-    </DashboardLayout>
-  );
+  </DashboardLayout>
+);
 }
 
 export default Parents;

@@ -128,61 +128,86 @@ function UserList() {
                   {user.schoolId?.schoolName || "N/A"}
                 </td>
 
-                <td style={tdStyle}>
-                  <span
-                    style={{
-                      background: user.isActive
-                        ? "#dcfce7"
-                        : "#fee2e2",
-                      color: user.isActive
-                        ? "#166534"
-                        : "#991b1b",
-                      padding: "5px 10px",
-                      borderRadius: "20px",
-                      fontSize: "12px",
-                      fontWeight: "bold"
-                    }}
-                  >
-                    {user.isActive
-                      ? "Active"
-                      : "Inactive"}
-                  </span>
-                </td>
+                <td
+  style={{
+    ...tdStyle,
+    textAlign: "center",
+    verticalAlign: "middle"
+  }}
+>
+  <span
+    style={{
+      display: "inline-block",
+      minWidth: "90px",
+      background: user.isActive
+        ? "#dcfce7"
+        : "#fee2e2",
+      color: user.isActive
+        ? "#166534"
+        : "#991b1b",
+      padding: "6px 2px",
+      borderRadius: "20px",
+      fontSize: "12px",
+      fontWeight: "600",
+      textAlign: "center"
+    }}
+  >
+    {user.isActive
+      ? "Active"
+      : "Inactive"}
+  </span>
+</td>
 
-                <td style={tdStyle}>
-                  <button
-                    onClick={() =>
-                      navigate(`/users?id=${user._id}`)
-                    }
-                    style={{
-                      background: "#2563eb",
-                      color: "#fff",
-                      border: "none",
-                      padding: "6px 12px",
-                      borderRadius: "6px",
-                      marginRight: "10px",
-                      cursor: "pointer"
-                    }}
-                  >
-                    Edit
-                  </button>
+               <td
+  style={{
+    ...tdStyle,
+    textAlign: "center",
+    verticalAlign: "middle"
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "10px"
+    }}
+  >
+    <button
+      onClick={() =>
+        navigate(
+          `/users?id=${user._id}`
+        )
+      }
+      style={{
+        background: "#2563eb",
+        color: "#fff",
+        border: "none",
+        padding: "8px 14px",
+        borderRadius: "6px",
+        cursor: "pointer"
+      }}
+    >
+      Edit
+    </button>
 
-                  <button
-                    onClick={() =>
-                      deleteUser(user._id)
-                    }
-                    style={{
-                      background: "#dc2626",
-                      color: "#fff",
-                      border: "none",
-                      padding: "6px 12px",
-                      borderRadius: "6px",
-                      cursor: "pointer"
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
+    <button
+      onClick={() =>
+        deleteUser(user._id)
+      }
+      style={{
+        background: "#dc2626",
+        color: "#fff",
+        border: "none",
+        padding: "8px 14px",
+        borderRadius: "6px",
+        cursor: "pointer"
+      }}
+    >
+      Delete
+    </button>
+  </div>
+</td>
               </tr>
             ))}
           </tbody>
@@ -199,8 +224,9 @@ const thStyle = {
 };
 
 const tdStyle = {
-  padding: "12px",
-  borderBottom: "1px solid #eee"
+  padding: "16px 12px",
+  borderBottom: "1px solid #eee",
+  verticalAlign: "middle"
 };
 
 export default UserList;

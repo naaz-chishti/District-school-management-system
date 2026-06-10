@@ -5,7 +5,8 @@ import {
   getUsers,
   getSingleUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  changePassword
 } from "../controllers/userController.js";
 
 import {
@@ -37,6 +38,12 @@ router.put(
   "/update/:id",
   protect,
   updateUser
+);
+
+router.put(
+  "/change-password/:id",
+  protect,
+  changePassword
 );
 
 router.put(

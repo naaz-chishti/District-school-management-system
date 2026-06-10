@@ -145,63 +145,88 @@ function Notifications() {
 }
     };
 
+    const inputStyle = {
+  width: "100%",
+  padding: "12px 15px",
+  border: "1px solid #D1D5DB",
+  borderRadius: "10px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#fff",
+  boxSizing: "border-box"
+};
+
   return (
     <DashboardLayout>
 
-      <h1>
-        {id
+  <div
+    style={{
+      background: "#fff",
+      padding: "35px",
+      borderRadius: "20px",
+      boxShadow:
+        "0 10px 30px rgba(0,0,0,0.08)",
+      maxWidth: "1100px",
+      margin: "0 auto"
+    }}
+  >
+
+    <div
+      style={{
+        marginBottom: "30px"
+      }}
+    >
+      <h1
+        style={{
+          margin: 0,
+          color: "#111827",
+          fontSize: "32px"
+        }}
+      >
+        🔔 {id
           ? "Edit Notification"
-          : "Add Notification"}
+          : "Send Notification"}
       </h1>
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
+      <p
+        style={{
+          color: "#6B7280",
+          marginTop: "8px"
+        }}
+      >
+        Send announcements and important messages
+      </p>
+    </div>
+
+    <form onSubmit={handleSubmit}>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "1fr 1fr",
+          gap: "20px"
+        }}
       >
 
         <input
           type="text"
           name="title"
-          placeholder="Title"
-          value={
-            formData.title
-          }
-          onChange={
-            handleChange
-          }
+          placeholder="Notification Title"
+          value={formData.title}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br />
-        <br />
-
-        <textarea
-          name="message"
-          placeholder="Message"
-          value={
-            formData.message
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
 
         <select
           name="sentTo"
-          value={
-            formData.sentTo
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.sentTo}
+          onChange={handleChange}
+          style={inputStyle}
         >
           <option value="all">
-            All
+            All Users
           </option>
 
           <option value="students">
@@ -217,36 +242,65 @@ function Notifications() {
           </option>
         </select>
 
-        <br />
-        <br />
-
         <input
           type="text"
           name="schoolId"
           placeholder="School ID"
-          value={
-            formData.schoolId
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.schoolId}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
 
-        <br />
-        <br />
+      </div>
 
-        <button
-          type="submit"
-        >
-          {id
-            ? "Update Notification"
-            : "Add Notification"}
-        </button>
+      <textarea
+        name="message"
+        placeholder="Notification Message"
+        value={formData.message}
+        onChange={handleChange}
+        required
+        style={{
+          width: "100%",
+          padding: "12px 15px",
+          border: "1px solid #D1D5DB",
+          borderRadius: "10px",
+          fontSize: "14px",
+          marginTop: "20px",
+          minHeight: "150px",
+          resize: "none",
+          boxSizing: "border-box"
+        }}
+      />
 
-      </form>
+      <button
+        type="submit"
+        style={{
+          width: "100%",
+          marginTop: "25px",
+          background:
+            "linear-gradient(135deg,#2563EB,#3B82F6)",
+          color: "#fff",
+          border: "none",
+          padding: "14px",
+          borderRadius: "12px",
+          fontSize: "16px",
+          fontWeight: "600",
+          cursor: "pointer",
+          boxShadow:
+            "0 6px 15px rgba(37,99,235,0.3)"
+        }}
+      >
+        {id
+          ? "Update Notification"
+          : "Send Notification"}
+      </button>
 
-    </DashboardLayout>
+    </form>
+
+  </div>
+
+</DashboardLayout>
   );
 }
 

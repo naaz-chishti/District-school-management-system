@@ -7,7 +7,6 @@ import TableHeader from "../../components/TableHeader";
 import DataTable from "../../components/DataTable";
 
 function TransportList() {
-
   const navigate = useNavigate();
 
   const [transport, setTransport] =
@@ -20,13 +19,13 @@ function TransportList() {
 
   const getTransport =
     async () => {
-
       try {
-
         const res =
           await API.get(
             "/transports/all"
           );
+
+          console.log(res.data);
 
         const data =
           res.data.transport || [];
@@ -35,7 +34,6 @@ function TransportList() {
         setFilteredTransport(data);
 
       } catch (error) {
-
         console.log(error);
       }
     };
@@ -46,7 +44,6 @@ function TransportList() {
 
   const handleSearch =
     (value) => {
-
       const filtered =
         transport.filter(
           (item) =>
@@ -76,7 +73,6 @@ function TransportList() {
 
   const handleDelete =
     async (id) => {
-
       const confirmDelete =
         window.confirm(
           "Delete Transport?"
@@ -86,7 +82,6 @@ function TransportList() {
         return;
 
       try {
-
         await API.delete(
           `/transports/delete/${id}`
         );
@@ -98,7 +93,6 @@ function TransportList() {
         getTransport();
 
       } catch (error) {
-
         console.log(error);
       }
     };
@@ -109,8 +103,16 @@ function TransportList() {
       label: "Bus Number"
     },
     {
+      key: "vehicleNumber",
+      label: "Vehicle Number"
+    },
+    {
       key: "driverName",
-      label: "Driver"
+      label: "Driver Name"
+    },
+    {
+      key: "driverPhone",
+      label: "Driver Phone"
     },
     {
       key: "routeName",
@@ -127,19 +129,17 @@ function TransportList() {
         <span
           style={{
             background:
-              item.status === "Active"
+              item.status === "active"
                 ? "#dcfce7"
                 : "#fee2e2",
             color:
-              item.status === "Active"
+              item.status === "active"
                 ? "#166534"
                 : "#991b1b",
-            padding:
-              "5px 10px",
-            borderRadius:
-              "20px",
-            fontWeight:
-              "bold"
+            padding: "5px 12px",
+            borderRadius: "20px",
+            fontWeight: "600",
+            fontSize: "12px"
           }}
         >
           {item.status}
@@ -248,4 +248,3 @@ function TransportList() {
 }
 
 export default TransportList;
-

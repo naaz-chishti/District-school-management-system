@@ -32,13 +32,12 @@ function ParentList() {
 
       try {
 
-        const res =
-          await API.get(
-            "/parents/all"
-          );
+        const res = await API.get(
+  "/students/all"
+);
 
-        const data =
-          res.data.parents || [];
+const data =
+  res.data.students || [];
 
         setParents(data);
         setFilteredParents(data);
@@ -52,42 +51,58 @@ function ParentList() {
     getParents();
   }, []);
 
-  const handleSearch =
-    (value) => {
+  const handleSearch = (value) => {
 
-      const filtered =
-        parents.filter(
-          (parent) =>
-            parent.phone
-              ?.toLowerCase()
-              .includes(
-                value.toLowerCase()
-              ) ||
+  const search =
+    value.toLowerCase();
 
-            parent.occupation
-              ?.toLowerCase()
-              .includes(
-                value.toLowerCase()
-              ) ||
+  const filtered =
+    parents.filter(
+      (parent) =>
+        parent.fatherName
+          ?.toLowerCase()
+          .includes(search) ||
 
-            parent.address
-              ?.toLowerCase()
-              .includes(
-                value.toLowerCase()
-              )
-        );
+        parent.fatherPhone
+          ?.toLowerCase()
+          .includes(search) ||
 
-      setFilteredParents(
-        filtered
-      );
-    };
+        parent.fatherOccupation
+          ?.toLowerCase()
+          .includes(search) ||
+
+        parent.motherName
+          ?.toLowerCase()
+          .includes(search) ||
+
+        parent.motherOccupation
+          ?.toLowerCase()
+          .includes(search) ||
+
+        parent.name
+          ?.toLowerCase()
+          .includes(search) ||
+
+        parent.class
+          ?.toLowerCase()
+          .includes(search) ||
+
+        parent.address
+          ?.toLowerCase()
+          .includes(search)
+    );
+
+  setFilteredParents(
+    filtered
+  );
+};
 
   const handleDelete =
     async (id) => {
 
       const confirmDelete =
         window.confirm(
-          "Delete Parent?"
+          "Delete Student & Parent Details?"
         );
 
       if (!confirmDelete)
@@ -100,7 +115,7 @@ function ParentList() {
         );
 
         alert(
-          "Parent Deleted Successfully"
+          "Student Deleted Successfully"
         );
 
         getParents();
@@ -111,32 +126,45 @@ function ParentList() {
     };
 
   const columns = [
-    {
-      key: "phone",
-      label: "Phone"
-    },
-    {
-      key: "occupation",
-      label: "Occupation"
-    },
-    {
-      key: "address",
-      label: "Address"
-    },
-    {
-      key: "children",
-      label: "Children",
-      render: (parent) =>
-        parent.children
-          ?.length || 0
-    }
-  ];
+  {
+    key: "fatherName",
+    label: "Father Name"
+  },
+  {
+    key: "fatherPhone",
+    label: "Father Mobile"
+  },
+  {
+    key: "fatherOccupation",
+    label: "Father Occupation"
+  },
+  {
+    key: "motherName",
+    label: "Mother Name"
+  },
+  {
+    key: "motherOccupation",
+    label: "Mother Occupation"
+  },
+  {
+    key: "name",
+    label: "Student Name"
+  },
+  {
+    key: "class",
+    label: "Class"
+  },
+  {
+    key: "address",
+    label: "Address"
+  }
+];
 
   return (
     <DashboardLayout>
 
       <TableHeader
-        title="Parents"
+        title="Parent Directory"
         count={
           filteredParents.length
         }
@@ -144,32 +172,6 @@ function ParentList() {
           handleSearch
         }
       />
-
-      <button
-        onClick={() =>
-          navigate(
-            "/parents"
-          )
-        }
-        style={{
-          background:
-            "#2563eb",
-          color:
-            "#fff",
-          border:
-            "none",
-          padding:
-            "10px 15px",
-          borderRadius:
-            "8px",
-          cursor:
-            "pointer",
-          marginBottom:
-            "20px"
-        }}
-      >
-        + Add Parent
-      </button>
 
       <DataTable
         columns={columns}
@@ -181,9 +183,9 @@ function ParentList() {
             <>
               <button
                 onClick={() =>
-                  navigate(
-                    `/parents?id=${parent._id}`
-                  )
+                 navigate(
+  `/students?id=${parent._id}`
+)
                 }
                 style={{
                   background:

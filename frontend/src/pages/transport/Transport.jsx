@@ -52,90 +52,77 @@ function Transport() {
   });
 
   // Get Schools
-  const getSchools =
-    async () => {
+  const getSchools = async () => {
+  try {
+    const res = await API.get("/schools/all");
+    console.log(res.data);
 
-      try {
+    setSchools(
+      res.data.schools || []
+    );
 
-        const res =
-          await API.get(
-            "/schools/all"
-          );
-
-        setSchools(
-          res.data.schools
-        );
-
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  } catch (error) {
+    console.log(error);
+    setSchools([]);
+  }
+};
 
   // Get Single Transport
-  const getSingleTransport =
-    async () => {
+  const getSingleTransport = async () => {
 
-      try {
+  try {
 
-        const res =
-          await API.get(
-            "/transports/all"
-          );
+    const res =
+      await API.get(
+        "/transport/all"
+      );
 
-        const transport =
-          res.data.transport.find(
-            (item) =>
-              item._id ===
-              transportId
-          );
+    console.log(res.data);
 
-        if (
-          transport
-        ) {
+    const transport =
+      res.data.transport?.find(
+        (item) =>
+          item._id ===
+          transportId
+      );
 
-          setEditId(
-            transport._id
-          );
+    if (transport) {
 
-          setFormData({
-            busNumber:
-              transport.busNumber ||
-              "",
+      setEditId(
+        transport._id
+      );
 
-            vehicleNumber:
-              transport.vehicleNumber ||
-              "",
+      setFormData({
+        busNumber:
+          transport.busNumber || "",
 
-            driverName:
-              transport.driverName ||
-              "",
+        vehicleNumber:
+          transport.vehicleNumber || "",
 
-            driverPhone:
-              transport.driverPhone ||
-              "",
+        driverName:
+          transport.driverName || "",
 
-            routeName:
-              transport.routeName ||
-              "",
+        driverPhone:
+          transport.driverPhone || "",
 
-            capacity:
-              transport.capacity ||
-              "",
+        routeName:
+          transport.routeName || "",
 
-            schoolId:
-              transport.schoolId
-                ?._id || "",
+        capacity:
+          transport.capacity || "",
 
-            status:
-              transport.status ||
-              "active"
-          });
-        }
+        schoolId:
+          transport.schoolId?._id || "",
 
-      } catch (error) {
-        console.log(error);
-      }
-    };
+        status:
+          transport.status || "active"
+      });
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   useEffect(() => {
 
@@ -174,7 +161,7 @@ function Transport() {
 
           // Update
           await API.put(
-            `/transports/update/${editId}`,
+            `/transport/update/${editId}`,
             formData
           );
 
@@ -186,7 +173,7 @@ function Transport() {
 
           // Add
           await API.post(
-            "/transports/add",
+            "/transport/add",
             formData
           );
 
@@ -211,186 +198,185 @@ function Transport() {
       }
     };
 
+    const inputStyle = {
+  width: "100%",
+  padding: "12px 15px",
+  border: "1px solid #D1D5DB",
+  borderRadius: "10px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#fff",
+  boxSizing: "border-box"
+};
+
   return (
-    <DashboardLayout>
+  <DashboardLayout>
 
-      <h1>
-        {editId
-          ? "Edit Transport"
-          : "Add Transport"}
-      </h1>
+    <div
+      style={{
+        background: "#fff",
+        padding: "35px",
+        borderRadius: "20px",
+        boxShadow:
+          "0 10px 30px rgba(0,0,0,0.08)",
+        maxWidth: "1100px",
+        margin: "0 auto"
+      }}
+    >
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
+      <div
         style={{
-          background:
-            "white",
-          padding:
-            "30px",
-          borderRadius:
-            "15px"
+          marginBottom: "30px"
         }}
       >
-
-        <input
-          type="text"
-          name="busNumber"
-          placeholder="Bus Number"
-          value={
-            formData.busNumber
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="text"
-          name="vehicleNumber"
-          placeholder="Vehicle Number"
-          value={
-            formData.vehicleNumber
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="text"
-          name="driverName"
-          placeholder="Driver Name"
-          value={
-            formData.driverName
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="text"
-          name="driverPhone"
-          placeholder="Driver Phone"
-          value={
-            formData.driverPhone
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="text"
-          name="routeName"
-          placeholder="Route Name"
-          value={
-            formData.routeName
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br />
-        <br />
-
-        <input
-          type="number"
-          name="capacity"
-          placeholder="Capacity"
-          value={
-            formData.capacity
-          }
-          onChange={
-            handleChange
-          }
-        />
-
-        <br />
-        <br />
-
-        {/* School Dropdown */}
-        <select
-          name="schoolId"
-          value={
-            formData.schoolId
-          }
-          onChange={
-            handleChange
-          }
-          required
+        <h1
+          style={{
+            margin: 0,
+            color: "#111827",
+            fontSize: "32px"
+          }}
         >
-          <option value="">
-            Select School
-          </option>
+          🚌 {editId
+            ? "Edit Transport"
+            : "Add Transport"}
+        </h1>
 
-          {schools.map(
-            (
-              school
-            ) => (
-              <option
-                key={
-                  school._id
-                }
-                value={
-                  school._id
-                }
-              >
-                {
-                  school.schoolName
-                }
-              </option>
-            )
-          )}
-        </select>
-
-        <br />
-        <br />
-
-        {/* Status */}
-        <select
-          name="status"
-          value={
-            formData.status
-          }
-          onChange={
-            handleChange
-          }
+        <p
+          style={{
+            color: "#6B7280",
+            marginTop: "8px"
+          }}
         >
-          <option value="active">
-            Active
-          </option>
+          Manage school buses, routes and drivers
+        </p>
+      </div>
 
-          <option value="inactive">
-            Inactive
-          </option>
-        </select>
+      <form onSubmit={handleSubmit}>
 
-        <br />
-        <br />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "1fr 1fr",
+            gap: "20px"
+          }}
+        >
+
+          <input
+            type="text"
+            name="busNumber"
+            placeholder="Bus Number"
+            value={formData.busNumber}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+
+          <input
+            type="text"
+            name="vehicleNumber"
+            placeholder="Vehicle Number"
+            value={formData.vehicleNumber}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+
+          <input
+            type="text"
+            name="driverName"
+            placeholder="Driver Name"
+            value={formData.driverName}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+
+          <input
+            type="text"
+            name="driverPhone"
+            placeholder="Driver Phone"
+            value={formData.driverPhone}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+
+          <input
+            type="text"
+            name="routeName"
+            placeholder="Route Name"
+            value={formData.routeName}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+
+          <input
+            type="number"
+            name="capacity"
+            placeholder="Bus Capacity"
+            value={formData.capacity}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+
+          <select
+  name="schoolId"
+  value={formData.schoolId}
+  onChange={handleChange}
+  required
+  style={inputStyle}
+>
+  <option value="">
+    Select School
+  </option>
+
+  {schools &&
+    schools.map((school) => (
+      <option
+        key={school._id}
+        value={school._id}
+      >
+        {school.schoolName}
+      </option>
+    ))}
+</select>
+
+          <select
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            style={inputStyle}
+          >
+            <option value="active">
+              Active
+            </option>
+
+            <option value="inactive">
+              Inactive
+            </option>
+          </select>
+
+        </div>
 
         <button
           type="submit"
+          style={{
+            width: "100%",
+            marginTop: "25px",
+            background:
+              "linear-gradient(135deg,#2563EB,#3B82F6)",
+            color: "#fff",
+            border: "none",
+            padding: "14px",
+            borderRadius: "12px",
+            fontSize: "16px",
+            fontWeight: "600",
+            cursor: "pointer",
+            boxShadow:
+              "0 6px 15px rgba(37,99,235,0.3)"
+          }}
         >
           {editId
             ? "Update Transport"
@@ -399,8 +385,10 @@ function Transport() {
 
       </form>
 
-    </DashboardLayout>
-  );
+    </div>
+
+  </DashboardLayout>
+);
 }
 
 export default Transport;

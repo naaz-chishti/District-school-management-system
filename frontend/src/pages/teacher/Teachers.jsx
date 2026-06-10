@@ -163,9 +163,7 @@ function Teachers() {
             formData
           );
 
-          alert(
-            "Teacher Updated Successfully"
-          );
+         toast.success("Teacher Updated Successfully");
 
           navigate(
             "/teacher-list"
@@ -178,9 +176,7 @@ function Teachers() {
             formData
           );
 
-          alert(
-            "Teacher Added Successfully"
-          );
+          toast.success("Teacher Added Successfully");
         }
 
         setFormData({
@@ -199,37 +195,62 @@ function Teachers() {
       }
     };
 
-  return (
-    <DashboardLayout>
+  const inputStyle = {
+  width: "100%",
+  padding: "12px 15px",
+  border: "1px solid #D1D5DB",
+  borderRadius: "10px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#fff",
+  boxSizing: "border-box"
+};
 
-      <h1>
-        Teachers
-      </h1>
+ return (
+  <DashboardLayout>
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
+    <div
+      style={{
+        background: "#fff",
+        padding: "35px",
+        borderRadius: "20px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+        maxWidth: "1100px",
+        margin: "0 auto"
+      }}
+    >
+      <div
         style={{
-          background:
-            "white",
-          padding:
-            "30px",
-          borderRadius:
-            "15px",
-          boxShadow:
-            "0 2px 10px rgba(0,0,0,0.1)"
+          marginBottom: "30px"
         }}
       >
+        <h1
+          style={{
+            margin: 0,
+            color: "#111827",
+            fontSize: "32px"
+          }}
+        >
+          👨‍🏫 {editId ? "Edit Teacher" : "Add Teacher"}
+        </h1>
+
+        <p
+          style={{
+            color: "#6B7280",
+            marginTop: "8px"
+          }}
+        >
+          Manage teacher information and assignments
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit}>
 
         <div
           style={{
-            display:
-              "grid",
-            gridTemplateColumns:
-              "1fr 1fr",
-            gap:
-              "15px"
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "20px"
           }}
         >
 
@@ -237,111 +258,80 @@ function Teachers() {
             type="text"
             name="teacherId"
             placeholder="Teacher ID"
-            value={
-              formData.teacherId
-            }
-            onChange={
-              handleChange
-            }
+            value={formData.teacherId}
+            onChange={handleChange}
             required
+            style={inputStyle}
           />
 
           <input
             type="text"
             name="name"
             placeholder="Teacher Name"
-            value={
-              formData.name
-            }
-            onChange={
-              handleChange
-            }
+            value={formData.name}
+            onChange={handleChange}
             required
+            style={inputStyle}
           />
 
           <input
             type="email"
             name="email"
-            placeholder="Email"
-            value={
-              formData.email
-            }
-            onChange={
-              handleChange
-            }
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
             required
+            style={inputStyle}
           />
 
           <input
             type="text"
             name="subject"
             placeholder="Subject"
-            value={
-              formData.subject
-            }
-            onChange={
-              handleChange
-            }
+            value={formData.subject}
+            onChange={handleChange}
             required
+            style={inputStyle}
           />
 
           <input
             type="text"
             name="qualification"
             placeholder="Qualification"
-            value={
-              formData.qualification
-            }
-            onChange={
-              handleChange
-            }
+            value={formData.qualification}
+            onChange={handleChange}
             required
+            style={inputStyle}
           />
 
           <input
             type="number"
             name="salary"
             placeholder="Salary"
-            value={
-              formData.salary
-            }
-            onChange={
-              handleChange
-            }
+            value={formData.salary}
+            onChange={handleChange}
+            style={inputStyle}
           />
 
           <select
             name="schoolId"
-            value={
-              formData.schoolId
-            }
-            onChange={
-              handleChange
-            }
+            value={formData.schoolId}
+            onChange={handleChange}
             required
+            style={inputStyle}
           >
             <option value="">
               Select School
             </option>
 
-            {schools.map(
-              (
-                school
-              ) => (
-                <option
-                  key={
-                    school._id
-                  }
-                  value={
-                    school._id
-                  }
-                >
-                  {
-                    school.schoolName
-                  }
-                </option>
-              )
-            )}
+            {schools.map((school) => (
+              <option
+                key={school._id}
+                value={school._id}
+              >
+                {school.schoolName}
+              </option>
+            ))}
           </select>
 
         </div>
@@ -349,33 +339,32 @@ function Teachers() {
         <button
           type="submit"
           style={{
-            width:
-              "100%",
+            width: "100%",
+            marginTop: "25px",
             background:
-              "#2563eb",
-            color:
-              "white",
-            padding:
-              "14px",
-            border:
-              "none",
-            borderRadius:
-              "10px",
-            marginTop:
-              "20px"
+              "linear-gradient(135deg,#2563EB,#3B82F6)",
+            color: "#fff",
+            border: "none",
+            padding: "14px",
+            borderRadius: "12px",
+            fontSize: "16px",
+            fontWeight: "600",
+            cursor: "pointer",
+            boxShadow:
+              "0 6px 15px rgba(37,99,235,0.3)"
           }}
         >
-          {
-            editId
-              ? "Update Teacher"
-              : "Add Teacher"
-          }
+          {editId
+            ? "Update Teacher"
+            : "Add Teacher"}
         </button>
 
       </form>
 
-    </DashboardLayout>
-  );
+    </div>
+
+  </DashboardLayout>
+);
 }
 
 export default Teachers;

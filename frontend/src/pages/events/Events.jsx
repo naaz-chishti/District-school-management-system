@@ -180,60 +180,89 @@ function Events() {
 }
     };
 
+    const inputStyle = {
+  width: "100%",
+  padding: "12px 15px",
+  border: "1px solid #D1D5DB",
+  borderRadius: "10px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#fff",
+  boxSizing: "border-box"
+};
+
   return (
     <DashboardLayout>
 
-      <h1>
-        Events
+  <div
+    style={{
+      background: "#fff",
+      padding: "35px",
+      borderRadius: "20px",
+      boxShadow:
+        "0 10px 30px rgba(0,0,0,0.08)",
+      maxWidth: "1100px",
+      margin: "0 auto"
+    }}
+  >
+
+    <div
+      style={{
+        marginBottom: "30px"
+      }}
+    >
+      <h1
+        style={{
+          margin: 0,
+          color: "#111827",
+          fontSize: "32px"
+        }}
+      >
+        🎉 {editId
+          ? "Edit Event"
+          : "Add Event"}
       </h1>
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
+      <p
+        style={{
+          color: "#6B7280",
+          marginTop: "8px"
+        }}
+      >
+        Manage school events, holidays, exams and meetings
+      </p>
+    </div>
+
+    <form onSubmit={handleSubmit}>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "1fr 1fr",
+          gap: "20px"
+        }}
       >
 
         <input
           type="text"
           name="title"
-          placeholder="Title"
-          value={
-            formData.title
-          }
-          onChange={
-            handleChange
-          }
+          placeholder="Event Title"
+          value={formData.title}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br /><br />
-
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={
-            formData.description
-          }
-          onChange={
-            handleChange
-          }
-          required
-        />
-
-        <br /><br />
 
         <select
           name="eventType"
-          value={
-            formData.eventType
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.eventType}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
-            Select Type
+            Select Event Type
           </option>
 
           <option value="holiday">
@@ -251,85 +280,55 @@ function Events() {
           <option value="meeting">
             Meeting
           </option>
-
         </select>
-
-        <br /><br />
 
         <input
           type="date"
           name="startDate"
-          value={
-            formData.startDate
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.startDate}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br /><br />
 
         <input
           type="date"
           name="endDate"
-          value={
-            formData.endDate
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.endDate}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br /><br />
 
         <select
           name="schoolId"
-          value={
-            formData.schoolId
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.schoolId}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select School
           </option>
 
           {schools.map(
-            (
-              school
-            ) => (
+            (school) => (
               <option
-                key={
-                  school._id
-                }
-                value={
-                  school._id
-                }
+                key={school._id}
+                value={school._id}
               >
-                {
-                  school.schoolName
-                }
+                {school.schoolName}
               </option>
             )
           )}
-
         </select>
-
-        <br /><br />
 
         <select
           name="status"
-          value={
-            formData.status
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.status}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select Status
@@ -346,22 +345,57 @@ function Events() {
           <option value="cancelled">
             Cancelled
           </option>
-
         </select>
 
-        <br /><br />
+      </div>
 
-        <button
-          type="submit"
-        >
-          {editId
-            ? "Update Event"
-            : "Add Event"}
-        </button>
+      <textarea
+        name="description"
+        placeholder="Event Description"
+        value={formData.description}
+        onChange={handleChange}
+        required
+        style={{
+          width: "100%",
+          padding: "12px 15px",
+          border: "1px solid #D1D5DB",
+          borderRadius: "10px",
+          fontSize: "14px",
+          marginTop: "20px",
+          minHeight: "120px",
+          resize: "none",
+          boxSizing: "border-box"
+        }}
+      />
 
-      </form>
+      <button
+        type="submit"
+        style={{
+          width: "100%",
+          marginTop: "25px",
+          background:
+            "linear-gradient(135deg,#2563EB,#3B82F6)",
+          color: "#fff",
+          border: "none",
+          padding: "14px",
+          borderRadius: "12px",
+          fontSize: "16px",
+          fontWeight: "600",
+          cursor: "pointer",
+          boxShadow:
+            "0 6px 15px rgba(37,99,235,0.3)"
+        }}
+      >
+        {editId
+          ? "Update Event"
+          : "Add Event"}
+      </button>
 
-    </DashboardLayout>
+    </form>
+
+  </div>
+
+</DashboardLayout>
   );
 }
 

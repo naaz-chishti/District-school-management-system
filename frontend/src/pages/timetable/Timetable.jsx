@@ -240,97 +240,119 @@ function Timetable() {
       }
     };
 
+    const inputStyle = {
+  width: "100%",
+  padding: "12px 15px",
+  border: "1px solid #D1D5DB",
+  borderRadius: "10px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#fff",
+  boxSizing: "border-box"
+};
+
   return (
     <DashboardLayout>
 
-      <h1>
-        Timetable
+  <div
+    style={{
+      background: "#fff",
+      padding: "35px",
+      borderRadius: "20px",
+      boxShadow:
+        "0 10px 30px rgba(0,0,0,0.08)",
+      maxWidth: "1100px",
+      margin: "0 auto"
+    }}
+  >
+
+    <div
+      style={{
+        marginBottom: "30px"
+      }}
+    >
+      <h1
+        style={{
+          margin: 0,
+          color: "#111827",
+          fontSize: "32px"
+        }}
+      >
+        📚 {editId
+          ? "Edit Timetable"
+          : "Add Timetable"}
       </h1>
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
+      <p
+        style={{
+          color: "#6B7280",
+          marginTop: "8px"
+        }}
+      >
+        Manage class schedules and teacher allocations
+      </p>
+    </div>
+
+    <form onSubmit={handleSubmit}>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "1fr 1fr",
+          gap: "20px"
+        }}
       >
 
         <select
           name="schoolId"
-          value={
-            formData.schoolId
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.schoolId}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select School
           </option>
 
           {schools.map(
-            (
-              school
-            ) => (
+            (school) => (
               <option
-                key={
-                  school._id
-                }
-                value={
-                  school._id
-                }
+                key={school._id}
+                value={school._id}
               >
-                {
-                  school.schoolName
-                }
+                {school.schoolName}
               </option>
             )
           )}
         </select>
 
-        <br />
-        <br />
-
         <input
           type="text"
           name="className"
           placeholder="Class"
-          value={
-            formData.className
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.className}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br />
-        <br />
 
         <input
           type="text"
           name="section"
           placeholder="Section"
-          value={
-            formData.section
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.section}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br />
-        <br />
 
         <select
           name="day"
-          value={
-            formData.day
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.day}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select Day
@@ -361,105 +383,87 @@ function Timetable() {
           </option>
         </select>
 
-        <br />
-        <br />
-
         <input
           type="text"
           name="subject"
           placeholder="Subject"
-          value={
-            formData.subject
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.subject}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br />
-        <br />
 
         <select
           name="teacherId"
-          value={
-            formData.teacherId
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.teacherId}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select Teacher
           </option>
 
           {teachers.map(
-            (
-              teacher
-            ) => (
+            (teacher) => (
               <option
-                key={
-                  teacher._id
-                }
-                value={
-                  teacher._id
-                }
+                key={teacher._id}
+                value={teacher._id}
               >
-                {
-                  teacher.name
-                }
+                {teacher.name}
               </option>
             )
           )}
         </select>
 
-        <br />
-        <br />
-
         <input
           type="time"
           name="startTime"
-          value={
-            formData.startTime
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.startTime}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br />
-        <br />
 
         <input
           type="time"
           name="endTime"
-          value={
-            formData.endTime
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.endTime}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
 
-        <br />
-        <br />
+      </div>
 
-        <button
-          type="submit"
-        >
-          {
-            editId
-              ? "Update Timetable"
-              : "Add Timetable"
-          }
-        </button>
+      <button
+        type="submit"
+        style={{
+          width: "100%",
+          marginTop: "25px",
+          background:
+            "linear-gradient(135deg,#2563EB,#3B82F6)",
+          color: "#fff",
+          border: "none",
+          padding: "14px",
+          borderRadius: "12px",
+          fontSize: "16px",
+          fontWeight: "600",
+          cursor: "pointer",
+          boxShadow:
+            "0 6px 15px rgba(37,99,235,0.3)"
+        }}
+      >
+        {editId
+          ? "Update Timetable"
+          : "Add Timetable"}
+      </button>
 
-      </form>
+    </form>
 
-    </DashboardLayout>
+  </div>
+
+</DashboardLayout>
   );
 }
 

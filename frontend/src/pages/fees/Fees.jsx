@@ -231,192 +231,169 @@ function Fees() {
 }
     };
 
+    const inputStyle = {
+  width: "100%",
+  padding: "12px 15px",
+  border: "1px solid #D1D5DB",
+  borderRadius: "10px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#fff",
+  boxSizing: "border-box"
+};
+
   return (
     <DashboardLayout>
 
-      <h1>
-        {
-          editId
-            ? "Edit Fee"
-            : "Add Fee"
-        }
+  <div
+    style={{
+      background: "#fff",
+      padding: "35px",
+      borderRadius: "20px",
+      boxShadow:
+        "0 10px 30px rgba(0,0,0,0.08)",
+      maxWidth: "1100px",
+      margin: "0 auto"
+    }}
+  >
+
+    <div
+      style={{
+        marginBottom: "30px"
+      }}
+    >
+      <h1
+        style={{
+          margin: 0,
+          color: "#111827",
+          fontSize: "32px"
+        }}
+      >
+        💰 {editId ? "Edit Fee" : "Add Fee"}
       </h1>
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
+      <p
         style={{
-          background:
-            "white",
-          padding:
-            "20px",
-          borderRadius:
-            "10px"
+          color: "#6B7280",
+          marginTop: "8px"
+        }}
+      >
+        Manage student fee payments and records
+      </p>
+    </div>
+
+    <form onSubmit={handleSubmit}>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "20px"
         }}
       >
 
         <select
           name="studentId"
-          value={
-            formData.studentId
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.studentId}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select Student
           </option>
 
-          {students.map(
-            (
-              student
-            ) => (
-              <option
-                key={
-                  student._id
-                }
-                value={
-                  student._id
-                }
-              >
-                {
-                  student.name
-                }
-              </option>
-            )
-          )}
+          {students.map((student) => (
+            <option
+              key={student._id}
+              value={student._id}
+            >
+              {student.name}
+            </option>
+          ))}
         </select>
-
-        <br />
-        <br />
 
         <select
           name="schoolId"
-          value={
-            formData.schoolId
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.schoolId}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select School
           </option>
 
-          {schools.map(
-            (
-              school
-            ) => (
-              <option
-                key={
-                  school._id
-                }
-                value={
-                  school._id
-                }
-              >
-                {
-                  school.schoolName
-                }
-              </option>
-            )
-          )}
+          {schools.map((school) => (
+            <option
+              key={school._id}
+              value={school._id}
+            >
+              {school.schoolName}
+            </option>
+          ))}
         </select>
-
-        <br />
-        <br />
 
         <input
           type="number"
           name="totalFee"
           placeholder="Total Fee"
-          value={
-            formData.totalFee
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.totalFee}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br />
-        <br />
 
         <input
           type="number"
           name="paidAmount"
           placeholder="Paid Amount"
-          value={
-            formData.paidAmount
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.paidAmount}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br />
-        <br />
 
         <input
           type="number"
           name="remainingAmount"
           placeholder="Remaining Amount"
-          value={
-            formData.remainingAmount
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.remainingAmount}
+          onChange={handleChange}
           required
+          style={inputStyle}
         />
-
-        <br />
-        <br />
 
         <select
           name="paymentStatus"
-          value={
-            formData.paymentStatus
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.paymentStatus}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
-            Select Status
+            Payment Status
           </option>
 
           <option value="paid">
-            Paid
+            ✅ Paid
           </option>
 
           <option value="partial">
-            Partial
+            🟡 Partial
           </option>
 
           <option value="pending">
-            Pending
+            🔴 Pending
           </option>
         </select>
 
-        <br />
-        <br />
-
         <select
           name="paymentMethod"
-          value={
-            formData.paymentMethod
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.paymentMethod}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Payment Method
@@ -439,22 +416,36 @@ function Fees() {
           </option>
         </select>
 
-        <br />
-        <br />
+      </div>
 
-        <button
-          type="submit"
-        >
-          {
-            editId
-              ? "Update Fee"
-              : "Add Fee"
-          }
-        </button>
+      <button
+        type="submit"
+        style={{
+          width: "100%",
+          marginTop: "25px",
+          background:
+            "linear-gradient(135deg,#2563EB,#3B82F6)",
+          color: "#fff",
+          border: "none",
+          padding: "14px",
+          borderRadius: "12px",
+          fontSize: "16px",
+          fontWeight: "600",
+          cursor: "pointer",
+          boxShadow:
+            "0 6px 15px rgba(37,99,235,0.3)"
+        }}
+      >
+        {editId
+          ? "Update Fee"
+          : "Add Fee"}
+      </button>
 
-      </form>
+    </form>
 
-    </DashboardLayout>
+  </div>
+
+</DashboardLayout>
   );
 }
 

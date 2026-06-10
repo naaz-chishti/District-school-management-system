@@ -60,6 +60,31 @@ const studentSchema = new mongoose.Schema(
       type: Date
     },
 
+    fatherName: {
+  type: String,
+  default: ""
+},
+
+fatherPhone: {
+  type: String,
+  default: ""
+},
+
+fatherOccupation: {
+  type: String,
+  default: ""
+},
+
+motherName: {
+  type: String,
+  default: ""
+},
+
+motherOccupation: {
+  type: String,
+  default: ""
+},
+
     gender: {
       type: String,
       enum: ["male", "female", "other"]

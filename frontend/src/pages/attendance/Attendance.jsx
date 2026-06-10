@@ -218,162 +218,191 @@ function Attendance() {
 }
     };
 
-  return (
-    <DashboardLayout>
+    const inputStyle = {
+  width: "100%",
+  padding: "12px 15px",
+  border: "1px solid #D1D5DB",
+  borderRadius: "10px",
+  fontSize: "14px",
+  outline: "none",
+  background: "#fff",
+  boxSizing: "border-box"
+};
 
-      <h1>
-        Attendance
+  return (
+   <DashboardLayout>
+
+  <div
+    style={{
+      background: "#fff",
+      padding: "35px",
+      borderRadius: "20px",
+      boxShadow:
+        "0 10px 30px rgba(0,0,0,0.08)",
+      maxWidth: "1000px",
+      margin: "0 auto"
+    }}
+  >
+
+    <div
+      style={{
+        marginBottom: "30px"
+      }}
+    >
+      <h1
+        style={{
+          margin: 0,
+          color: "#111827",
+          fontSize: "32px"
+        }}
+      >
+        📅 {editId
+          ? "Edit Attendance"
+          : "Mark Attendance"}
       </h1>
 
-      <form
-        onSubmit={
-          handleSubmit
-        }
+      <p
         style={{
-          background:
-            "white",
-          padding:
-            "30px",
-          borderRadius:
-            "15px"
+          color: "#6B7280",
+          marginTop: "8px"
+        }}
+      >
+        Manage student attendance records
+      </p>
+    </div>
+
+    <form
+      onSubmit={handleSubmit}
+    >
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "1fr 1fr",
+          gap: "20px"
         }}
       >
 
-        <h2>
-          {editId
-            ? "Edit Attendance"
-            : "Add Attendance"}
-        </h2>
-
         <select
           name="studentId"
-          value={
-            formData.studentId
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.studentId}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select Student
           </option>
 
           {students.map(
-            (
-              student
-            ) => (
+            (student) => (
               <option
-                key={
-                  student._id
-                }
-                value={
-                  student._id
-                }
+                key={student._id}
+                value={student._id}
               >
-                {
-                  student.name
-                }
+                {student.name}
               </option>
             )
           )}
         </select>
 
-        <br />
-        <br />
-
         <select
           name="schoolId"
-          value={
-            formData.schoolId
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.schoolId}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select School
           </option>
 
           {schools.map(
-            (
-              school
-            ) => (
+            (school) => (
               <option
-                key={
-                  school._id
-                }
-                value={
-                  school._id
-                }
+                key={school._id}
+                value={school._id}
               >
-                {
-                  school.schoolName
-                }
+                {school.schoolName}
               </option>
             )
           )}
         </select>
 
-        <br />
-        <br />
-
         <select
           name="status"
-          value={
-            formData.status
-          }
-          onChange={
-            handleChange
-          }
+          value={formData.status}
+          onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">
             Select Status
           </option>
 
           <option value="present">
-            Present
+            ✅ Present
           </option>
 
           <option value="absent">
-            Absent
+            ❌ Absent
           </option>
 
           <option value="late">
-            Late
+            ⏰ Late
           </option>
         </select>
 
-        <br />
-        <br />
+      </div>
 
-        <textarea
-          name="remarks"
-          placeholder="Remarks"
-          value={
-            formData.remarks
-          }
-          onChange={
-            handleChange
-          }
-        />
+      <textarea
+        name="remarks"
+        placeholder="Remarks"
+        value={formData.remarks}
+        onChange={handleChange}
+        style={{
+          width: "100%",
+          padding: "12px 15px",
+          border:
+            "1px solid #D1D5DB",
+          borderRadius: "10px",
+          fontSize: "14px",
+          marginTop: "20px",
+          minHeight: "120px",
+          resize: "none",
+          boxSizing: "border-box"
+        }}
+      />
 
-        <br />
-        <br />
+      <button
+        type="submit"
+        style={{
+          width: "100%",
+          marginTop: "25px",
+          background:
+            "linear-gradient(135deg,#2563EB,#3B82F6)",
+          color: "#fff",
+          border: "none",
+          padding: "14px",
+          borderRadius: "12px",
+          fontSize: "16px",
+          fontWeight: "600",
+          cursor: "pointer",
+          boxShadow:
+            "0 6px 15px rgba(37,99,235,0.3)"
+        }}
+      >
+        {editId
+          ? "Update Attendance"
+          : "Mark Attendance"}
+      </button>
 
-        <button
-          type="submit"
-        >
-          {editId
-            ? "Update Attendance"
-            : "Add Attendance"}
-        </button>
+    </form>
 
-      </form>
+  </div>
 
-    </DashboardLayout>
+</DashboardLayout>
   );
 }
 
