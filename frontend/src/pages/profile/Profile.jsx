@@ -211,19 +211,21 @@ const [showConfirmPassword,
         >
 
           <div style={cardStyle}>
-            <h4>User ID</h4>
-            <p>{user?._id}</p>
-          </div>
+  <h4>Department</h4>
+  <p>Administration</p>
+</div>
 
           <div style={cardStyle}>
             <h4>Role</h4>
-            <p>{user?.role}</p>
+            <p>District Admin</p>
           </div>
 
-          <div style={cardStyle}>
-            <h4>Status</h4>
-            <p>Active</p>
-          </div>
+         <div style={cardStyle}>
+  <h4>Last Login</h4>
+  <p>
+    {new Date().toLocaleDateString()}
+  </p>
+</div>
 
           <div style={cardStyle}>
             <h4>School</h4>
