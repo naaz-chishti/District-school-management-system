@@ -27,49 +27,40 @@ function UserMenu() {
 
   return (
     <div
-      style={{
-        position: "relative"
-      }}
-      onMouseEnter={() =>
-        setOpen(true)
-      }
-      onMouseLeave={() =>
-        setOpen(false)
-      }
-    >
-      <FaUserCircle
-        size={40}
-        color="#38bdf8"
-        style={{
-          cursor: "pointer",
-          transition:
-            "all 0.3s ease"
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform =
-            "scale(1.15)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform =
-            "scale(1)";
-        }}
-      />
+  style={{
+    position: "relative"
+  }}
+>
+     <FaUserCircle
+  size={40}
+  color="#38bdf8"
+  style={{
+    cursor: "pointer",
+    transition: "all 0.3s ease"
+  }}
+  onClick={() =>
+    setOpen(true)
+  }
+/>
 
       {open && (
-        <div
-          style={{
-            position: "absolute",
-            right: 0,
-            top: "50px",
-            width: "220px",
-            background: "#fff",
-            borderRadius: "12px",
-            boxShadow:
-              "0 8px 25px rgba(0,0,0,0.15)",
-            overflow: "hidden",
-            zIndex: 999
-          }}
-        >
+  <div
+    onMouseLeave={() =>
+      setOpen(false)
+    }
+    style={{
+      position: "absolute",
+      right: 0,
+      top: "50px",
+      width: "220px",
+      background: "#fff",
+      borderRadius: "12px",
+      boxShadow:
+        "0 8px 25px rgba(0,0,0,0.15)",
+      overflow: "hidden",
+      zIndex: 999
+    }}
+  >
           <div
             style={{
               padding: "15px",
@@ -114,9 +105,10 @@ function UserMenu() {
               e.currentTarget.style.paddingLeft =
                 "15px";
             }}
-            onClick={() =>
-              navigate("/profile")
-            }
+           onClick={() => {
+  setOpen(false);
+  navigate("/profile");
+}}
           >
             My Profile
           </div>
@@ -140,9 +132,10 @@ function UserMenu() {
               e.currentTarget.style.paddingLeft =
                 "15px";
             }}
-            onClick={() =>
-              navigate("/settings")
-            }
+           onClick={() => {
+  setOpen(false);
+  navigate("/settings");
+}}
           >
             Settings
           </div>
@@ -167,7 +160,10 @@ function UserMenu() {
               e.currentTarget.style.paddingLeft =
                 "15px";
             }}
-            onClick={handleLogout}
+           onClick={() => {
+  setOpen(false);
+  handleLogout();
+}}
           >
             Logout
           </div>

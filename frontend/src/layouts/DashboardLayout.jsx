@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import TopNavbar from "../components/TopNavbar";
 
 function DashboardLayout({ children }) {
-
+  
  const [mobile, setMobile] =
   useState(window.innerWidth < 768);
 
@@ -32,44 +32,46 @@ const [sidebarOpen,
 
   }, []);
 
-  return (
+ return (
+  <div
+    style={{
+      display: "flex",
+      minHeight: "100vh",
+      background: "#f4f6f9"
+    }}
+  >
+    <Sidebar
+      isMobile={mobile}
+      sidebarOpen={sidebarOpen}
+      setSidebarOpen={setSidebarOpen}
+    />
+
     <div
       style={{
-        display: "flex",
-        minHeight: "100vh",
+        flex: 1,
+        overflow: "auto",
         background: "#f4f6f9"
       }}
     >
-      <Sidebar
-  isMobile={mobile}
-  sidebarOpen={sidebarOpen}
-  setSidebarOpen={setSidebarOpen}
-/>
+      <TopNavbar
+        isMobile={mobile}
+        setSidebarOpen={setSidebarOpen}
+      />
 
       <div
         style={{
-          flex: 1,
-          overflow: "auto"
+          padding:
+            mobile
+              ? "15px"
+              : "25px",
+          color: "#111827"
         }}
       >
-        <TopNavbar
-  isMobile={mobile}
-  setSidebarOpen={setSidebarOpen}
-/>
-
-        <div
-          style={{
-            padding:
-              mobile
-                ? "15px"
-                : "25px"
-          }}
-        >
-          {children}
-        </div>
+        {children}
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default DashboardLayout;

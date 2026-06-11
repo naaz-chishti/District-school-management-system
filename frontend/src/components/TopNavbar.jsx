@@ -18,6 +18,7 @@ function TopNavbar({
     setShowNotifications] =
     useState(false);
 
+
   const getNotifications =
     async () => {
       try {
@@ -34,9 +35,9 @@ function TopNavbar({
       }
     };
 
-  useEffect(() => {
-    getNotifications();
-  }, []);
+    useEffect(() => {
+  getNotifications();
+}, []);
 
   return (
     <div
@@ -47,8 +48,7 @@ function TopNavbar({
         justifyContent:
           "space-between",
         alignItems: "center",
-        borderBottom:
-          "1px solid #eee",
+      borderBottom: "1px solid #eee",
         marginBottom: "20px"
       }}
     >
@@ -99,6 +99,7 @@ function TopNavbar({
           position: "relative"
         }}
       >
+
         {/* Bell */}
         <div
           style={{
