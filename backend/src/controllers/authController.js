@@ -173,3 +173,140 @@ export const login =
       });
     }
   };
+
+  // CHANGE PASSWORD
+export const changePassword =
+  async (req, res) => {
+
+    try {
+
+      const {
+        oldPassword,
+        newPassword
+      } = req.body;
+
+      const user =
+        await User.findById(
+          req.params.id
+        );
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "User not found"
+        });
+      }
+
+      const isMatch =
+        await bcrypt.compare(
+          oldPassword,
+          user.password
+        );
+
+      if (!isMatch) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Current password is incorrect"
+        });
+      }
+
+      const hashedPassword =
+        await bcrypt.hash(
+          newPassword,
+          10
+        );
+
+      user.password =
+        hashedPassword;
+
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Password changed successfully"
+      });
+
+    } catch (error) {
+
+      console.log(
+        "CHANGE PASSWORD ERROR:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };
+
+  // RESET PASSWORD
+export const resetPassword =
+  async (req, res) => {
+
+    try {
+
+      const {
+        email,
+        newPassword
+      } = req.body;
+
+      if (
+        !email ||
+        !newPassword
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Email and New Password are required"
+        });
+      }
+
+      const user =
+        await User.findOne({
+          email
+        });
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "User not found"
+        });
+      }
+
+      const hashedPassword =
+        await bcrypt.hash(
+          newPassword,
+          10
+        );
+
+      user.password =
+        hashedPassword;
+
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Password Reset Successfully"
+      });
+
+    } catch (error) {
+
+      console.log(
+        "RESET PASSWORD ERROR:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message
+      });
+    }
+  };

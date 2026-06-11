@@ -1,6 +1,4 @@
-import React, {
-  useState
-} from "react";
+import React, { useState } from "react";
 
 function DataTable({
   columns,
@@ -36,125 +34,205 @@ function DataTable({
     );
 
   return (
+
     <div
       style={{
         background: "#fff",
-        padding: "20px",
-        borderRadius: "12px",
+        borderRadius: "18px",
         boxShadow:
-          "0 4px 10px rgba(0,0,0,0.08)",
-        overflowX: "auto"
+          "0 10px 25px rgba(0,0,0,0.08)",
+        overflow: "hidden"
       }}
     >
-     <table
-  style={{
-    width: "100%",
-    minWidth: "900px",
-          borderCollapse:
-            "collapse"
+
+      {/* Table */}
+
+      <div
+        style={{
+          overflowX: "auto"
         }}
       >
-        <thead>
-          <tr
-            style={{
-              background:
-                "#f3f4f6"
-            }}
-          >
-            {columns.map(
-              (column) => (
-                <th
-                  key={
-                    column.key
-                  }
-                  style={{
-                    padding:
-                      "12px",
-                    textAlign:
-                      "left",
-                    borderBottom:
-                      "1px solid #ddd"
-                  }}
-                >
-                  {
-                    column.label
-                  }
-                </th>
-              )
-            )}
 
-            {renderActions && (
-              <th
-                style={{
-                  padding:
-                    "12px",
-                  textAlign:
-                    "left",
-                  borderBottom:
-                    "1px solid #ddd"
-                }}
-              >
-                Actions
-              </th>
-            )}
-          </tr>
-        </thead>
+        <table
+          style={{
+            width: "100%",
+            minWidth: "1000px",
+            borderCollapse:
+              "collapse"
+          }}
+        >
 
-        <tbody>
-          {currentRecords.map(
-            (row) => (
-              <tr
-                key={
-                  row._id
-                }
-              >
-                {columns.map(
-                  (
-                    column
-                  ) => (
-                    <td
-                      key={
-                        column.key
-                      }
-                      style={{
-                        padding:
-                          "12px",
-                        borderBottom:
-                          "1px solid #eee"
-                      }}
-                    >
-                      {column.render
-                        ? column.render(
-                            row
-                          )
-                        : row[
-                            column.key
-                          ]}
-                    </td>
-                  )
-                )}
+          <thead>
 
-                {renderActions && (
-                  <td
+            <tr
+              style={{
+                background:
+                  "linear-gradient(135deg,#2563EB,#3B82F6)",
+                color: "#fff"
+              }}
+            >
+
+              {columns.map(
+                (column) => (
+
+                  <th
+                    key={
+                      column.key
+                    }
                     style={{
                       padding:
-                        "12px",
-                      borderBottom:
-                        "1px solid #eee"
+                        "16px",
+                      textAlign:
+                        "left",
+                      fontSize:
+                        "14px",
+                      fontWeight:
+                        "600"
                     }}
                   >
-                    {renderActions(
-                      row
-                    )}
-                  </td>
-                )}
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+                    {
+                      column.label
+                    }
+                  </th>
 
-      {/* Pagination */}
+                )
+              )}
+
+              {renderActions && (
+
+                <th
+                  style={{
+                    padding:
+                      "16px",
+                    textAlign:
+                      "center"
+                  }}
+                >
+                  Actions
+                </th>
+
+              )}
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {currentRecords.length >
+            0 ? (
+
+              currentRecords.map(
+                (
+                  row,
+                  rowIndex
+                ) => (
+
+                  <tr
+                    key={
+                      row._id
+                    }
+                    style={{
+                      background:
+                        rowIndex %
+                          2 ===
+                        0
+                          ? "#fff"
+                          : "#F9FAFB",
+                      transition:
+                        "0.3s"
+                    }}
+                  >
+
+                    {columns.map(
+                      (
+                        column
+                      ) => (
+
+                        <td
+                          key={
+                            column.key
+                          }
+                          style={{
+                            padding:
+                              "14px 16px",
+                            borderBottom:
+                              "1px solid #E5E7EB",
+                            fontSize:
+                              "14px",
+                            color:
+                              "#374151"
+                          }}
+                        >
+                          {column.render
+                            ? column.render(
+                                row
+                              )
+                            : row[
+                                column
+                                  .key
+                              ]}
+                        </td>
+
+                      )
+                    )}
+
+                    {renderActions && (
+
+                      <td
+                        style={{
+                          padding:
+                            "14px",
+                          borderBottom:
+                            "1px solid #E5E7EB",
+                          textAlign:
+                            "center"
+                        }}
+                      >
+                        {renderActions(
+                          row
+                        )}
+                      </td>
+
+                    )}
+
+                  </tr>
+
+                )
+              )
+
+            ) : (
+
+              <tr>
+
+                <td
+                  colSpan={
+                    columns.length +
+                    1
+                  }
+                  style={{
+                    textAlign:
+                      "center",
+                    padding:
+                      "40px",
+                    color:
+                      "#6B7280"
+                  }}
+                >
+                  No Records Found
+                </td>
+
+              </tr>
+
+            )}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      {/* Footer */}
 
       <div
         style={{
@@ -163,11 +241,23 @@ function DataTable({
             "space-between",
           alignItems:
             "center",
-          marginTop:
-            "20px"
+          padding:
+            "18px 20px",
+          borderTop:
+            "1px solid #E5E7EB",
+          background:
+            "#F9FAFB"
         }}
       >
-        <div>
+
+        <div
+          style={{
+            color:
+              "#6B7280",
+            fontSize:
+              "14px"
+          }}
+        >
           Showing{" "}
           {data.length === 0
             ? 0
@@ -185,9 +275,10 @@ function DataTable({
         <div
           style={{
             display: "flex",
-            gap: "5px"
+            gap: "8px"
           }}
         >
+
           <button
             disabled={
               currentPage ===
@@ -199,14 +290,18 @@ function DataTable({
                   1
               )
             }
+            style={
+              pageBtn
+            }
           >
-            Previous
+            ←
           </button>
 
           {[...Array(
             totalPages
           )].map(
             (_, index) => (
+
               <button
                 key={
                   index
@@ -218,30 +313,24 @@ function DataTable({
                   )
                 }
                 style={{
+                  ...pageBtn,
                   background:
                     currentPage ===
                     index +
                       1
-                      ? "#2563eb"
+                      ? "#2563EB"
                       : "#fff",
                   color:
                     currentPage ===
                     index +
                       1
                       ? "#fff"
-                      : "#000",
-                  border:
-                    "1px solid #ddd",
-                  padding:
-                    "6px 12px",
-                  borderRadius:
-                    "5px",
-                  cursor:
-                    "pointer"
+                      : "#111827"
                 }}
               >
                 {index + 1}
               </button>
+
             )
           )}
 
@@ -256,14 +345,35 @@ function DataTable({
                   1
               )
             }
+            style={
+              pageBtn
+            }
           >
-            Next
+            →
           </button>
+
         </div>
+
       </div>
 
     </div>
+
   );
 }
+
+const pageBtn = {
+  border:
+    "1px solid #D1D5DB",
+  background:
+    "#fff",
+  padding:
+    "8px 12px",
+  borderRadius:
+    "8px",
+  cursor:
+    "pointer",
+  fontWeight:
+    "600"
+};
 
 export default DataTable;

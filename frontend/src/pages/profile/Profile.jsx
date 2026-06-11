@@ -9,10 +9,10 @@ import {
 
 function Profile() {
 
-  const user =
-    JSON.parse(
-      localStorage.getItem("user")
-    );
+ const user = JSON.parse(
+  localStorage.getItem("user") ||
+  sessionStorage.getItem("user")
+);
 
   const [name, setName] =
     useState(user?.name || "");
@@ -97,14 +97,14 @@ const [showConfirmPassword,
     try {
 
       await API.put(
-        `/users/change-password/${user._id}`,
-        {
-          oldPassword:
-            passwordData.oldPassword,
-          newPassword:
-            passwordData.newPassword
-        }
-      );
+  `/auth/change-password/${user._id}`,
+  {
+    oldPassword:
+      passwordData.oldPassword,
+    newPassword:
+      passwordData.newPassword
+  }
+);
 
       alert(
         "Password Changed Successfully"

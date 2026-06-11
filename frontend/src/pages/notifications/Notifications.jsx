@@ -27,24 +27,48 @@ function Notifications() {
       "id"
     );
 
-  const [
-    formData,
-    setFormData
-  ] =
-    useState({
-      title: "",
-      message: "",
-      sentTo: "all",
-      schoolId: ""
-    });
+ const [formData,
+  setFormData] =
+  useState({
+    title: "",
+    message: "",
+    sentTo: "all",
+    priority: "normal",
+    studentIds: [],
+    schoolId: ""
+  });
 
-  useEffect(() => {
+  const [schools, setSchools] = useState([]);
+const [students, setStudents] = useState([]);
 
-    if (id) {
-      fetchNotification();
-    }
+const getSchools = async () => {
+  try {
+    const res = await API.get("/schools/all");
+    setSchools(res.data.schools || []);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-  }, [id]);
+const fetchStudents = async () => {
+  try {
+    const res = await API.get("/students/all");
+    setStudents(res.data.students || []);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+ useEffect(() => {
+
+  getSchools();
+  fetchStudents();
+
+  if (id) {
+    fetchNotification();
+  }
+
+}, [id]);
 
   const fetchNotification =
     async () => {
@@ -78,8 +102,15 @@ function Notifications() {
               .schoolId?._id ||
             res.data
               .notification
-              .schoolId ||
-            ""
+              .schoolId ||  "",
+
+              priority:
+  res.data.notification.priority ||
+  "normal",
+
+studentIds:
+  res.data.notification.studentIds ||
+  [],
         });
 
       } catch (error) {
@@ -209,6 +240,73 @@ function Notifications() {
         }}
       >
 
+        {
+  formData.sentTo ===
+    "selected_students" && (
+
+    <div
+      style={{
+        marginTop: "20px"
+      }}
+    >
+
+      <label
+        style={{
+          fontWeight: "600",
+          display: "block",
+          marginBottom: "10px"
+        }}
+      >
+        Select Students
+      </label>
+
+      <select
+        multiple
+        style={{
+          ...inputStyle,
+          minHeight: "180px"
+        }}
+        onChange={(e) => {
+
+          const selected =
+            Array.from(
+              e.target.selectedOptions
+            ).map(
+              option =>
+                option.value
+            );
+
+          setFormData({
+            ...formData,
+            studentIds:
+              selected
+          });
+        }}
+      >
+
+        {students.map(
+          (student) => (
+
+            <option
+              key={
+                student._id
+              }
+              value={
+                student._id
+              }
+            >
+              {student.name}
+            </option>
+
+          )
+        )}
+
+      </select>
+
+    </div>
+  )
+}
+
         <input
           type="text"
           name="title"
@@ -220,37 +318,71 @@ function Notifications() {
         />
 
         <select
-          name="sentTo"
-          value={formData.sentTo}
-          onChange={handleChange}
-          style={inputStyle}
-        >
-          <option value="all">
-            All Users
-          </option>
+  name="sentTo"
+  value={formData.sentTo}
+  onChange={handleChange}
+  style={inputStyle}
+>
+  <option value="all">
+    All Users
+  </option>
 
-          <option value="students">
-            Students
-          </option>
+  <option value="students">
+    All Students
+  </option>
 
-          <option value="teachers">
-            Teachers
-          </option>
+  <option value="teachers">
+    All Teachers
+  </option>
 
-          <option value="parents">
-            Parents
-          </option>
-        </select>
+  <option value="parents">
+    All Parents
+  </option>
 
-        <input
-          type="text"
-          name="schoolId"
-          placeholder="School ID"
-          value={formData.schoolId}
-          onChange={handleChange}
-          required
-          style={inputStyle}
-        />
+  <option value="selected_students">
+    Selected Students
+  </option>
+</select>
+
+        <select
+  name="priority"
+  value={formData.priority}
+  onChange={handleChange}
+  style={inputStyle}
+>
+  <option value="normal">
+    Normal Priority
+  </option>
+
+  <option value="important">
+    Important
+  </option>
+
+  <option value="urgent">
+    Urgent
+  </option>
+</select>
+
+      <select
+  name="schoolId"
+  value={formData.schoolId}
+  onChange={handleChange}
+  required
+  style={inputStyle}
+>
+  <option value="">
+    Select School
+  </option>
+
+  {schools.map((school) => (
+    <option
+      key={school._id}
+      value={school._id}
+    >
+      {school.schoolName}
+    </option>
+  ))}
+</select>
 
       </div>
 

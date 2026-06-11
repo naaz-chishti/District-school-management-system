@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import API from "../../api/axios";
 
+
 function Login() {
+
   const navigate = useNavigate();
 
   const [email, setEmail] =
@@ -11,153 +14,376 @@ function Login() {
   const [password, setPassword] =
     useState("");
 
-  const isMobile =
-    window.innerWidth < 768;
+    const [showPassword,
+  setShowPassword] =
+  useState(false);
+
+const [rememberMe,
+  setRememberMe] =
+  useState(false);
+
+  const [
+  showForgotPassword,
+  setShowForgotPassword
+] = useState(false);
+
+const [
+  resetData,
+  setResetData
+] = useState({
+  email: "",
+  newPassword: "",
+  confirmPassword: ""
+});
 
   const handleLogin = async (e) => {
+
     e.preventDefault();
 
     try {
-      const res = await API.post(
-        "/auth/login",
+
+      const res =
+        await API.post(
+          "/auth/login",
+          {
+            email,
+            password
+          }
+        );
+
+     if (rememberMe) {
+
+  localStorage.setItem(
+    "token",
+    res.data.token
+  );
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify(
+      res.data.user
+    )
+  );
+
+} else {
+
+  sessionStorage.setItem(
+    "token",
+    res.data.token
+  );
+
+  sessionStorage.setItem(
+    "user",
+    JSON.stringify(
+      res.data.user
+    )
+  );
+}
+
+      navigate(
+        "/dashboard"
+      );
+
+    } catch (error) {
+
+      alert(
+        error.response?.data?.message ||
+        "Login Failed"
+      );
+    }
+  };
+
+  const handleResetPassword =
+  async () => {
+
+    if (
+      resetData.newPassword !==
+      resetData.confirmPassword
+    ) {
+
+      alert(
+        "Passwords do not match"
+      );
+
+      return;
+    }
+
+    try {
+
+      await API.put(
+        "/auth/reset-password",
         {
-          email,
-          password,
+          email:
+            resetData.email,
+          newPassword:
+            resetData.newPassword
         }
       );
 
-      localStorage.setItem(
-        "token",
-        res.data.token
-      );
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify(
-          res.data.user
-        )
-      );
-
-      navigate("/dashboard");
-    } catch (error) {
       alert(
-        error.response?.data
-          ?.message ||
-          "Login Failed"
+        "Password Reset Successfully"
+      );
+
+      setShowForgotPassword(
+        false
+      );
+
+      setResetData({
+        email: "",
+        newPassword: "",
+        confirmPassword: ""
+      });
+
+    } catch (error) {
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to Reset Password"
       );
     }
   };
 
   return (
+  <div
+    style={{
+      minHeight: "100vh",
+      display: "flex",
+      background:
+        "linear-gradient(135deg,#2563EB,#4F46E5,#7C3AED)",
+      position: "relative",
+      overflow: "hidden"
+    }}
+  >
+
+    {/* Background Circles */}
+
     <div
       style={{
-        minHeight: "100vh",
-        backgroundImage:
-          "url('https://images.openai.com/static-rsc-4/FQPCk2ONbJet3efM_JeJ6MOIZWTRNGcHvb4I_ByDPcrBJkQ-klOzv_hjsqwzG_ChrGGUyPR6hp4MOy22_8Z9s-NsI1pl1iKL1c6caajltT8SkWN0PVP7m-LnHXO1u3U2_7GEsWWWF3CXDblIupIdp96kWGZ9MYB5z3uvszIyYP0?purpose=inline')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        position: "absolute",
+        width: "400px",
+        height: "400px",
+        background:
+          "rgba(255,255,255,0.12)",
+        borderRadius: "50%",
+        top: "-100px",
+        left: "-100px"
+      }}
+    />
+
+    <div
+      style={{
+        position: "absolute",
+        width: "300px",
+        height: "300px",
+        background:
+          "rgba(255,255,255,0.08)",
+        borderRadius: "50%",
+        bottom: "-100px",
+        right: "-50px"
+      }}
+    />
+
+    {/* LEFT */}
+
+    <div
+      style={{
+        flex: 1,
+        padding: "80px",
+        color: "#fff",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center",
-        padding: "20px",
-        position: "relative",
+        zIndex: 2
       }}
     >
-      {/* Overlay */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "rgba(0,0,0,0.45)",
-        }}
-      />
 
-      {/* Login Card */}
+      <h1
+  style={{
+    fontSize: "64px",
+    fontWeight: "800",
+    letterSpacing: "2px",
+    marginBottom: "15px"
+  }}
+>
+  NEURONIX
+</h1>
+
+      <h2
+  style={{
+    fontSize: "34px",
+    fontWeight: "700",
+    marginBottom: "15px"
+  }}
+>
+  Transforming Education Through Digital Excellence
+</h2>
+
+<p
+  style={{
+    maxWidth: "650px",
+    lineHeight: "1.9",
+    color: "#E5E7EB",
+    fontSize: "16px"
+  }}
+>
+  A comprehensive School ERP platform designed to
+  streamline academic operations, automate administration,
+  enhance communication, and provide real-time insights
+  for District Administrators, Schools, Teachers,
+  Students and Parents.
+</p>
+
       <div
         style={{
-          position: "relative",
-          zIndex: 1,
-          width: "100%",
-          maxWidth: isMobile
-            ? "95%"
-            : "450px",
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(2,1fr)",
+          gap: "15px",
+          marginTop: "40px",
+          maxWidth: "600px"
+        }}
+      >
+
+        <div style={featureStyle}>
+          🎓 Student Management
+        </div>
+
+        <div style={featureStyle}>
+          👨‍🏫 Teacher Management
+        </div>
+
+        <div style={featureStyle}>
+          📅 Attendance
+        </div>
+
+        <div style={featureStyle}>
+          💰 Payroll
+        </div>
+
+        <div style={featureStyle}>
+          🚌 Transport
+        </div>
+
+        <div style={featureStyle}>
+          🏠 Hostel
+        </div>
+
+      </div>
+
+      <div
+        style={{
+          marginTop: "40px",
           background:
-            "rgba(255,255,255,0.15)",
+            "rgba(255,255,255,0.12)",
           backdropFilter:
-            "blur(15px)",
-          WebkitBackdropFilter:
-            "blur(15px)",
+            "blur(20px)",
           border:
             "1px solid rgba(255,255,255,0.2)",
           borderRadius: "20px",
-          padding: isMobile
-            ? "25px"
-            : "40px",
-          boxShadow:
-            "0 8px 32px rgba(0,0,0,0.3)",
-          textAlign: "center",
-          color: "#fff",
+          padding: "25px",
+          width: "500px"
         }}
       >
-        <div
-          style={{
-            fontSize: isMobile
-              ? "40px"
-              : "50px",
-            marginBottom: "10px",
-          }}
-        >
-          🎓
-        </div>
 
-        <h1
-          style={{
-            marginBottom: "10px",
-            fontSize: isMobile
-              ? "22px"
-              : "30px",
-            fontWeight: "700",
-          }}
-        >
-          NEURONIX
-          TECHNOLOGIES
-        </h1>
-
-        <h3
-          style={{
-            marginBottom: "8px",
-            fontSize: isMobile
-              ? "16px"
-              : "20px",
-          }}
-        >
-          District School
-          Management System
+        <h3>
+          📊 Dashboard
         </h3>
 
-        <p
+        <div
           style={{
-            marginBottom: "30px",
-            color: "#e5e7eb",
-            fontSize: isMobile
-              ? "13px"
-              : "15px",
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(2,1fr)",
+            gap: "15px",
+            marginTop: "15px"
           }}
         >
-          Empowering Education
-          Through Technology
-        </p>
+
+          <div>
+            👨‍🎓 2500 Students
+          </div>
+
+          <div>
+            👨‍🏫 180 Teachers
+          </div>
+
+          <div>
+            🏫 12 Schools
+          </div>
+
+          <div>
+            💰 ₹45L Collection
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {/* RIGHT LOGIN */}
+
+    <div
+      style={{
+        width: "500px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "40px",
+        zIndex: 2
+      }}
+    >
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "420px",
+          background:
+            "rgba(255,255,255,0.15)",
+          backdropFilter:
+            "blur(20px)",
+          border:
+            "1px solid rgba(255,255,255,0.2)",
+          borderRadius: "25px",
+          padding: "40px",
+          color: "#fff",
+          boxShadow:
+            "0 25px 50px rgba(0,0,0,0.25)"
+        }}
+      >
+
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "30px"
+          }}
+        >
+
+          <div
+            style={{
+              fontSize: "60px"
+            }}
+          >
+            🎓
+          </div>
+
+          <h2>
+            Welcome Back
+          </h2>
+
+          <p>
+            Login to continue
+          </p>
+
+        </div>
 
         <form
-          onSubmit={
-            handleLogin
-          }
+          onSubmit={handleLogin}
         >
+
           <input
             type="email"
-            placeholder="Enter Email"
+            placeholder="Email"
             value={email}
             onChange={(e) =>
               setEmail(
@@ -165,79 +391,203 @@ function Login() {
               )
             }
             required
-            style={{
-              width: "100%",
-              padding: "14px",
-              marginBottom: "15px",
-              borderRadius: "10px",
-              border: "none",
-              outline: "none",
-              fontSize: "15px",
-              boxSizing:
-                "border-box",
-            }}
+            style={glassInput}
           />
 
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(
-                e.target.value
-              )
-            }
-            required
-            style={{
-              width: "100%",
-              padding: "14px",
-              marginBottom: "20px",
-              borderRadius: "10px",
-              border: "none",
-              outline: "none",
-              fontSize: "15px",
-              boxSizing:
-                "border-box",
-            }}
-          />
+         <div
+  style={{
+    position: "relative",
+    marginBottom: "18px"
+  }}
+>
+
+  <input
+    type={
+      showPassword
+        ? "text"
+        : "password"
+    }
+    placeholder="Password"
+    value={password}
+    onChange={(e) =>
+      setPassword(
+        e.target.value
+      )
+    }
+    required
+    style={{
+      width: "100%",
+      padding: "14px",
+      paddingRight: "50px",
+      borderRadius: "10px",
+      border: "none",
+      outline: "none",
+      boxSizing: "border-box"
+    }}
+  />
+
+  <div
+    onMouseDown={() =>
+      setShowPassword(true)
+    }
+    onMouseUp={() =>
+      setShowPassword(false)
+    }
+    onMouseLeave={() =>
+      setShowPassword(false)
+    }
+    style={{
+      position: "absolute",
+      right: "15px",
+      top: "50%",
+      transform:
+        "translateY(-50%)",
+      cursor: "pointer",
+      color: "#374151"
+    }}
+  >
+    {showPassword
+      ? <FaEyeSlash />
+      : <FaEye />}
+  </div>
+
+</div>
+
+<div
+  style={{
+    display: "flex",
+    justifyContent:
+      "space-between",
+    alignItems: "center",
+    marginBottom: "20px",
+    fontSize: "16px"
+  }}
+>
+
+  <label
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      color: "#fff"
+    }}
+  >
+    <input
+      type="checkbox"
+      checked={rememberMe}
+      onChange={() =>
+        setRememberMe(
+          !rememberMe
+        )
+      }
+    />
+
+    Remember Me
+  </label>
+
+  <span
+    style={{
+      color: "#fff",
+      cursor: "pointer",
+      textDecoration:
+        "underline"
+    }}
+    onClick={() =>
+      navigate(
+        "/forgot-password"
+      )
+    }
+  >
+    Forgot Password?
+  </span>
+
+</div>
 
           <button
             type="submit"
             style={{
               width: "100%",
-              padding: isMobile
-                ? "12px"
-                : "14px",
+              padding: "15px",
               border: "none",
-              borderRadius: "10px",
-              background:
-                "linear-gradient(90deg,#2563eb,#06b6d4)",
-              color: "#fff",
-              fontSize: isMobile
-                ? "14px"
-                : "16px",
-              fontWeight: "bold",
-              cursor: "pointer",
+              borderRadius: "12px",
+              background: "#fff",
+              color: "#2563EB",
+              fontWeight: "700",
+              fontSize: "16px",
+              cursor: "pointer"
             }}
           >
             Login
           </button>
+
         </form>
 
-        <p
-          style={{
-            marginTop: "25px",
-            fontSize: "12px",
-            color: "#e5e7eb",
-          }}
-        >
-          © 2026 Neuronix
-          Technologies.
-          All Rights Reserved.
-        </p>
       </div>
+
     </div>
-  );
+    <p
+  onClick={() =>
+    setShowForgotPassword(
+      true
+    )
+  }
+  style={{
+    cursor: "pointer",
+    color: "#2563EB",
+    fontWeight: "600",
+    fontSize: "15px"
+  }}
+>
+  Forgot Password?
+</p>
+
+  </div>
+);
 }
+
+// const inputStyle = {
+//   width: "100%",
+//   padding: "14px",
+//   border: "1px solid #D1D5DB",
+//   borderRadius: "12px",
+//   marginBottom: "18px",
+//   fontSize: "15px",
+//   outline: "none",
+//   boxSizing: "border-box"
+// };
+
+// const featureCard = {
+//   background: "#FFFFFF",
+//   padding: "18px",
+//   borderRadius: "14px",
+//   border: "1px solid #DBEAFE",
+//   boxShadow:
+//     "0 4px 12px rgba(37,99,235,0.08)",
+//   fontWeight: "600",
+//   color: "#374151"
+// };
+
+const glassInput = {
+  width: "100%",
+  padding: "14px",
+  marginBottom: "18px",
+  border:
+    "1px solid rgba(255,255,255,0.3)",
+  borderRadius: "12px",
+  background:
+    "rgba(255,255,255,0.15)",
+  color: "#fff",
+  fontSize: "15px",
+  outline: "none",
+  boxSizing: "border-box"
+};
+
+const featureStyle = {
+  background:
+    "rgba(255,255,255,0.12)",
+  padding: "15px",
+  borderRadius: "12px",
+  fontWeight: "600"
+};
 
 export default Login;

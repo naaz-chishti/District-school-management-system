@@ -81,14 +81,19 @@ function Dashboard() {
           Welcome Back 👋
         </h1>
 
-        <p
-          style={{
-            color: "#6b7280",
-            fontSize: "15px"
-          }}
-        >
-          Manage your School ERP from one place.
-        </p>
+       <p
+  style={{
+    color: "#6b7280",
+    fontSize: "16px",
+    maxWidth: "700px",
+    lineHeight: "1.7"
+  }}
+>
+  Monitor students, teachers, attendance,
+  examinations, fees, transport, hostel and
+  administrative operations from a centralized
+  School Management Platform.
+</p>
 
         <h3
           style={{
@@ -198,7 +203,7 @@ function Dashboard() {
           }
           color="#ea580c"
         />
-
+          
       </div>
 
       {/* Activities + Events */}
@@ -242,5 +247,17 @@ function Dashboard() {
     </DashboardLayout>
   );
 }
+
+const summaryCard = {
+  background: "#fff",
+  padding: "20px",
+  borderRadius: "16px",
+  boxShadow:
+    "0 4px 15px rgba(0,0,0,0.08)",
+  minHeight: "120px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center"
+};
 
 export default Dashboard;

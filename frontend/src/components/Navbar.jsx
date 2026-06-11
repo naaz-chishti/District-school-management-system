@@ -13,7 +13,10 @@ function TopNavbar() {
     navigate("/login"); // safer than "/"
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(
+  localStorage.getItem("user") ||
+  sessionStorage.getItem("user")
+);
 
   // ✅ Close dropdown when clicking outside
   useEffect(() => {

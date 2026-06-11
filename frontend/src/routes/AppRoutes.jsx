@@ -68,6 +68,8 @@ import Profile from "../pages/profile/Profile";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 
+import ForgotPassword from "../pages/auth/ForgotPassword";
+
 function AppRoutes() {
   return (
     <BrowserRouter>
@@ -75,6 +77,13 @@ function AppRoutes() {
 
         {/* PUBLIC */}
         <Route path="/" element={<Login />} />
+
+        <Route
+  path="/forgot-password"
+  element={
+    <ForgotPassword />
+  }
+/>
 
         {/* DASHBOARD */}
         <Route

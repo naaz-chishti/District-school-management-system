@@ -95,34 +95,81 @@ function NotificationList() {
     };
 
   const columns = [
-    {
-      key: "title",
-      label: "Title"
-    },
-    {
-      key: "message",
-      label: "Message"
-    },
-    {
-      key: "sentTo",
-      label: "Sent To"
-    },
-    {
-      key: "school",
-      label: "School",
-      render: (item) =>
-        item.schoolId
-          ?.schoolName || "N/A"
-    },
-    {
-      key: "date",
-      label: "Date",
-      render: (item) =>
-        new Date(
-          item.createdAt
-        ).toLocaleDateString()
-    }
-  ];
+  {
+    key: "title",
+    label: "Title"
+  },
+
+  {
+    key: "sentTo",
+    label: "Audience",
+
+    render: (item) =>
+      item.sentTo
+        ?.replace("_", " ")
+        ?.toUpperCase()
+  },
+
+  {
+    key: "priority",
+    label: "Priority",
+
+    render: (item) => (
+
+      <span
+        style={{
+          padding: "6px 12px",
+          borderRadius: "20px",
+          fontWeight: "600",
+          background:
+            item.priority === "urgent"
+              ? "#FEE2E2"
+              : item.priority === "important"
+              ? "#FEF3C7"
+              : "#DCFCE7",
+
+          color:
+            item.priority === "urgent"
+              ? "#DC2626"
+              : item.priority === "important"
+              ? "#D97706"
+              : "#16A34A"
+        }}
+      >
+        {item.priority || "normal"}
+      </span>
+
+    )
+  },
+
+  {
+    key: "school",
+    label: "School",
+
+    render: (item) =>
+      item.schoolId
+        ?.schoolName || "-"
+  },
+
+  {
+    key: "createdBy",
+    label: "Created By",
+
+    render: (item) =>
+      item.createdBy
+        ?.name || "-"
+  },
+
+  {
+    key: "date",
+    label: "Date",
+
+    render: (item) =>
+      new Date(
+        item.createdAt
+      ).toLocaleDateString()
+  }
+];
 
   return (
     <DashboardLayout>
@@ -135,6 +182,72 @@ function NotificationList() {
           handleSearch
         }
       />
+
+      <div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(4,1fr)",
+    gap: "20px",
+    marginBottom: "25px"
+  }}
+>
+
+  <div style={statCard}>
+    <h2>
+      {notifications.length}
+    </h2>
+    <p>
+      Total Notifications
+    </p>
+  </div>
+
+  <div style={statCard}>
+    <h2>
+      {
+        notifications.filter(
+          n =>
+            n.priority ===
+            "urgent"
+        ).length
+      }
+    </h2>
+    <p>
+      Urgent
+    </p>
+  </div>
+
+  <div style={statCard}>
+    <h2>
+      {
+        notifications.filter(
+          n =>
+            n.priority ===
+            "important"
+        ).length
+      }
+    </h2>
+    <p>
+      Important
+    </p>
+  </div>
+
+  <div style={statCard}>
+    <h2>
+      {
+        notifications.filter(
+          n =>
+            n.priority ===
+            "normal"
+        ).length
+      }
+    </h2>
+    <p>
+      Normal
+    </p>
+  </div>
+
+</div>
 
       <button
         onClick={() =>
@@ -222,5 +335,14 @@ function NotificationList() {
     </DashboardLayout>
   );
 }
+
+const statCard = {
+  background: "#fff",
+  padding: "20px",
+  borderRadius: "16px",
+  textAlign: "center",
+  boxShadow:
+    "0 4px 15px rgba(0,0,0,0.08)"
+};
 
 export default NotificationList;

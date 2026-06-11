@@ -7,8 +7,9 @@ function Sidebar({
 }) {
 
   const user = JSON.parse(
-    localStorage.getItem("user")
-  );
+  localStorage.getItem("user") ||
+  sessionStorage.getItem("user")
+);
 
   const role = user?.role;
 

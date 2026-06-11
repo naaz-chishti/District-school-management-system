@@ -19,10 +19,29 @@ const notificationSchema =
           "all",
           "students",
           "teachers",
-          "parents"
+          "parents",
+          "selected_students"
         ],
         default: "all"
       },
+
+      priority: {
+        type: String,
+        enum: [
+          "normal",
+          "important",
+          "urgent"
+        ],
+        default: "normal"
+      },
+
+      studentIds: [
+        {
+          type:
+            mongoose.Schema.Types.ObjectId,
+          ref: "Student"
+        }
+      ],
 
       schoolId: {
         type:
