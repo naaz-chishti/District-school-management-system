@@ -223,7 +223,7 @@ const [
     maxWidth: "650px",
     lineHeight: "1.9",
     color: "#E5E7EB",
-    fontSize: "16px"
+    fontSize: "17px"
   }}
 >
   A comprehensive School ERP platform designed to
@@ -240,7 +240,8 @@ const [
             "repeat(2,1fr)",
           gap: "15px",
           marginTop: "40px",
-          maxWidth: "600px"
+          maxWidth: "600px",
+          fontSize: "17px",
         }}
       >
 
@@ -281,7 +282,8 @@ const [
             "1px solid rgba(255,255,255,0.2)",
           borderRadius: "20px",
           padding: "25px",
-          width: "500px"
+          width: "500px",
+          fontSize: "18px",
         }}
       >
 
@@ -295,7 +297,8 @@ const [
             gridTemplateColumns:
               "repeat(2,1fr)",
             gap: "15px",
-            marginTop: "15px"
+            marginTop: "15px",
+            fontSize: "17px",
           }}
         >
 

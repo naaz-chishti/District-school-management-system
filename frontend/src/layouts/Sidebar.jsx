@@ -103,11 +103,6 @@ function Sidebar({
       Student List
     </LinkStyle>
 
-    {/* Parent Management */}  
-    <LinkStyle to="/parent-list">
-      Parent List
-    </LinkStyle>
-
     {/* Attendance */}
     <LinkStyle to="/attendance">
       Attendance
